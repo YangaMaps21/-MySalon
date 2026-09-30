@@ -34,6 +34,12 @@
   }
   .page-head h1{ font-size:34px; font-weight:400; margin-bottom:10px; }
   .page-head p{ font-family:-apple-system, sans-serif; color:#6b5d4f; max-width:560px; line-height:1.6; }
+  .tag-filter-banner{
+    margin-top:16px; padding:10px 16px; background: var(--ivory-deep); border:1px solid var(--line);
+    border-radius:10px; font-size:13px; color: var(--espresso-soft); display:inline-block;
+  }
+  .tag-filter-banner strong{ color: var(--teal); }
+  .tag-filter-banner a{ color: var(--gold-deep); font-weight:700; }
 
   .locate-bar{
     max-width:1180px; margin: 24px auto 0; padding: 0 32px;
@@ -268,6 +274,9 @@
     <div class="eyebrow">Beauty / Spa</div>
     <h1>Massage &amp; spa specialists near you</h1>
     <p class="sans">Massage therapists, masseuses, spa studios and lounges on @MySalon — one price either way, every profile fully featured. Turn on your location to see how far each one is.</p>
+    <div class="tag-filter-banner sans" id="tagFilterBanner" style="display:none;">
+      Showing results for <strong id="tagFilterName"></strong> · <a href="beauty-spa.html" id="tagFilterClear">Clear filter ✕</a>
+    </div>
   </section>
 
   <div class="locate-bar">
@@ -309,7 +318,7 @@
     </div>
     <div class="results-bar sans" id="resultsBar"></div>
     <div id="allSalonsWrap"></div>
-    <div class="empty-state" id="emptyState">Nothing in this radius yet — try widening it.</div>
+    <div class="empty-state" id="emptyState"></div>
   </section>
 
   <footer>© 2026 @MySalon. All rights reserved.</footer>
@@ -351,6 +360,17 @@
 
     let userLoc = null;
     let sponsoredExpanded = false;
+
+    // Optional ?tag=Massage (etc.) filter — used by links from the homepage's "Popular services"
+    const activeTag = new URLSearchParams(location.search).get('tag');
+    function matchesTag(s){
+      return !activeTag || s.tags.some(t => t.toLowerCase() === activeTag.toLowerCase());
+    }
+    if (activeTag){
+      const banner = document.getElementById('tagFilterBanner');
+      document.getElementById('tagFilterName').textContent = '"' + activeTag + '"';
+      banner.style.display = 'inline-block';
+    }
 
     function haversineKm(lat1, lon1, lat2, lon2){
       const R = 6371;
@@ -411,10 +431,12 @@
     }
 
     function renderSponsored(){
-      const list = withDistance(SPONSORED);
-      const shown = sponsoredExpanded ? list : list.slice(0, 4);
+      const filtered = withDistance(SPONSORED).filter(matchesTag);
+      const shown = sponsoredExpanded ? filtered : filtered.slice(0, 4);
       sponsoredGrid.innerHTML = shown.map(s => cardHtml(s, true)).join('');
-      viewAllSponsoredBtn.textContent = sponsoredExpanded ? 'Show fewer' : `View all sponsored (${SPONSORED.length})`;
+      const sponsoredSection = sponsoredGrid.closest('.salon-section');
+      if (sponsoredSection) sponsoredSection.style.display = filtered.length ? '' : 'none';
+      viewAllSponsoredBtn.textContent = sponsoredExpanded ? 'Show fewer' : `View all sponsored (${filtered.length})`;
     }
 
     const ALL_PAGE_SIZE = 8; // one tier only, so a slightly larger default page
@@ -466,7 +488,7 @@
     }
 
     function renderAll(){
-      let list = withDistance(ALL_SALONS);
+      let list = withDistance(ALL_SALONS).filter(matchesTag);
 
       if (userLoc && activeRadius !== 'all'){
         list = list.filter(s => s.d <= Number(activeRadius));
@@ -491,6 +513,9 @@
       });
 
       const total = studios.length + individuals.length;
+      emptyState.textContent = activeTag
+        ? `Nothing tagged "${activeTag}" yet.`
+        : 'Nothing in this radius yet — try widening it.';
       emptyState.style.display = total ? 'none' : 'block';
       resultsBar.textContent = userLoc
         ? `${total} listing${total === 1 ? '' : 's'}${activeRadius !== 'all' ? ' within ' + activeRadius + ' km' : ''} — studios first, closest distance band first, highest-rated within each band`
