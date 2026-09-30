@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Profile — @MySalon</title>
+<style>
+  :root{
+    --ivory:#FAF6F0; --ivory-deep:#F1E9DD; --espresso:#241E1A; --espresso-soft:#3A322C;
+    --gold:#C9A961; --gold-deep:#A9863F; --line:#E6DCCB; --white:#FFFFFF; --green:#3F6B4A;
+    --shadow: 0 20px 40px -20px rgba(36,30,26,0.35);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{ font-family:"Georgia", serif; background:var(--ivory); color:var(--espresso); -webkit-font-smoothing:antialiased; }
+  .sans{ font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+  a{ text-decoration:none; color:inherit; }
+  button{ font-family:inherit; cursor:pointer; border:none; background:none; }
+
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 18px 32px; background: var(--espresso); color: var(--ivory);
+  }
+  .brand{ font-size: 22px; }
+  .brand b{ color: var(--gold); font-weight:600; }
+  .back-link{ font-family:-apple-system, sans-serif; font-size:13px; color: var(--gold); }
+
+  /* ---------- Sign up / Log in ---------- */
+  .auth-wrap{ max-width:440px; margin:0 auto; padding:64px 32px 100px; }
+  .auth-box{ background:var(--white); border:1px solid var(--line); border-radius:18px; padding:34px 30px; box-shadow:var(--shadow); }
+  .toggle-inner{
+    display:flex; background: var(--ivory-deep); border-radius:999px; padding:4px; margin-bottom:26px;
+    font-family:-apple-system, sans-serif; font-size:13px;
+  }
+  .toggle-inner span{ flex:1; text-align:center; padding:9px 0; border-radius:999px; cursor:pointer; font-weight:600; color:#8a7c6c; }
+  .toggle-inner span.active{ background: var(--espresso); color: var(--gold); }
+  .auth-box h1{ font-size:24px; font-weight:400; margin-bottom:6px; }
+  .auth-box .sub{ font-family:-apple-system, sans-serif; font-size:12.5px; color:#8a7c6c; margin-bottom:22px; line-height:1.5; }
+  .auth-box input{
+    width:100%; border:1px solid var(--line); border-radius:9px; padding:12px 14px; font-family:-apple-system, sans-serif;
+    font-size:13.5px; background:var(--ivory); color:var(--espresso); margin-bottom:12px; box-sizing:border-box;
+  }
+  .auth-btn{
+    display:block; width:100%; text-align:center; padding:13px; border-radius:9px; font-size:14px; font-weight:700;
+    font-family:-apple-system, sans-serif; background: linear-gradient(180deg, var(--gold), var(--gold-deep)); color:var(--espresso); margin-top:6px;
+  }
+  .auth-btn[disabled]{ opacity:0.6; pointer-events:none; }
+  .auth-msg{ font-family:-apple-system, sans-serif; font-size:12px; color:var(--espresso-soft); margin-top:12px; text-align:center; line-height:1.5; }
+  .auth-note{ font-family:-apple-system, sans-serif; font-size:11px; color:#a89a86; margin-top:18px; text-align:center; line-height:1.5; }
+
+  /* ---------- Dashboard ---------- */
+  .dash-wrap{ max-width:1000px; margin:0 auto; padding:48px 32px 100px; }
+  .dash-head{ display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:14px; margin-bottom:30px; }
+  .eyebrow{ font-family:-apple-system, sans-serif; text-transform:uppercase; letter-spacing:2.5px; font-size:11px; color:var(--gold-deep); margin-bottom:8px; }
+  .dash-head h1{ font-size:28px; font-weight:400; word-break:break-all; }
+  .btn-outline-sm{
+    font-family:-apple-system, sans-serif; font-size:12.5px; font-weight:700; padding:10px 18px; border-radius:8px;
+    border:1px solid var(--line); color: var(--espresso-soft); flex:none;
+  }
+  .dash-grid{ display:grid; grid-template-columns:repeat(2, 1fr); gap:22px; margin-bottom:26px; }
+  .dash-panel{ background:var(--white); border:1px solid var(--line); border-radius:16px; padding:26px 24px; }
+  .dash-panel.featured-panel{ border-color:var(--gold); background: linear-gradient(160deg, #FFFDF8, var(--ivory-deep)); }
+  .dash-panel h3{ font-size:18px; font-weight:400; margin-bottom:4px; }
+  .dash-panel .sub{ font-family:-apple-system, sans-serif; font-size:12.5px; color:#8a7c6c; margin-bottom:18px; line-height:1.5; }
+  .empty-state{ text-align:center; padding:18px 10px; }
+  .empty-state p{ font-family:-apple-system, sans-serif; font-size:13px; color:#8a7c6c; margin-bottom:16px; }
+  .perk-list{ list-style:none; display:flex; flex-direction:column; gap:9px; margin-bottom:18px; }
+  .perk-list li{ font-family:-apple-system, sans-serif; font-size:13px; color:var(--espresso-soft); display:flex; gap:8px; align-items:flex-start; }
+  .perk-list li::before{ content:"✓"; color:var(--gold-deep); font-weight:700; flex:none; }
+  .btn-gold-sm{
+    display:inline-block; font-family:-apple-system, sans-serif; font-size:12.5px; font-weight:700; padding:11px 20px; border-radius:8px;
+    background: linear-gradient(180deg, var(--gold), var(--gold-deep)); color:var(--espresso);
+  }
+  .dash-billing-link{
+    display:block; text-align:center; font-family:-apple-system, sans-serif; font-size:13px; font-weight:600;
+    color: var(--gold-deep); padding:16px; border:1px dashed var(--line); border-radius:12px;
+  }
+
+  footer{ background: var(--espresso); color: rgba(250,246,240,0.6); text-align:center; padding: 28px; font-family:-apple-system, sans-serif; font-size:12px; }
+
+  @media (max-width: 700px){
+    .dash-grid{ grid-template-columns:1fr; }
+  }
+
+  .topbar{ position:relative; }
+  .topbar-right{ display:flex; align-items:center; gap:8px; }
+  .icon-btn{
+    width:46px; height:46px; border-radius:9px; display:flex; align-items:center; justify-content:center;
+    position:relative;
+  }
+  .icon-btn:hover{ background: rgba(255,255,255,0.08); }
+  .icon-btn svg{ width:21px; height:21px; }
+  .burger{
+    width:46px; height:46px; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:6px;
+    border-radius: 9px;
+    position:relative;
+  }
+  .burger:hover{ background: rgba(255,255,255,0.08); }
+  .burger span{ width:24px; height:2.5px; background: var(--ivory); display:block; border-radius:2px; }
+
+  .menu-panel{
+    position:absolute; top: 68px; right: 32px; z-index:70;
+    background: var(--white); border-radius: 14px;
+    box-shadow: var(--shadow); border:1px solid var(--line);
+    min-width: 260px; padding: 10px;
+    display:none; flex-direction:column; gap:2px;
+  }
+  .menu-panel.open{ display:flex; }
+  .menu-panel a{
+    font-family:-apple-system, sans-serif; font-size:15px; color: var(--espresso);
+    padding: 13px 16px; border-radius: 9px;
+  }
+  .menu-panel a:hover{ background: var(--ivory-deep); }
+  .menu-divider{ height:1px; background: var(--line); margin: 6px 4px; }
+</style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">@<b>MySalon</b></div>
+    <div class="topbar-right">
+      <a class="back-link sans" href="index.html">← Back to home</a>
+      <button class="burger icon-btn" id="burgerBtn" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="menu-panel" id="menuPanel">
+      <a href="index.html">Home</a>
+      <a href="profile.html">Profile</a>
+      <a href="about.html">About Us</a>
+      <div class="menu-divider"></div>
+      <a href="salons.html">Salons</a>
+      <a href="specialists.html">Specialists</a>
+      <a href="beauty-spa.html">Beauty / Spa</a>
+      <a href="makeup-artists.html">Makeup Artists</a>
+      <a href="market.html">Market</a>
+      <a href="rent-a-chair.html">Rent a Chair</a>
+      <div class="menu-divider"></div>
+      <a href="billing.html">Billing</a>
+      <a href="list-your-business.html">List Your Business</a>
+    </div>
+  </header>
+
+  <div id="page"></div>
+
+  <footer>© 2026 @MySalon. All rights reserved.</footer>
+
+  <script>
+    // Real Supabase Auth (this project is genuinely connected — not a simulated login).
+    const SUPABASE_URL = 'https://ainvcbecumzudoyhruee.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_OGbYg40sMwVug_3DGaZrVA_HpPGZg0n';
+    const SESSION_KEY = 'mysalon_session';
+
+    function getSession(){
+      try { return JSON.parse(localStorage.getItem(SESSION_KEY) || 'null'); } catch (e){ return null; }
+    }
+    function setSession(s){ try { localStorage.setItem(SESSION_KEY, JSON.stringify(s)); } catch (e){} }
+    function clearSession(){ try { localStorage.removeItem(SESSION_KEY); } catch (e){} }
+
+    let authMode = 'login'; // 'login' | 'signup'
+
+    function render(){
+      const session = getSession();
+      const page = document.getElementById('page');
+      if (session && session.user){
+        page.innerHTML = dashboardHtml(session.user);
+        wireDashboard();
+      } else {
+        page.innerHTML = authHtml();
+        wireAuth();
+      }
+    }
+
+    function authHtml(){
+      return `
+        <section class="auth-wrap">
+          <div class="auth-box">
+            <div class="toggle-inner" id="authToggle">
+              <span data-mode="login" class="${authMode === 'login' ? 'active' : ''}">Log In</span>
+              <span data-mode="signup" class="${authMode === 'signup' ? 'active' : ''}">Sign Up</span>
+            </div>
+            <h1>${authMode === 'login' ? 'Welcome back' : 'Create your account'}</h1>
+            <div class="sub">${authMode === 'login' ? 'Log in to manage your business, bookings and billing.' : 'Sign up to list a business, book with providers, or manage billing — customers and business owners use the same account.'}</div>
+            <input type="email" id="authEmail" placeholder="Email address" autocomplete="email">
+            <input type="password" id="authPassword" placeholder="Password" autocomplete="${authMode === 'login' ? 'current-password' : 'new-password'}">
+            <button type="button" id="authSubmitBtn" class="auth-btn">${authMode === 'login' ? 'Log In' : 'Sign Up'}</button>
+            <div class="auth-msg" id="authMsg"></div>
+          </div>
+          <div class="auth-note">Real accounts, stored securely — this connects to @MySalon's actual backend, not a demo.</div>
+        </section>`;
+    }
+
+    function wireAuth(){
+      document.querySelectorAll('#authToggle span').forEach(el => {
+        el.addEventListener('click', () => {
+          if (authMode === el.dataset.mode) return;
+          authMode = el.dataset.mode;
+          render();
+        });
+      });
+      document.getElementById('authSubmitBtn').addEventListener('click', submitAuth);
+      document.getElementById('authPassword').addEventListener('keydown', (e) => { if (e.key === 'Enter') submitAuth(); });
+    }
+
+    async function submitAuth(){
+      const email = document.getElementById('authEmail').value.trim();
+      const password = document.getElementById('authPassword').value;
+      const msg = document.getElementById('authMsg');
+      const btn = document.getElementById('authSubmitBtn');
+      msg.textContent = '';
+      if (!email || !password){ msg.textContent = 'Enter an email and password.'; return; }
+      if (password.length < 6){ msg.textContent = 'Password needs to be at least 6 characters.'; return; }
+
+      btn.disabled = true;
+      btn.textContent = 'Please wait…';
+
+      try {
+        if (authMode === 'signup'){
+          const res = await fetch(`${SUPABASE_URL}/auth/v1/signup`, {
+            method: 'POST',
+            headers: { apikey: SUPABASE_KEY, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+          });
+          const out = await res.json();
+          if (!res.ok){
+            msg.textContent = out.msg || out.error_description || out.error || 'Could not sign up — try again.';
+          } else if (out.access_token){
+            setSession({ access_token: out.access_token, user: out.user });
+            render();
+            return;
+          } else {
+            msg.textContent = 'Account created! If email confirmation is required, check your inbox — otherwise just log in below.';
+            authMode = 'login';
+            setTimeout(render, 1800);
+          }
+        } else {
+          const res = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
+            method: 'POST',
+            headers: { apikey: SUPABASE_KEY, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+          });
+          const out = await res.json();
+          if (!res.ok){
+            msg.textContent = out.error_description || out.msg || 'Could not log in — check your details.';
+          } else {
+            setSession({ access_token: out.access_token, user: out.user });
+            render();
+            return;
+          }
+        }
+      } catch (e){
+        msg.textContent = 'Network error — please try again.';
+      }
+
+      btn.disabled = false;
+      btn.textContent = authMode === 'login' ? 'Log In' : 'Sign Up';
+    }
+
+    function dashboardHtml(user){
+      return `
+        <section class="dash-wrap">
+          <div class="dash-head">
+            <div>
+              <div class="eyebrow">Your account</div>
+              <h1>${user.email}</h1>
+            </div>
+            <button type="button" id="logoutBtn" class="btn-outline-sm">Log out</button>
+          </div>
+
+          <div class="dash-grid">
+            <div class="dash-panel">
+              <h3>My Businesses</h3>
+              <div class="sub">Salons, studios, specialist profiles and shops you manage on @MySalon.</div>
+              <div class="empty-state">
+                <p>You haven't listed a business yet.</p>
+                <a href="list-your-business.html" class="btn-gold-sm">List Your Business →</a>
+              </div>
+            </div>
+
+            <div class="dash-panel featured-panel">
+              <h3>Sponsored &amp; Premium Businesses</h3>
+              <div class="sub">Upgrade a listing to get seen first, across search, directories and the homepage map.</div>
+              <ul class="perk-list">
+                <li>Featured / sponsored placement</li>
+                <li>List spare chairs for rent</li>
+                <li>Salon exhibition gallery</li>
+                <li>Priority support</li>
+              </ul>
+              <a href="billing.html" class="btn-gold-sm">Upgrade to Premium →</a>
+            </div>
+          </div>
+
+          <a href="billing.html" class="dash-billing-link">Manage billing &amp; subscription →</a>
+        </section>`;
+    }
+
+    function wireDashboard(){
+      document.getElementById('logoutBtn').addEventListener('click', () => {
+        clearSession();
+        render();
+      });
+    }
+
+    render();
+  </script>
+
+  <script>
+  (function(){
+    const burgerBtn = document.getElementById('burgerBtn');
+    const menuPanel = document.getElementById('menuPanel');
+    if (burgerBtn && menuPanel){
+      burgerBtn.addEventListener('click', function(e){
+        e.stopPropagation();
+        menuPanel.classList.toggle('open');
+      });
+      document.addEventListener('click', function(e){
+        if (!menuPanel.contains(e.target) && e.target !== burgerBtn){
+          menuPanel.classList.remove('open');
+        }
+      });
+    }
+  })();
+  </script>
+</body>
+</html>

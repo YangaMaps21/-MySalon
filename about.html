@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About Us — @MySalon</title>
+<style>
+  :root{
+    --ivory:#FAF6F0; --ivory-deep:#F1E9DD; --espresso:#241E1A; --espresso-soft:#3A322C;
+    --gold:#C9A961; --gold-deep:#A9863F; --blush:#D9AFA6; --line:#E6DCCB; --white:#FFFFFF;
+    --shadow: 0 20px 40px -20px rgba(36,30,26,0.35);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{ font-family:"Georgia", serif; background:var(--ivory); color:var(--espresso); -webkit-font-smoothing:antialiased; }
+  .sans{ font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+  a{ text-decoration:none; color:inherit; }
+  button{ font-family:inherit; cursor:pointer; border:none; background:none; }
+
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 18px 32px; background: var(--espresso); color: var(--ivory);
+  }
+  .brand{ font-size: 22px; }
+  .brand b{ color: var(--gold); font-weight:600; }
+  .back-link{ font-family:-apple-system, sans-serif; font-size:13px; color: var(--gold); }
+
+  .page-head{
+    padding: 56px 32px 8px; max-width: 1180px; margin: 0 auto; text-align:center;
+  }
+  .page-head .eyebrow{
+    font-family:-apple-system, sans-serif; text-transform:uppercase; letter-spacing:3px;
+    font-size:12px; color: var(--gold-deep); margin-bottom:14px;
+  }
+  .page-head h1{ font-size:38px; font-weight:400; margin-bottom:14px; }
+  .page-head p{ font-family:-apple-system, sans-serif; color:#6b5d4f; max-width:620px; margin:0 auto; line-height:1.7; }
+
+  .section{ padding: 48px 32px; max-width: 1180px; margin:0 auto; }
+  .section-head{ display:flex; justify-content:space-between; align-items:flex-end; margin-bottom: 26px; }
+  .section-head h2{ font-size: 28px; font-weight:400; }
+  .section-head span{ color: var(--gold-deep); font-style:italic; }
+  .section.alt{ background: var(--ivory-deep); max-width:none; }
+  .section.alt > .inner{ max-width:1180px; margin:0 auto; padding: 0 32px; }
+
+  /* Exhibition / photos */
+  .exhibit-grid{ display:grid; grid-template-columns: repeat(6, 1fr); gap:14px; }
+  .exhibit-grid .ex-photo{
+    aspect-ratio: 1/1; border-radius:12px; display:flex; align-items:center; justify-content:center;
+    background: linear-gradient(135deg, var(--blush), var(--gold)); color: rgba(36,30,26,0.55);
+    font-family:-apple-system, sans-serif; font-size:12px; letter-spacing:0.3px;
+  }
+  .exhibit-grid .ex-photo:nth-child(2n){ background: linear-gradient(135deg, var(--gold), var(--ivory-deep)); }
+  .exhibit-grid .ex-photo:nth-child(3n){ background: linear-gradient(135deg, var(--espresso-soft), var(--blush)); }
+
+  /* Vlog */
+  .vlog-grid{ display:grid; grid-template-columns: repeat(3, 1fr); gap:20px; }
+  .vlog-card{ background: var(--white); border:1px solid var(--line); border-radius:14px; overflow:hidden; }
+  .vlog-thumb{
+    aspect-ratio: 16/10; background: linear-gradient(135deg, var(--espresso-soft), var(--espresso));
+    display:flex; align-items:center; justify-content:center; position:relative;
+  }
+  .vlog-thumb .play{
+    width:44px; height:44px; border-radius:50%; background: var(--gold); color: var(--espresso);
+    display:flex; align-items:center; justify-content:center; font-size:16px;
+  }
+  .vlog-card .vc-body{ padding:14px 16px; }
+  .vlog-card h4{ font-size:14.5px; margin-bottom:4px; }
+  .vlog-card p{ font-family:-apple-system, sans-serif; font-size:12px; color:#8a7c6c; }
+
+  /* Trending news */
+  .news-list{ display:flex; flex-direction:column; gap:14px; }
+  .news-item{
+    display:flex; gap:16px; align-items:center; background: var(--white); border:1px solid var(--line);
+    border-radius:14px; padding:16px 20px;
+  }
+  .news-tag{
+    font-family:-apple-system, sans-serif; font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;
+    background: var(--ivory-deep); color: var(--gold-deep); padding:5px 10px; border-radius:999px; flex:none;
+  }
+  .news-item h4{ font-size:15px; margin-bottom:2px; }
+  .news-item p{ font-family:-apple-system, sans-serif; font-size:12.5px; color:#8a7c6c; }
+
+  /* Testimonials */
+  .testi-grid{ display:grid; grid-template-columns: repeat(3, 1fr); gap:20px; }
+  .testi-card{ background: var(--white); border:1px solid var(--line); border-radius:14px; padding:22px; }
+  .testi-card .stars{ color: var(--gold); font-size:13px; margin-bottom:10px; }
+  .testi-card p{ font-family:-apple-system, sans-serif; font-size:13.5px; color: var(--espresso-soft); line-height:1.6; margin-bottom:14px; font-style:italic; }
+  .testi-card .who{ font-family:-apple-system, sans-serif; font-size:12.5px; font-weight:700; color: var(--espresso); }
+  .testi-card .who span{ font-weight:400; color:#8a7c6c; }
+
+  footer{ background: var(--espresso); color: rgba(250,246,240,0.6); text-align:center; padding: 28px; font-family:-apple-system, sans-serif; font-size:12px; }
+
+  @media (max-width: 900px){
+    .exhibit-grid{ grid-template-columns: repeat(3, 1fr); }
+    .vlog-grid{ grid-template-columns: 1fr; }
+    .testi-grid{ grid-template-columns: 1fr; }
+  }
+
+  .topbar{ position:relative; }
+  .topbar-right{ display:flex; align-items:center; gap:8px; }
+  .icon-btn{
+    width:46px; height:46px; border-radius:9px; display:flex; align-items:center; justify-content:center;
+    position:relative;
+  }
+  .icon-btn:hover{ background: rgba(255,255,255,0.08); }
+  .icon-btn svg{ width:21px; height:21px; }
+  .burger{
+    width:46px; height:46px; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:6px;
+    border-radius: 9px;
+    position:relative;
+  }
+  .burger:hover{ background: rgba(255,255,255,0.08); }
+  .burger span{ width:24px; height:2.5px; background: var(--ivory); display:block; border-radius:2px; }
+
+  .menu-panel{
+    position:absolute; top: 68px; right: 32px; z-index:70;
+    background: var(--white); border-radius: 14px;
+    box-shadow: var(--shadow); border:1px solid var(--line);
+    min-width: 260px; padding: 10px;
+    display:none; flex-direction:column; gap:2px;
+  }
+  .menu-panel.open{ display:flex; }
+  .menu-panel a{
+    font-family:-apple-system, sans-serif; font-size:15px; color: var(--espresso);
+    padding: 13px 16px; border-radius: 9px;
+  }
+  .menu-panel a:hover{ background: var(--ivory-deep); }
+  .menu-divider{ height:1px; background: var(--line); margin: 6px 4px; }
+</style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">@<b>MySalon</b></div>
+    <div class="topbar-right">
+      <a class="back-link sans" href="index.html">← Back to home</a>
+      <button class="burger icon-btn" id="burgerBtn" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="menu-panel" id="menuPanel">
+      <a href="index.html">Home</a>
+      <a href="profile.html">Profile</a>
+      <a href="about.html">About Us</a>
+      <div class="menu-divider"></div>
+      <a href="salons.html">Salons</a>
+      <a href="specialists.html">Specialists</a>
+      <a href="beauty-spa.html">Beauty / Spa</a>
+      <a href="makeup-artists.html">Makeup Artists</a>
+      <a href="market.html">Market</a>
+      <a href="rent-a-chair.html">Rent a Chair</a>
+      <div class="menu-divider"></div>
+      <a href="billing.html">Billing</a>
+      <a href="list-your-business.html">List Your Business</a>
+    </div>
+  </header>
+
+  <section class="page-head">
+    <div class="eyebrow">Our story</div>
+    <h1>About @MySalon</h1>
+    <p class="sans">We're on a mission to make South Africa's best salons, barbers and specialists easy to find, book, and trust — one great appointment at a time.</p>
+  </section>
+
+  <!-- PHOTOS / EXHIBITION -->
+  <section class="section">
+    <div class="section-head">
+      <h2>Moments from <span>our community</span></h2>
+    </div>
+    <div class="exhibit-grid">
+      <div class="ex-photo">Photo</div>
+      <div class="ex-photo">Photo</div>
+      <div class="ex-photo">Photo</div>
+      <div class="ex-photo">Photo</div>
+      <div class="ex-photo">Photo</div>
+      <div class="ex-photo">Photo</div>
+    </div>
+  </section>
+
+  <!-- VLOG -->
+  <section class="section alt">
+    <div class="inner">
+      <div class="section-head">
+        <h2>Latest <span>vlogs</span></h2>
+        <a href="#" class="sans" style="font-family:-apple-system, sans-serif; font-size:13px; color:var(--gold-deep); font-weight:600;">View all →</a>
+      </div>
+      <div class="vlog-grid">
+        <div class="vlog-card">
+          <div class="vlog-thumb"><div class="play">▶</div></div>
+          <div class="vc-body"><h4>A day in the life at Velvet &amp; Vine</h4><p>4 min watch</p></div>
+        </div>
+        <div class="vlog-card">
+          <div class="vlog-thumb"><div class="play">▶</div></div>
+          <div class="vc-body"><h4>How our specialists get verified</h4><p>3 min watch</p></div>
+        </div>
+        <div class="vlog-card">
+          <div class="vlog-thumb"><div class="play">▶</div></div>
+          <div class="vc-body"><h4>Behind the app: building the map</h4><p>6 min watch</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRENDING NEWS -->
+  <section class="section">
+    <div class="section-head">
+      <h2>Trending <span>news</span></h2>
+    </div>
+    <div class="news-list">
+      <div class="news-item">
+        <span class="news-tag sans">Announcement</span>
+        <div><h4>@MySalon is now live across Gauteng</h4><p class="sans">Sandton, Rosebank, Centurion, Midrand and more — find a pro near you.</p></div>
+      </div>
+      <div class="news-item">
+        <span class="news-tag sans">Feature</span>
+        <div><h4>Try before you book: AI look preview is here</h4><p class="sans">Preview a new haircut, beard, or nail set before your appointment.</p></div>
+      </div>
+      <div class="news-item">
+        <span class="news-tag sans">Community</span>
+        <div><h4>Rent a Chair passes 100 listings</h4><p class="sans">More salons are opening up spare chairs to independent specialists.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="section alt">
+    <div class="inner">
+      <div class="section-head">
+        <h2>What people <span>say</span></h2>
+      </div>
+      <div class="testi-grid">
+        <div class="testi-card">
+          <div class="stars">★★★★★</div>
+          <p class="sans">"Booked a last-minute braid appointment through the map and it was seamless. Found my new go-to salon."</p>
+          <div class="who">Naledi M. <span>· Rosebank</span></div>
+        </div>
+        <div class="testi-card">
+          <div class="stars">★★★★★</div>
+          <p class="sans">"The hairstyle preview tool actually helped me decide on a cut I would've never tried otherwise."</p>
+          <div class="who">Kagiso T. <span>· Sandton</span></div>
+        </div>
+        <div class="testi-card">
+          <div class="stars">★★★★☆</div>
+          <p class="sans">"Listed my spare chair through Rent a Chair and had a specialist renting it within a week."</p>
+          <div class="who">Palesa D. <span>· Hatfield</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>© 2026 @MySalon. All rights reserved.</footer>
+
+
+  <script>
+  (function(){
+    const burgerBtn = document.getElementById('burgerBtn');
+    const menuPanel = document.getElementById('menuPanel');
+    if (burgerBtn && menuPanel){
+      burgerBtn.addEventListener('click', function(e){
+        e.stopPropagation();
+        menuPanel.classList.toggle('open');
+      });
+      document.addEventListener('click', function(e){
+        if (!menuPanel.contains(e.target) && e.target !== burgerBtn){
+          menuPanel.classList.remove('open');
+        }
+      });
+    }
+  })();
+  </script>
+</body>
+</html>

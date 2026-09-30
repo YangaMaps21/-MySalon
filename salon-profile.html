@@ -1,0 +1,2030 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Salon — @MySalon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ivory:#FAF6F0; --ivory-deep:#F1E9DD; --espresso:#241E1A; --espresso-soft:#3A322C;
+    --gold:#C9A961; --gold-deep:#A9863F; --blush:#D9AFA6; --line:#E6DCCB; --white:#FFFFFF;
+    --maroon:#7A1F2A; --green:#3F6B4A;
+    --shadow: 0 20px 40px -20px rgba(36,30,26,0.35);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{ font-family:"Georgia", serif; background:var(--ivory); color:var(--espresso); -webkit-font-smoothing:antialiased; }
+  .sans{ font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+  a{ text-decoration:none; color:inherit; }
+  button{ font-family:inherit; cursor:pointer; border:none; background:none; }
+
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 18px 32px; background: var(--espresso); color: var(--ivory);
+  }
+  .brand{ font-size: 22px; }
+  .brand b{ color: var(--gold); font-weight:600; }
+  .back-link{ font-family:-apple-system, sans-serif; font-size:13px; color: var(--gold); }
+
+  /* Base hero — overridden per salon "template" below; each salon's owner controls
+     the background, accent color, font and headline wording, the visitor just sees the result. */
+  .hero{ padding: 56px 32px; color: var(--ivory); position:relative; overflow:hidden; }
+  .hero-inner{ max-width:1180px; margin:0 auto; position:relative; z-index:2; }
+  .hero-top{ display:flex; flex-wrap:wrap; justify-content:space-between; gap:16px; align-items:flex-start; }
+  .hero-tier{
+    display:inline-flex; align-items:center; gap:6px;
+    font-family:-apple-system, sans-serif; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px;
+    padding:6px 12px; border-radius:999px; margin-bottom:14px;
+    background: rgba(255,255,255,0.14); border:1px solid rgba(255,255,255,0.28); color: var(--ivory);
+  }
+  .hero h1{ font-size:34px; font-weight:400; margin-bottom:6px; }
+  .hero-tagline{ font-size:16px; font-style:italic; margin-bottom:12px; opacity:0.92; }
+  .hero-meta{ font-family:-apple-system, sans-serif; font-size:13.5px; color: rgba(250,246,240,0.8); margin-bottom:14px; }
+  .hero-meta .stars{ color: inherit; filter: brightness(1.3); }
+  .hero-tags{ display:flex; gap:8px; flex-wrap:wrap; }
+  .hero-tag{
+    font-family:-apple-system, sans-serif; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.3px;
+    background: rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.18); color: var(--ivory);
+    padding:5px 11px; border-radius:999px;
+  }
+  .hero-book{
+    background: var(--white); color: var(--espresso);
+    font-family:-apple-system, sans-serif; font-weight:700; font-size:14px; padding:13px 28px; border-radius:9px; flex:none;
+  }
+  .rent-chair-note{
+    margin-top:18px; font-family:-apple-system, sans-serif; font-size:12.5px; color: rgba(250,246,240,0.85);
+    display:flex; align-items:center; gap:8px;
+  }
+  .photo-flag{
+    position:absolute; top:16px; right:20px; z-index:3;
+    font-family:-apple-system, sans-serif; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px;
+    background: rgba(0,0,0,0.28); padding:5px 10px; border-radius:999px; color:rgba(255,255,255,0.85);
+  }
+
+  /* Template: classic — left-aligned, deep charcoal panel (the original look) */
+  .hero.tpl-classic{ background: linear-gradient(135deg, #3A322C, #241E1A); }
+
+  /* Template: bold — full-bleed accent color/photo block, centered */
+  .hero.tpl-bold{ text-align:center; }
+  .hero.tpl-bold .hero-top{ flex-direction:column; align-items:center; }
+  .hero.tpl-bold .hero-tags{ justify-content:center; }
+  .hero.tpl-bold h1{ font-size:40px; }
+
+  /* Template: minimal — light, logo-forward, owner's brand mark front and center */
+  .hero.tpl-minimal{ background: var(--ivory); color: var(--espresso); padding-top:48px; }
+  .hero.tpl-minimal .hero-tier{ background: rgba(36,30,26,0.06); border-color: rgba(36,30,26,0.12); color: var(--espresso-soft); }
+  .hero.tpl-minimal .hero-meta{ color:#6b5d4f; }
+  .hero.tpl-minimal .hero-tag{ background: rgba(36,30,26,0.05); border-color: rgba(36,30,26,0.12); color: var(--espresso-soft); }
+  .hero.tpl-minimal .rent-chair-note{ color:#6b5d4f; }
+  .hero.tpl-minimal .photo-flag{ background: rgba(36,30,26,0.08); color:#6b5d4f; }
+  .hero.tpl-minimal .hero-book{ color: var(--white); }
+  .hero-logo-badge{
+    width:74px; height:74px; border-radius:50%; margin:0 auto 18px;
+    display:flex; align-items:center; justify-content:center;
+    font-family:-apple-system, sans-serif; font-weight:700; font-size:22px; color: var(--white);
+    box-shadow: var(--shadow);
+  }
+
+  /* Font choices an owner can pick for their headline wording */
+  .font-elegant h1, .font-elegant .hero-tagline{ font-family:'Playfair Display', Georgia, serif; }
+  .font-modern h1{ font-family:'Poppins', -apple-system, sans-serif; font-weight:700; }
+  .font-modern .hero-tagline{ font-family:'Poppins', -apple-system, sans-serif; font-style:normal; font-weight:500; }
+
+  .menu-section{ max-width:1180px; margin:0 auto; padding: 40px 32px 8px; }
+  .menu-head{ display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:6px; }
+  .menu-head h2{ font-size:24px; font-weight:400; }
+  .menu-head h2 span{ color: var(--gold-deep); font-style:italic; }
+  .menu-sub{ font-family:-apple-system, sans-serif; font-size:12.5px; color:#8a7c6c; margin-bottom:20px; }
+  .menu-groups{ display:grid; grid-template-columns: repeat(2, 1fr); gap:20px; }
+  .menu-group{
+    background: var(--white); border:1px solid var(--line); border-radius:14px; padding:20px 22px;
+  }
+  .menu-group h3{
+    font-family:-apple-system, sans-serif; font-size:11.5px; font-weight:700; text-transform:uppercase;
+    letter-spacing:0.5px; color: var(--maroon); margin-bottom:14px;
+  }
+  .menu-item{
+    display:flex; justify-content:space-between; align-items:baseline; gap:10px;
+    font-family:-apple-system, sans-serif; font-size:13.5px; color: var(--espresso-soft);
+    padding:9px 0; border-bottom:1px dashed var(--line);
+  }
+  .menu-item:last-child{ border-bottom:none; }
+  .menu-item .m-name{ min-width:0; }
+  .menu-price{ font-weight:700; color: var(--gold-deep); flex:none; }
+
+  .staff-section{ max-width:1180px; margin:0 auto; padding: 40px 32px 8px; }
+  .staff-head{ display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:6px; }
+  .staff-head h2{ font-size:24px; font-weight:400; }
+  .staff-head h2 span{ color: var(--gold-deep); font-style:italic; }
+  .staff-sub{ font-family:-apple-system, sans-serif; font-size:12.5px; color:#8a7c6c; margin-bottom:22px; }
+
+  .staff-grid{ display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap:18px; padding-bottom:70px; }
+  .staff-card{
+    background: var(--white); border:1px solid var(--line); border-radius:14px; overflow:hidden;
+    display:flex; flex-direction:column; cursor:pointer; transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .staff-card:hover{ transform: translateY(-3px); box-shadow: var(--shadow); }
+  .staff-top{ display:flex; align-items:center; gap:12px; padding:16px 16px 0; }
+  .staff-avatar{
+    width:54px; height:54px; border-radius:50%; flex:none;
+    background: linear-gradient(135deg, var(--ivory-deep), var(--blush));
+    display:flex; align-items:center; justify-content:center;
+    font-family:-apple-system, sans-serif; font-size:9.5px; color: var(--gold-deep);
+  }
+  .staff-id{ min-width:0; }
+  .staff-card h4{ font-size:15px; margin-bottom:3px; }
+  .staff-role{ font-family:-apple-system, sans-serif; font-size:11px; color:#8a7c6c; margin-bottom:6px; }
+  .staff-status{
+    display:inline-flex; align-items:center; gap:6px; font-family:-apple-system, sans-serif;
+    font-size:10.5px; font-weight:700; padding:4px 10px; border-radius:999px;
+  }
+  .staff-status .dot{ width:6px; height:6px; border-radius:50%; }
+  .staff-status.working{ background:rgba(63,107,74,0.12); color: var(--green); }
+  .staff-status.working .dot{ background: var(--green); }
+  .staff-status.off{ background:rgba(122,31,42,0.08); color: var(--maroon); }
+  .staff-status.off .dot{ background: var(--maroon); }
+
+  .staff-services{ padding:14px 16px 0; display:flex; flex-direction:column; gap:7px; }
+  .svc-row{
+    display:flex; justify-content:space-between; gap:10px;
+    font-family:-apple-system, sans-serif; font-size:12px; color: var(--espresso-soft);
+  }
+  .svc-price{ font-weight:700; color: var(--gold-deep); flex:none; }
+
+  .staff-portfolio-label{
+    font-family:-apple-system, sans-serif; font-size:10px; font-weight:700; text-transform:uppercase;
+    letter-spacing:0.4px; color:#a89a86; padding:14px 16px 6px;
+  }
+  .staff-portfolio{ display:grid; gap:6px; padding:0 16px 16px; }
+  .staff-portfolio.photos-2{ grid-template-columns: repeat(2, 1fr); }
+  .staff-portfolio.photos-4{ grid-template-columns: repeat(4, 1fr); }
+  .staff-portfolio.photos-8{ grid-template-columns: repeat(4, 1fr); }
+
+  /* Premium-tier perk: the salon's own exhibition gallery, separate from each worker's portfolio */
+  .exhibit-section{ max-width:1180px; margin:0 auto; padding: 40px 32px 8px; }
+  .exhibit-head{ display:flex; align-items:center; gap:12px; margin-bottom:6px; }
+  .exhibit-head h2{ font-size:26px; font-weight:400; }
+  .exhibit-head .tier-chip{
+    font-family:-apple-system, sans-serif; font-size:10.5px; font-weight:700; text-transform:uppercase;
+    letter-spacing:0.5px; color:#4A3A12; background: linear-gradient(135deg, #F3D68A, #C9A961);
+    padding:5px 12px; border-radius:999px;
+  }
+  .exhibit-sub{ font-family:-apple-system, sans-serif; font-size:13px; color:#8a7c6c; margin: 4px 0 18px; }
+  .exhibit-grid{ display:grid; grid-template-columns: repeat(4, 1fr); gap:12px; }
+  .exhibit-photo{
+    aspect-ratio:1/1; border-radius:14px; display:flex; align-items:center; justify-content:center;
+    font-family:-apple-system, sans-serif; font-size:11px; color:rgba(0,0,0,0.45);
+  }
+  @media (max-width: 700px){ .exhibit-grid{ grid-template-columns: repeat(2, 1fr); } }
+  .pf-thumb{
+    aspect-ratio:1/1; border-radius:8px; background: linear-gradient(135deg, var(--ivory-deep), var(--blush));
+    display:flex; align-items:center; justify-content:center;
+    font-family:-apple-system, sans-serif; font-size:9px; color: var(--gold-deep);
+  }
+
+  .staff-btn{
+    display:block; text-align:center; margin:4px 16px 16px; margin-top:auto;
+    font-family:-apple-system, sans-serif; font-size:12px; font-weight:700;
+    padding:10px 18px; border-radius:8px; background: var(--espresso); color: var(--gold);
+  }
+  .staff-btn.disabled{ background: var(--ivory-deep); color:#a89a86; pointer-events:none; }
+
+  .not-found{
+    max-width:700px; margin:80px auto; padding:0 32px; text-align:center;
+    font-family:-apple-system, sans-serif; color:#6b5d4f;
+  }
+  .not-found h2{ font-family:Georgia, serif; font-size:24px; color:var(--espresso); margin-bottom:10px; }
+  .not-found a{ color: var(--gold-deep); font-weight:600; }
+
+  footer{ background: var(--espresso); color: rgba(250,246,240,0.6); text-align:center; padding: 28px; font-family:-apple-system, sans-serif; font-size:12px; }
+
+  @media (max-width: 900px){
+    .staff-grid{ grid-template-columns: repeat(2, 1fr); }
+    .menu-groups{ grid-template-columns: 1fr; }
+  }
+  @media (max-width: 560px){
+    .staff-grid{ grid-template-columns: 1fr; }
+  }
+
+  /* ---------- Rent-a-Chair CTA (only for salons that list a spare chair) ---------- */
+  .chair-banner{
+    max-width:1180px; margin: 0 auto; padding: 0 32px;
+  }
+  .chair-banner-inner{
+    display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:16px;
+    background: linear-gradient(135deg, #E7F0E9, #D5E6D9); border:1px solid #BFD6AE;
+    border-radius:18px; padding:18px 22px; margin-top:24px; font-family:-apple-system, sans-serif;
+  }
+  .chair-banner h4{ font-family:Georgia, serif; font-size:16px; font-weight:400; margin-bottom:4px; color:#2E403D; }
+  .chair-banner .sub{ font-size:12.5px; color:#4B6B3E; }
+  .chair-banner .price{ font-size:13px; font-weight:700; color:#2E403D; margin-top:4px; }
+  .chair-btn{
+    flex:none; background: linear-gradient(180deg, #4E8A5D, #3F6B4A); color:#fff;
+    font-size:13px; font-weight:700; padding:11px 22px; border-radius:999px;
+  }
+
+  /* ---------- Palette customizer — the business owner's own colour, applied live ---------- */
+  .palette-fab{
+    position:fixed; bottom:24px; right:24px; z-index:150; width:52px; height:52px; border-radius:50%;
+    background: var(--espresso); color: var(--gold); font-size:20px; display:flex; align-items:center; justify-content:center;
+    box-shadow: var(--shadow); cursor:pointer; border:none;
+  }
+  .palette-panel{
+    position:fixed; bottom:88px; right:24px; z-index:150; width:250px; background:#fff; border-radius:16px;
+    box-shadow: var(--shadow); padding:16px; display:none; font-family:-apple-system, sans-serif;
+  }
+  .palette-panel.open{ display:block; }
+  .palette-panel .p-label{ font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; color:#8a7c6c; margin-bottom:2px; }
+  .palette-panel .p-sub{ font-size:11px; color:#a89a86; margin-bottom:10px; }
+  .palette-swatches{ display:grid; grid-template-columns:repeat(6,1fr); gap:8px; margin-bottom:12px; }
+  .palette-swatch{ width:28px; height:28px; border-radius:50%; border:2px solid #fff; box-shadow:0 0 0 1px var(--line); cursor:pointer; padding:0; }
+  .palette-custom-row{ display:flex; align-items:center; gap:8px; margin-bottom:10px; }
+  .palette-custom-row input[type=color]{ width:34px; height:34px; border:none; border-radius:8px; padding:0; background:none; cursor:pointer; }
+  .palette-reset{ font-size:11.5px; color:#8a7c6c; text-decoration:underline; background:none; border:none; cursor:pointer; }
+
+  /* ---------- WORKER MODAL (profile → book a time → message) ---------- */
+  .modal-overlay{
+    display:none; position:fixed; inset:0; z-index:200; background: rgba(36,30,26,0.6);
+    align-items:center; justify-content:center; padding:20px;
+  }
+  .modal-overlay.open{ display:flex; }
+  .modal-box{
+    background: var(--ivory); border-radius:18px; max-width:520px; width:100%;
+    max-height:88vh; overflow-y:auto; box-shadow: var(--shadow); position:relative;
+  }
+  .modal-close{
+    position:absolute; top:14px; right:14px; z-index:2; width:30px; height:30px; border-radius:50%;
+    background: rgba(36,30,26,0.08); display:flex; align-items:center; justify-content:center;
+    font-size:14px; color: var(--espresso-soft);
+  }
+  .wm-hero{
+    padding:26px 26px 20px; color:#fff; border-radius:18px 18px 0 0; position:relative; overflow:hidden;
+  }
+  .wm-hero .wm-avatar{
+    width:64px; height:64px; border-radius:50%; background: rgba(255,255,255,0.18);
+    display:flex; align-items:center; justify-content:center; font-family:-apple-system, sans-serif;
+    font-weight:700; font-size:20px; margin-bottom:12px; position:relative;
+  }
+  /* Premium-tier perk: a cover photo band behind the hero, plus a "profile picture" style avatar
+     (owner picks the cover color/photo from the salon's own brand palette). */
+  .wm-hero.wm-hero-premium{ padding-top:64px; }
+  .wm-hero .wm-cover{
+    position:absolute; top:0; left:0; right:0; height:56px; opacity:0.9;
+  }
+  .wm-hero .wm-avatar.wm-avatar-photo{
+    width:72px; height:72px; border:3px solid rgba(255,255,255,0.85);
+    background: rgba(255,255,255,0.14); box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+  }
+  .wm-hero .wm-avatar-cam{
+    position:absolute; bottom:-2px; right:-2px; width:20px; height:20px; border-radius:50%;
+    background:#fff; color:#5A4E3E; font-size:10px; display:flex; align-items:center; justify-content:center;
+    box-shadow:0 2px 5px rgba(0,0,0,0.3);
+  }
+  .wm-hero h3{ font-size:21px; margin-bottom:4px; }
+  .wm-hero .wm-role{ font-family:-apple-system, sans-serif; font-size:12.5px; opacity:0.85; }
+  .wm-hero .wm-status{
+    display:inline-flex; align-items:center; gap:6px; margin-top:10px;
+    font-family:-apple-system, sans-serif; font-size:11px; font-weight:700;
+    background: rgba(255,255,255,0.16); padding:5px 11px; border-radius:999px;
+  }
+  .wm-hero .wm-status .dot{ width:6px; height:6px; border-radius:50%; background:#fff; }
+
+  .wm-body{ padding:22px 26px 26px; font-family:-apple-system, sans-serif; }
+  .wm-label{ font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; color:#a89a86; margin-bottom:10px; }
+  .wm-portfolio{ display:grid; grid-template-columns: repeat(4, 1fr); gap:8px; margin-bottom:22px; }
+  .wm-photo{
+    aspect-ratio:1/1; border-radius:10px; background: linear-gradient(135deg, var(--ivory-deep), var(--blush));
+    display:flex; align-items:center; justify-content:center; font-size:10px; color: var(--gold-deep);
+  }
+  .wm-services{ display:flex; flex-direction:column; gap:8px; margin-bottom:22px; }
+  .wm-svc-row{ display:flex; justify-content:space-between; font-size:13px; color: var(--espresso-soft); }
+  .wm-svc-row b{ color: var(--gold-deep); }
+
+  .wm-good-at{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px; }
+  .wm-good-chip{
+    font-size:11.5px; font-weight:600; color: var(--gold-deep); background: var(--ivory-deep);
+    border:1px solid var(--line); border-radius:999px; padding:6px 12px;
+  }
+
+  .lightbox-overlay{
+    position:fixed; inset:0; background:rgba(20,15,12,0.85); z-index:200; display:none;
+    align-items:center; justify-content:center; padding:24px;
+  }
+  .lightbox-overlay.open{ display:flex; }
+  .lightbox-box{ position:relative; width:min(520px, 92vw); }
+  .lightbox-photo{
+    width:100%; aspect-ratio:4/3; border-radius:16px; background: linear-gradient(135deg, var(--ivory-deep), var(--blush));
+    display:flex; align-items:center; justify-content:center; font-size:15px; color: var(--gold-deep); font-family:-apple-system, sans-serif;
+  }
+  .lightbox-close{
+    position:absolute; top:-14px; right:-14px; width:34px; height:34px; border-radius:50%;
+    background:#fff; color: var(--espresso); font-size:15px; display:flex; align-items:center; justify-content:center;
+    cursor:pointer; box-shadow: var(--shadow);
+  }
+  .lightbox-nav{
+    display:flex; justify-content:space-between; margin-top:14px;
+  }
+  .lightbox-nav button{
+    font-family:-apple-system, sans-serif; font-size:12.5px; font-weight:600; color:#fff;
+    background: rgba(255,255,255,0.14); padding:8px 16px; border-radius:999px; cursor:pointer;
+  }
+  .lightbox-nav button[disabled]{ opacity:0.35; cursor:default; }
+
+  .wm-message textarea{
+    width:100%; border:1px solid var(--line); border-radius:10px; padding:12px 14px; font-family:inherit;
+    font-size:13px; resize:vertical; min-height:70px; background:#fff; color: var(--espresso);
+  }
+  .wm-actions{ display:flex; gap:10px; margin-top:14px; }
+  .wm-btn{
+    flex:1; text-align:center; font-size:13px; font-weight:700; padding:12px; border-radius:9px;
+  }
+  .wm-btn.primary{ color:#fff; }
+  .wm-btn.ghost{ background: var(--ivory-deep); color: var(--espresso-soft); }
+  .wm-btn[disabled]{ opacity:0.5; pointer-events:none; }
+
+  /* Booking calendar step */
+  .wm-day-row{ display:flex; gap:8px; overflow-x:auto; padding-bottom:6px; margin-bottom:18px; }
+  .wm-day{
+    flex:none; width:58px; padding:10px 0; border-radius:12px; text-align:center; background:#fff;
+    border:1px solid var(--line); cursor:pointer;
+  }
+  .wm-day .d-dow{ font-size:10px; color:#8a7c6c; text-transform:uppercase; }
+  .wm-day .d-num{ font-size:16px; font-weight:700; margin-top:2px; }
+  .wm-day.active{ color:#fff; border-color:transparent; }
+  .wm-hours{ display:grid; grid-template-columns: repeat(3, 1fr); gap:8px; margin-bottom:18px; }
+  .wm-hour{
+    padding:10px 0; text-align:center; border-radius:9px; font-size:12.5px; font-weight:600;
+    background:#fff; border:1px solid var(--line); color: var(--espresso-soft); cursor:pointer;
+  }
+  .wm-hour.taken{ background: var(--ivory-deep); color:#b7a998; text-decoration:line-through; cursor:not-allowed; }
+  .wm-hour.active{ color:#fff; border-color:transparent; }
+
+  .wm-chat{ display:flex; flex-direction:column; gap:10px; margin-bottom:6px; }
+  .wm-bubble{ max-width:80%; padding:10px 14px; border-radius:14px; font-size:13px; line-height:1.5; }
+  .wm-bubble.me{ align-self:flex-end; background: var(--espresso); color: var(--ivory); border-bottom-right-radius:4px; }
+  .wm-bubble.them{ align-self:flex-start; background: var(--ivory-deep); color: var(--espresso); border-bottom-left-radius:4px; }
+  .wm-proto-note{ font-size:11px; color:#a89a86; text-align:center; margin-top:14px; }
+  .wm-typing{ font-size:12px; color:#8a7c6c; align-self:flex-start; }
+
+  .topbar{ position:relative; }
+  .topbar-right{ display:flex; align-items:center; gap:8px; }
+  .icon-btn{
+    width:46px; height:46px; border-radius:9px; display:flex; align-items:center; justify-content:center;
+    position:relative;
+  }
+  .icon-btn:hover{ background: rgba(255,255,255,0.08); }
+  .icon-btn svg{ width:21px; height:21px; }
+  .burger{
+    width:46px; height:46px; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:6px;
+    border-radius: 9px;
+    position:relative;
+  }
+  .burger:hover{ background: rgba(255,255,255,0.08); }
+  .burger span{ width:24px; height:2.5px; background: var(--ivory); display:block; border-radius:2px; }
+
+  .menu-panel{
+    position:absolute; top: 68px; right: 32px; z-index:70;
+    background: var(--white); border-radius: 14px;
+    box-shadow: var(--shadow); border:1px solid var(--line);
+    min-width: 260px; padding: 10px;
+    display:none; flex-direction:column; gap:2px;
+  }
+  .menu-panel.open{ display:flex; }
+  .menu-panel a{
+    font-family:-apple-system, sans-serif; font-size:15px; color: var(--espresso);
+    padding: 13px 16px; border-radius: 9px;
+  }
+  .menu-panel a:hover{ background: var(--ivory-deep); }
+  .menu-divider{ height:1px; background: var(--line); margin: 6px 4px; }
+</style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">@<b>MySalon</b></div>
+    <div class="topbar-right">
+      <a class="back-link sans" href="salons.html">← Back to Salons</a>
+      <button class="burger icon-btn" id="burgerBtn" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="menu-panel" id="menuPanel">
+      <a href="index.html">Home</a>
+      <a href="profile.html">Profile</a>
+      <a href="about.html">About Us</a>
+      <div class="menu-divider"></div>
+      <a href="salons.html">Salons</a>
+      <a href="specialists.html">Specialists</a>
+      <a href="beauty-spa.html">Beauty / Spa</a>
+      <a href="makeup-artists.html">Makeup Artists</a>
+      <a href="market.html">Market</a>
+      <a href="rent-a-chair.html">Rent a Chair</a>
+      <div class="menu-divider"></div>
+      <a href="billing.html">Billing</a>
+      <a href="list-your-business.html">List Your Business</a>
+    </div>
+  </header>
+
+  <div id="page"></div>
+
+  <div class="modal-overlay" id="workerModalOverlay">
+    <div class="modal-box" id="workerModalBox"></div>
+  </div>
+
+  <div class="modal-overlay" id="chairModalOverlay">
+    <div class="modal-box" id="chairModalBox"></div>
+  </div>
+
+  <div class="lightbox-overlay" id="lightboxOverlay">
+    <div class="lightbox-box">
+      <div class="lightbox-close" id="lightboxClose">✕</div>
+      <div class="lightbox-photo" id="lightboxPhoto"></div>
+      <div class="lightbox-nav">
+        <button type="button" id="lightboxPrev">← Previous</button>
+        <button type="button" id="lightboxNext">Next →</button>
+      </div>
+    </div>
+  </div>
+
+  <button class="palette-fab" id="paletteFab" type="button" title="Customize your business colour">🎨</button>
+  <div class="palette-panel" id="palettePanel">
+    <div class="p-label">Business colour</div>
+    <div class="p-sub">Owner-only — matches this to your own brand palette.</div>
+    <div class="palette-swatches" id="paletteSwatches"></div>
+    <div class="palette-custom-row">
+      <input type="color" id="paletteCustomInput">
+      <span style="font-size:11.5px; color:#6b5d4f;">Custom colour</span>
+    </div>
+    <button type="button" class="palette-reset" id="paletteResetBtn">Reset to default</button>
+  </div>
+
+  <footer>© 2026 @MySalon. All rights reserved.</footer>
+
+  <script>
+    // Each salon owner controls: template layout, background (color / photo / logo), accent color,
+    // heading font and their own headline wording. Visitors on our side just see the finished page —
+    // in the real product this would come from a "customize your page" screen in the salon's dashboard.
+    const SALONS = {
+      'the-gold-chair':        { name:'The Gold Chair', area:'Sandton',   rating:4.9, reviews:212, tags:['Barbers','Fades'], tier:'standard',
+        theme:{ template:'bold', bg:'photo', accent:'#7A1F2A', accentDark:'#4A1119', font:'elegant', headline:'Fresh fades, sharp lines.' } },
+      'mua-studio-sandton':    { name:'MUA Studio Sandton', area:'Sandton', rating:5.0, reviews:118, tags:['Makeup','Bridal'], tier:'premium',
+        theme:{ template:'minimal', bg:'gradient', accent:'#D63C7A', accentDark:'#8C2350', font:'modern', headline:'Glow like you mean it.' } },
+      'velvet-and-vine':       { name:'Velvet & Vine', area:'Rosebank', rating:4.8, reviews:164, tags:['Braids','Locs'], tier:'standard',
+        theme:{ template:'classic', bg:'gradient', accent:'#B8794A', accentDark:'#7A4E2C', font:'default', headline:'Braids, done beautifully.' } },
+      'nail-bar-rosebank':     { name:'Nail Bar Rosebank', area:'Rosebank', rating:4.8, reviews:141, tags:['Nails','Gel'], tier:'standard',
+        theme:{ template:'bold', bg:'gradient', accent:'#D97B56', accentDark:'#A9502F', font:'modern', headline:'Nails that turn heads.' } },
+      'the-colour-bar':        { name:'The Colour Bar', area:'Centurion', rating:4.7, reviews:98, tags:['Colors','Balayage'], tier:'premium',
+        theme:{ template:'minimal', bg:'logo', accent:'#7B5EA7', accentDark:'#4E3A70', font:'elegant', headline:'Colour, perfected.' } },
+      'curl-and-co-studio':    { name:'Curl & Co Studio', area:'Centurion', rating:4.6, reviews:73, tags:['Braids','Twists'], tier:'standard',
+        theme:{ template:'classic', bg:'gradient', accent:'#8a5a3c', accentDark:'#5C3A26', font:'default', headline:'Twists and curls, loved.' } },
+      'wig-studio-menlyn':     { name:'Wig Studio Menlyn', area:'Menlyn', rating:4.6, reviews:59, tags:['Wigs','Installs'], tier:'standard',
+        theme:{ template:'bold', bg:'photo', accent:'#C98A8A', accentDark:'#8C5252', font:'modern', headline:'Your crown, installed.' } },
+      'serenity-massage':      { name:'Serenity Massage', area:'Menlyn', rating:4.9, reviews:132, tags:['Massage','Spa'], tier:'premium',
+        theme:{ template:'minimal', bg:'gradient', accent:'#7C9070', accentDark:'#4E5F44', font:'elegant', headline:'Breathe. Release. Restore.' } },
+      'the-ritual-spa':        { name:'The Ritual Spa', area:'Hatfield', rating:4.9, reviews:87, tags:['Spa','Massage'], tier:'premium',
+        theme:{ template:'bold', bg:'photo', accent:'#6E8B8B', accentDark:'#425757', font:'elegant', headline:'A ritual worth repeating.' } },
+      'studio-hatfield':       { name:'Studio Hatfield', area:'Hatfield', rating:4.7, reviews:176, tags:['Facials','Wigs'], tier:'premium',
+        theme:{ template:'classic', bg:'gradient', accent:'#5E8C86', accentDark:'#365550', font:'default', headline:'Facials, wigs, and more.' } },
+      'midrand-beauty-bar':    { name:'Midrand Beauty Bar', area:'Midrand', rating:4.9, reviews:203, tags:['Makeup','Facials'], tier:'premium',
+        theme:{ template:'minimal', bg:'logo', accent:'#A23B4E', accentDark:'#661F2C', font:'modern', headline:'Beauty, elevated.' } },
+      'glow-and-co-beauty-bar':{ name:'Glow & Co Beauty Bar', area:'Midrand', rating:4.5, reviews:44, tags:['Nails','Facials'], tier:'standard',
+        theme:{ template:'classic', bg:'gradient', accent:'#D97B56', accentDark:'#A9502F', font:'default', headline:'Glow from every angle.' } }
+    };
+
+    const TIER_INFO = {
+      standard: { label: 'Standard tier', seats: 4, desc:'Up to 4 team members', photos: 2 },
+      premium:  { label: 'Premium tier', seats: 8, desc:'Up to 8+ team members · Rent-a-Chair enabled', photos: 4 }
+    };
+
+    const FIRST_NAMES = ['Thabo','Naledi','Kagiso','Palesa','Sipho','Lerato','Boitumelo','Karabo','Nomvula','Tumi','Andile','Zanele','Bongani','Ayanda','Mpho','Refilwe','Lungile','Kabelo'];
+    const LAST_INITIALS = ['M','N','D','K','T','S','P','R','V','H'];
+
+    // Rough price bands per service tag, used to generate each specialist's catalog
+    const PRICE_MAP = {
+      Barbers:[120,180], Fades:[120,180], Braids:[350,650], Locs:[350,650], Twists:[350,600], Installs:[400,700],
+      Wigs:[400,700], Colors:[450,900], Balayage:[500,900], Nails:[180,320], Gel:[180,320],
+      Massage:[320,550], Spa:[320,550], Makeup:[350,900], Bridal:[500,1200], Facials:[280,480]
+    };
+
+    // The full salon menu — every line item offered under each of the salon's specialties
+    const SERVICE_CATALOG = {
+      Barbers: [ ['Skin Fade',120], ['Line-Up',60], ['Beard Trim',80], ['Hot Towel Shave',150], ["Kids' Cut",90] ],
+      Fades:   [ ['Skin Fade',120], ['Taper Fade',130], ['Bald Fade + Design',180], ['Beard Fade',100] ],
+      Braids:  [ ['Box Braids',450], ['Knotless Braids',650], ['Cornrows',350], ["Kids' Braids",250] ],
+      Locs:    [ ['Starter Locs',550], ['Retwist',300], ['Loc Maintenance',250] ],
+      Twists:  [ ['Senegalese Twists',500], ['Passion Twists',550], ['Twist-Out Styling',300] ],
+      Installs:[ ['Wig Install (Glueless)',400], ['Wig Install (Lace, Bleached)',700], ['Frontal Install',650] ],
+      Wigs:    [ ['Wig Unit Styling',350], ['Wig Wash & Restyle',300], ['Custom Wig Install',700] ],
+      Colors:  [ ['Full Colour',500], ['Root Touch-Up',350], ['Highlights',600] ],
+      Balayage:[ ['Balayage',750], ['Balayage + Toner',900], ['Colour Correction',1200] ],
+      Nails:   [ ['Classic Manicure',180], ['Classic Pedicure',220], ['Acrylic Full Set',350], ['Acrylic Fill',250] ],
+      Gel:     [ ['Gel Manicure',220], ['Gel Overlay',280], ['Gel + Nail Art',320] ],
+      Massage: [ ['Swedish Massage (60 min)',380], ['Deep Tissue Massage (60 min)',450], ['Hot Stone Massage',550] ],
+      Spa:     [ ['Full Body Spa Package',900], ['Couples Spa Package',1600], ['Express Facial + Massage',650] ],
+      Makeup:  [ ['Everyday Makeup',350], ['Glam Makeup',500], ['Makeup Lesson',400] ],
+      Bridal:  [ ['Bridal Makeup (Trial)',600], ['Bridal Makeup (Day-Of)',1200], ['Bridal Party (per person)',450] ],
+      Facials: [ ['Signature Facial',320], ['Deep Cleanse Facial',380], ['Anti-Aging Facial',480] ]
+    };
+
+    function hashStr(s){
+      let h = 0;
+      for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+      return h;
+    }
+
+    // Salons that also list a spare chair for rent on the Rent a Chair page — same weekly
+    // prices shown there. Only salons in this map get the "Rent a Chair here" banner below.
+    const CHAIR_LISTINGS = {
+      'the-gold-chair': 650, 'mua-studio-sandton': 900, 'studio-hatfield': 550, 'the-ritual-spa': 1200,
+      'midrand-beauty-bar': 450, 'velvet-and-vine': 700, 'the-colour-bar': 500, 'serenity-massage': 800,
+      'curl-and-co-studio': 400, 'nail-bar-rosebank': 350
+    };
+    const CHAIR_PERK_POOL = ['Basin access','Backwash included','Storage locker','Free wifi','High foot traffic','Walk-in clients','Reception support','Product display space','Treatment room','Natural light'];
+    function chairPerksFor(slug){
+      const seed = hashStr(slug);
+      const count = 3 + (seed % 2);
+      const picked = [];
+      for (let i = 0; i < count; i++) picked.push(CHAIR_PERK_POOL[(seed + i * 7) % CHAIR_PERK_POOL.length]);
+      return [...new Set(picked)];
+    }
+    function chairBannerHtml(slug, salon){
+      if (!(slug in CHAIR_LISTINGS)) return '';
+      const price = CHAIR_LISTINGS[slug];
+      return `
+        <div class="chair-banner">
+          <div class="chair-banner-inner">
+            <div>
+              <h4>Rent a chair at ${salon.name}</h4>
+              <div class="sub">${chairPerksFor(slug).join(' · ')}</div>
+              <div class="price">R${price} / week</div>
+            </div>
+            <button class="chair-btn" id="chairRentBtn" type="button">Rent this chair</button>
+          </div>
+        </div>`;
+    }
+
+    // Premium-tier perk: the salon owner can pick each worker's cover-photo color from the
+    // salon's own brand palette (built from their theme's accent colors), rather than one fixed banner.
+    function lightenColor(hex, amt){
+      const c = hex.replace('#', '');
+      const num = parseInt(c, 16);
+      let r = (num >> 16) & 255, g = (num >> 8) & 255, b = num & 255;
+      r = Math.round(r + (255 - r) * amt);
+      g = Math.round(g + (255 - g) * amt);
+      b = Math.round(b + (255 - b) * amt);
+      return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
+    }
+    function paletteFor(salon){
+      return [salon.theme.accent, salon.theme.accentDark, lightenColor(salon.theme.accent, 0.35), '#C9A961'];
+    }
+    function coverBandHtml(w, salon){
+      if (salon.tier !== 'premium' || !w.coverColor) return '';
+      return `<div class="wm-cover" style="background:${w.coverColor};" title="Cover photo — picked from ${salon.name}'s brand palette"></div>`;
+    }
+    function workerAvatarHtml(w, salon){
+      if (salon.tier === 'premium'){
+        return `<div class="wm-avatar wm-avatar-photo">${initials(w.name)}<span class="wm-avatar-cam">📷</span></div>`;
+      }
+      return `<div class="wm-avatar">${initials(w.name)}</div>`;
+    }
+
+    function initials(name){
+      return name.replace(/&/g, ' ').split(/\s+/).filter(Boolean).slice(0, 2).map(w => w[0]).join('').toUpperCase();
+    }
+
+    // Builds the hero exactly the way that salon's owner has customized it —
+    // template layout + background (color / photo / logo) + accent + font + their own wording.
+    function heroHtml(salon, info){
+      const t = salon.theme;
+      const bgStyle = t.bg === 'logo'
+        ? (t.template === 'minimal' ? '' : `background:${t.accentDark};`)
+        : `background: linear-gradient(135deg, ${t.accent}, ${t.accentDark});`;
+      const photoFlag = t.bg === 'photo' ? '<span class="photo-flag">📷 Cover photo</span>' : '';
+      const tierStyle = `style="background:rgba(255,255,255,0.16); border-color:rgba(255,255,255,0.3);"`;
+      const bookStyle = `style="color:${t.accentDark};"`;
+
+      const body = `
+        <div class="hero-tier ${salon.tier}" ${t.template === 'minimal' ? '' : tierStyle}>${info.label} · ${info.desc}</div>
+        <h1>${salon.name}</h1>
+        <div class="hero-tagline">${t.headline}</div>
+        <div class="hero-meta sans"><span class="stars">★ ${salon.rating}</span> (${salon.reviews} reviews) · ${salon.area}</div>
+        <div class="hero-tags">${salon.tags.map(tag => `<span class="hero-tag">${tag}</span>`).join('')}</div>
+      `;
+
+      const logoBadge = `<div class="hero-logo-badge" style="background:${t.accent};">${initials(salon.name)}</div>`;
+
+      let inner;
+      if (t.template === 'minimal'){
+        inner = `
+          <div class="hero-top" style="align-items:center; flex-direction:column; text-align:center;">
+            ${t.bg === 'logo' ? logoBadge : ''}
+            <div>${body}</div>
+          </div>
+          <div style="text-align:center; margin-top:8px;">
+            <a href="#" class="hero-book" data-open="salon-book" style="background:${t.accent}; color:#fff;">Book at ${salon.name}</a>
+          </div>
+        `;
+      } else if (t.template === 'bold'){
+        inner = `
+          <div class="hero-top">
+            <div>${t.bg === 'logo' ? logoBadge : ''}${body}</div>
+          </div>
+          <div style="margin-top:10px;">
+            <a href="#" class="hero-book" data-open="salon-book" ${bookStyle}>Book at ${salon.name}</a>
+          </div>
+        `;
+      } else {
+        inner = `
+          <div class="hero-top">
+            <div>${body}</div>
+            <a href="#" class="hero-book" data-open="salon-book" ${bookStyle}>Book at ${salon.name}</a>
+          </div>
+        `;
+      }
+
+      return `
+        <section class="hero tpl-${t.template} font-${t.font}" style="${t.template === 'minimal' ? '' : bgStyle}">
+          ${photoFlag}
+          <div class="hero-inner">
+            ${inner}
+            ${salon.tier === 'premium' ? `
+              <div class="rent-chair-note">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h9l3 3v13H6z"/><path d="M9 4v13"/></svg>
+                This salon's plan includes Rent-a-Chair — spare chairs may be listed for independent specialists.
+              </div>` : ''}
+          </div>
+        </section>
+      `;
+    }
+
+    function priceFor(tag, seed){
+      const range = PRICE_MAP[tag] || [200, 400];
+      const val = range[0] + (seed % (range[1] - range[0] + 1));
+      return Math.round(val / 10) * 10;
+    }
+
+    function staffFor(slug, salon){
+      const info = TIER_INFO[salon.tier];
+      const seed = hashStr(slug);
+      const staff = [];
+      for (let i = 0; i < info.seats; i++){
+        const ni = (seed + i * 7) % FIRST_NAMES.length;
+        const li = (seed + i * 13) % LAST_INITIALS.length;
+        const name = FIRST_NAMES[ni] + ' ' + LAST_INITIALS[li] + '.';
+        const primaryTag = salon.tags[i % salon.tags.length];
+        const secondaryTag = salon.tags[(i + 1) % salon.tags.length];
+        const role = primaryTag + ' Specialist';
+        const working = ((seed + i * 5) % 3) !== 0; // deterministic per salon, ~2 in 3 working today
+        const services = [
+          { name: primaryTag, price: priceFor(primaryTag, seed + i * 3) },
+          { name: secondaryTag + ' Add-on', price: priceFor(secondaryTag, seed + i * 9) }
+        ];
+        const coverColor = salon.tier === 'premium' ? paletteFor(salon)[i % 4] : null;
+        staff.push({ name, role, working, services, photos: salon.tier === 'premium' ? 8 : 4, coverColor });
+      }
+      return staff;
+    }
+
+    // Premium-tier perk: the salon gets its own 8-photo exhibition, separate from each worker's own portfolio.
+    function exhibitionHtml(salon){
+      if (salon.tier !== 'premium') return '';
+      const accent = salon.theme.accent, accentDark = salon.theme.accentDark;
+      return `
+        <section class="exhibit-section">
+          <div class="exhibit-head">
+            <h2>Inside <span style="color:${accent}; font-style:italic;">${salon.name}</span></h2>
+            <span class="tier-chip">★ Premium perk</span>
+          </div>
+          <div class="exhibit-sub">The salon's own exhibition — separate from each specialist's personal portfolio.</div>
+          <div class="exhibit-grid">
+            ${Array.from({ length: 8 }).map((_, i) => `
+              <div class="exhibit-photo" style="background:linear-gradient(${135 + i * 12}deg, ${accent}33, ${accentDark}55);">Photo ${i + 1}</div>
+            `).join('')}
+          </div>
+        </section>`;
+    }
+
+    function render(){
+      const params = new URLSearchParams(window.location.search);
+      const slug = params.get('salon');
+      const salon = slug && SALONS[slug];
+      const page = document.getElementById('page');
+
+      if (!salon){
+        page.innerHTML = `
+          <div class="not-found">
+            <h2>We couldn't find that salon</h2>
+            <p>It may have been renamed or removed. <a href="salons.html">Back to all salons →</a></p>
+          </div>`;
+        document.title = 'Salon not found — @MySalon';
+        return;
+      }
+
+      document.title = salon.name + ' — @MySalon';
+      const info = TIER_INFO[salon.tier];
+      const staff = staffFor(slug, salon);
+
+      currentSalon = salon;
+      currentSlug = slug;
+      currentStaff = staff;
+
+      page.innerHTML = `
+        ${heroHtml(salon, info)}
+
+        ${chairBannerHtml(slug, salon)}
+
+        <section class="menu-section">
+          <div class="menu-head">
+            <h2>Menu <span>&amp; pricing</span></h2>
+          </div>
+          <div class="menu-sub sans">Everything on offer at ${salon.name}. Ask your specialist about add-ons when you book.</div>
+          <div class="menu-groups">
+            ${salon.tags.map(tag => `
+              <div class="menu-group">
+                <h3 style="color:${salon.theme.accent};">${tag}</h3>
+                ${(SERVICE_CATALOG[tag] || []).map(([itemName, price]) => `
+                  <div class="menu-item">
+                    <span class="m-name">${itemName}</span>
+                    <span class="menu-price">R${price}</span>
+                  </div>
+                `).join('')}
+              </div>
+            `).join('')}
+          </div>
+        </section>
+
+        ${exhibitionHtml(salon)}
+
+        <section class="staff-section">
+          <div class="staff-head">
+            <h2>Who's working <span>today</span></h2>
+          </div>
+          <div class="staff-sub sans">${info.seats} team slot${info.seats === 1 ? '' : 's'} on the ${info.label.toLowerCase()} — tap an available specialist to book with them directly.</div>
+          <div class="staff-grid">
+            ${staff.map((w, i) => `
+              <div class="staff-card" data-idx="${i}">
+                <div class="staff-top">
+                  <div class="staff-avatar">Photo</div>
+                  <div class="staff-id">
+                    <h4>${w.name}</h4>
+                    <div class="staff-role sans">${w.role}</div>
+                    <div class="staff-status ${w.working ? 'working' : 'off'} sans">
+                      <span class="dot"></span>${w.working ? 'Working today' : 'Off today'}
+                    </div>
+                  </div>
+                </div>
+                <div class="staff-services">
+                  ${w.services.map(s => `<div class="svc-row"><span>${s.name}</span><span class="svc-price">R${s.price}</span></div>`).join('')}
+                </div>
+                <div class="staff-portfolio-label">Catalog</div>
+                <div class="staff-portfolio photos-${w.photos}">
+                  ${Array.from({ length: w.photos }).map(() => '<div class="pf-thumb">Photo</div>').join('')}
+                </div>
+                <a href="#" class="staff-btn ${w.working ? '' : 'disabled'}" data-idx="${i}" ${w.working ? `style="background:${salon.theme.accent}; color:#fff;"` : ''}>${w.working ? 'Book ' + w.name.split(' ')[0] : 'Unavailable'}</a>
+              </div>
+            `).join('')}
+          </div>
+        </section>
+      `;
+
+      if (slug in CHAIR_LISTINGS){
+        loadChairSlot(slug).then(data => {
+          if (data && currentSlug === slug && !document.getElementById('chairSlotCard')){
+            chairSlotSaved = data;
+            const grid = document.querySelector('#page .staff-grid');
+            if (grid) grid.insertAdjacentHTML('beforeend', chairSlotCardHtml(salon, data.name, data.profilePhoto, data.workPhotos, data.specialties));
+          }
+        });
+      }
+    }
+
+    // ---------- Chair-slot persistence — saved to Supabase so it survives a page reload
+    // (this prototype has no login yet, so a slot is saved per salon rather than per person).
+    const SUPABASE_URL = 'https://ainvcbecumzudoyhruee.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_OGbYg40sMwVug_3DGaZrVA_HpPGZg0n';
+
+    async function loadChairSlot(slug){
+      try {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/chair_slots?salon_slug=eq.${encodeURIComponent(slug)}&select=*`, {
+          headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+        });
+        if (!res.ok) return null;
+        const rows = await res.json();
+        if (!rows.length) return null;
+        const row = rows[0];
+        const wp = Array.isArray(row.work_photos) ? row.work_photos.slice(0, 4) : [];
+        while (wp.length < 4) wp.push(null);
+        return { name: row.name || '', profilePhoto: row.profile_photo || null, workPhotos: wp, specialties: Array.isArray(row.specialties) ? row.specialties : [] };
+      } catch (e){
+        return null; // offline / unreachable — the page still works, just without the saved slot
+      }
+    }
+
+    async function saveChairSlot(slug, data){
+      try {
+        await fetch(`${SUPABASE_URL}/rest/v1/chair_slots`, {
+          method: 'POST',
+          headers: {
+            apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}`,
+            'Content-Type': 'application/json', Prefer: 'resolution=merge-duplicates,return=minimal'
+          },
+          body: JSON.stringify({
+            salon_slug: slug, name: data.name, profile_photo: data.profilePhoto, work_photos: data.workPhotos,
+            specialties: data.specialties, updated_at: new Date().toISOString()
+          })
+        });
+      } catch (e){
+        // best-effort — the slot still shows for the rest of this visit even if the save failed
+      }
+    }
+
+    // ---------- Worker modal: profile → book a time → message the specialist ----------
+    let currentSalon = null, currentSlug = null, currentStaff = [];
+    let bookingDay = null, bookingHour = null;
+
+    const workerOverlay = document.getElementById('workerModalOverlay');
+    const workerBox = document.getElementById('workerModalBox');
+
+    // ---------- Portfolio lightbox ----------
+    const lightboxOverlay = document.getElementById('lightboxOverlay');
+    const lightboxPhoto = document.getElementById('lightboxPhoto');
+    let lightboxWorker = null, lightboxIdx = 0;
+
+    function renderLightbox(){
+      lightboxPhoto.textContent = `${lightboxWorker.name.split(' ')[0]}'s portfolio — Photo ${lightboxIdx + 1} of ${lightboxWorker.photos}`;
+      document.getElementById('lightboxPrev').disabled = lightboxIdx === 0;
+      document.getElementById('lightboxNext').disabled = lightboxIdx === lightboxWorker.photos - 1;
+    }
+    function openPhotoLightbox(w, pi, accent){
+      lightboxWorker = w;
+      lightboxIdx = pi;
+      renderLightbox();
+      lightboxOverlay.classList.add('open');
+    }
+    document.getElementById('lightboxClose').addEventListener('click', () => lightboxOverlay.classList.remove('open'));
+    lightboxOverlay.addEventListener('click', (e) => { if (e.target === lightboxOverlay) lightboxOverlay.classList.remove('open'); });
+    document.getElementById('lightboxPrev').addEventListener('click', () => { if (lightboxIdx > 0){ lightboxIdx--; renderLightbox(); } });
+    document.getElementById('lightboxNext').addEventListener('click', () => { if (lightboxIdx < lightboxWorker.photos - 1){ lightboxIdx++; renderLightbox(); } });
+
+    const DOW = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    const HOURS = ['09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00'];
+
+    function nextDays(n){
+      const days = [];
+      const today = new Date();
+      for (let i = 0; i < n; i++){
+        const d = new Date(today);
+        d.setDate(today.getDate() + i);
+        days.push(d);
+      }
+      return days;
+    }
+
+    function hourTaken(seed, dayIdx, hourIdx){
+      return ((seed + dayIdx * 11 + hourIdx * 7) % 5) === 0; // ~1 in 5 slots already booked
+    }
+
+    function closeWorkerModal(){
+      workerOverlay.classList.remove('open');
+      bookingDay = null;
+      bookingHour = null;
+    }
+
+    let selectedWorkerItems = [];
+
+    function workerMenuSummary(){
+      const names = selectedWorkerItems.map(i => i.name);
+      const total = selectedWorkerItems.reduce((sum, i) => sum + Number(i.price), 0);
+      return { names, total };
+    }
+
+    function updateWorkerMenuContinue(accent, w){
+      const btn = document.getElementById('wmGoBook');
+      if (!btn) return;
+      if (!w.working){ btn.disabled = true; btn.textContent = 'Unavailable today'; return; }
+      if (selectedWorkerItems.length === 0){
+        btn.disabled = true;
+        btn.textContent = 'Choose at least one service to book';
+      } else {
+        const { names, total } = workerMenuSummary();
+        btn.disabled = false;
+        btn.textContent = names.length === 1
+          ? `Book ${names[0]} · R${total}`
+          : `Book ${names.length} services · R${total}`;
+      }
+    }
+
+    function openWorkerProfile(idx, goStraightToBooking){
+      const w = currentStaff[idx];
+      const salon = currentSalon;
+      const accent = salon.theme.accent;
+      bookingDay = null;
+      bookingHour = null;
+      selectedWorkerItems = [];
+
+      workerBox.innerHTML = `
+        <button type="button" class="modal-close" id="wmClose">✕</button>
+        <div class="wm-hero ${salon.tier === 'premium' ? 'wm-hero-premium' : ''}" style="background:linear-gradient(135deg, ${accent}, ${salon.theme.accentDark});">
+          ${coverBandHtml(w, salon)}
+          ${workerAvatarHtml(w, salon)}
+          <h3>${w.name}</h3>
+          <div class="wm-role">${w.role} · ${salon.name}</div>
+          <div class="wm-status"><span class="dot"></span>${w.working ? 'Working today' : 'Off today'}</div>
+        </div>
+        <div class="wm-body">
+          <div class="wm-label">What ${w.name.split(' ')[0]} is known for</div>
+          <div class="wm-good-at">
+            ${w.services.map(s => `<span class="wm-good-chip">${s.name}</span>`).join('')}
+          </div>
+
+          <div class="wm-label">Full menu — pick one or more to book with ${w.name.split(' ')[0]}</div>
+          <div class="wm-services" id="wmWorkerMenu">
+            ${salon.tags.map(tag => (SERVICE_CATALOG[tag] || []).map(([name, price]) => `
+              <div class="wm-svc-row" data-name="${name}" data-price="${price}" style="cursor:pointer; padding:10px 12px; border:1px solid var(--line); border-radius:9px; background:#fff; display:flex; align-items:center; gap:10px;">
+                <span class="wm-svc-check" style="width:18px; height:18px; border-radius:5px; border:1.5px solid #cbbfa9; flex:none; display:flex; align-items:center; justify-content:center; font-size:12px; color:#fff;"></span>
+                <span style="flex:1;">${name} <span style="color:#a89a86; font-size:11px;">· ${tag}</span></span>
+                <b>R${price}</b>
+              </div>
+            `).join('')).join('')}
+          </div>
+
+          <div class="wm-label">Portfolio <span style="font-weight:400; color:#a89a86; font-size:11.5px;">(tap a photo to enlarge)</span></div>
+          <div class="wm-portfolio" id="wmPortfolio">
+            ${Array.from({ length: w.photos }).map((_, pi) => `<div class="wm-photo" data-pi="${pi}" style="cursor:zoom-in;">Photo ${pi + 1}</div>`).join('')}
+          </div>
+
+          <div class="wm-label">Send a message</div>
+          <div class="wm-message">
+            <textarea id="wmMsgInput" placeholder="Ask ${w.name.split(' ')[0]} a question before you book…"></textarea>
+          </div>
+
+          <div class="wm-actions">
+            <button type="button" class="wm-btn ghost" id="wmSendMsg">Send message</button>
+            <button type="button" class="wm-btn primary" id="wmGoBook" style="background:${accent};" disabled>${w.working ? 'Choose at least one service to book' : 'Unavailable today'}</button>
+          </div>
+        </div>
+      `;
+
+      document.getElementById('wmClose').addEventListener('click', closeWorkerModal);
+      document.getElementById('wmSendMsg').addEventListener('click', () => {
+        const box = document.getElementById('wmMsgInput');
+        if (!box.value.trim()) return;
+        box.value = '';
+        box.placeholder = `Message sent to ${w.name.split(' ')[0]} — they'll reply here soon.`;
+      });
+      document.querySelectorAll('#wmPortfolio .wm-photo').forEach(el => {
+        el.addEventListener('click', () => openPhotoLightbox(w, Number(el.dataset.pi), accent));
+      });
+      document.querySelectorAll('#wmWorkerMenu .wm-svc-row').forEach(row => {
+        row.addEventListener('click', () => {
+          const name = row.dataset.name, price = row.dataset.price;
+          const idx2 = selectedWorkerItems.findIndex(i => i.name === name);
+          const check = row.querySelector('.wm-svc-check');
+          if (idx2 >= 0){
+            selectedWorkerItems.splice(idx2, 1);
+            row.style.borderColor = 'var(--line)';
+            row.style.background = '#fff';
+            check.style.background = 'transparent';
+            check.textContent = '';
+          } else {
+            selectedWorkerItems.push({ name, price });
+            row.style.borderColor = accent;
+            row.style.background = 'rgba(0,0,0,0.02)';
+            check.style.background = accent;
+            check.style.borderColor = accent;
+            check.textContent = '✓';
+          }
+          updateWorkerMenuContinue(accent, w);
+        });
+      });
+      document.getElementById('wmGoBook').addEventListener('click', () => { if (w.working && selectedWorkerItems.length) openBookingStep(idx); });
+
+      workerOverlay.classList.add('open');
+      if (goStraightToBooking && w.working){
+        // Land on the profile so they can pick services first — booking needs at least one selected.
+      }
+    }
+
+    function openBookingStep(idx){
+      const w = currentStaff[idx];
+      const salon = currentSalon;
+      const accent = salon.theme.accent;
+      const seed = hashStr(currentSlug) + idx * 17;
+      const days = nextDays(7);
+      const { names, total } = workerMenuSummary();
+
+      workerBox.innerHTML = `
+        <button type="button" class="modal-close" id="wmClose">✕</button>
+        <div class="wm-hero ${salon.tier === 'premium' ? 'wm-hero-premium' : ''}" style="background:linear-gradient(135deg, ${accent}, ${salon.theme.accentDark});">
+          ${coverBandHtml(w, salon)}
+          ${workerAvatarHtml(w, salon)}
+          <h3>Book ${w.name}</h3>
+          <div class="wm-role">${names.join(' + ')} · R${total}</div>
+        </div>
+        <div class="wm-body">
+          <div class="wm-label">Choose a day</div>
+          <div class="wm-day-row" id="wmDayRow">
+            ${days.map((d, i) => `
+              <div class="wm-day" data-i="${i}">
+                <div class="d-dow">${DOW[d.getDay()]}</div>
+                <div class="d-num">${d.getDate()}</div>
+              </div>
+            `).join('')}
+          </div>
+
+          <div id="wmHoursWrap"></div>
+          <div id="wmNoteWrap"></div>
+        </div>
+      `;
+
+      document.getElementById('wmClose').addEventListener('click', closeWorkerModal);
+
+      document.querySelectorAll('#wmDayRow .wm-day').forEach(el => {
+        el.addEventListener('click', () => {
+          document.querySelectorAll('#wmDayRow .wm-day').forEach(d => { d.classList.remove('active'); d.style.background = ''; d.style.color = ''; });
+          el.classList.add('active');
+          el.style.background = accent;
+          bookingDay = Number(el.dataset.i);
+          bookingHour = null;
+          renderHours(idx, seed, bookingDay, accent);
+          document.getElementById('wmNoteWrap').innerHTML = '';
+        });
+      });
+    }
+
+    function renderHours(idx, seed, dayIdx, accent){
+      const wrap = document.getElementById('wmHoursWrap');
+      wrap.innerHTML = `
+        <div class="wm-label">Available hours</div>
+        <div class="wm-hours" id="wmHours">
+          ${HOURS.map((h, hi) => {
+            const taken = hourTaken(seed, dayIdx, hi);
+            return `<div class="wm-hour ${taken ? 'taken' : ''}" data-h="${hi}">${h}</div>`;
+          }).join('')}
+        </div>
+      `;
+      document.querySelectorAll('#wmHours .wm-hour').forEach(el => {
+        if (el.classList.contains('taken')) return;
+        el.addEventListener('click', () => {
+          document.querySelectorAll('#wmHours .wm-hour').forEach(h => { h.classList.remove('active'); h.style.background = ''; });
+          el.classList.add('active');
+          el.style.background = accent;
+          bookingHour = Number(el.dataset.h);
+          renderNote(idx, accent);
+        });
+      });
+    }
+
+    function renderNote(idx, accent){
+      const w = currentStaff[idx];
+      const wrap = document.getElementById('wmNoteWrap');
+      wrap.innerHTML = `
+        <div class="wm-label">Add a note for ${w.name.split(' ')[0]}</div>
+        <div class="wm-message">
+          <textarea id="wmBookNote" placeholder="e.g. 'Looking to get box braids, medium length' or 'First time — any advice on prep?'"></textarea>
+        </div>
+        <div class="wm-actions">
+          <button type="button" class="wm-btn primary" id="wmSendRequest" style="background:${accent};">Send booking request</button>
+        </div>
+      `;
+      document.getElementById('wmSendRequest').addEventListener('click', () => sendBookingRequest(idx, accent));
+    }
+
+    function sendBookingRequest(idx, accent){
+      const w = currentStaff[idx];
+      const salon = currentSalon;
+      const day = nextDays(7)[bookingDay];
+      const dayLabel = `${DOW[day.getDay()]} ${day.getDate()}`;
+      const hourLabel = HOURS[bookingHour];
+      const noteEl = document.getElementById('wmBookNote');
+      const note = (noteEl && noteEl.value.trim()) || null;
+      const { names, total } = workerMenuSummary();
+      const itemsLabel = names.join(', ');
+
+      workerBox.innerHTML = `
+        <button type="button" class="modal-close" id="wmClose">✕</button>
+        <div class="wm-hero ${salon.tier === 'premium' ? 'wm-hero-premium' : ''}" style="background:linear-gradient(135deg, ${accent}, ${salon.theme.accentDark});">
+          ${coverBandHtml(w, salon)}
+          ${workerAvatarHtml(w, salon)}
+          <h3>${w.name}</h3>
+          <div class="wm-role">${names.join(' + ')} · ${dayLabel} · ${hourLabel}</div>
+        </div>
+        <div class="wm-body">
+          <div id="wmChatArea">
+            <div class="wm-chat" id="wmChat">
+              <div class="wm-bubble me">Hi ${w.name.split(' ')[0]}! I'd like to book ${itemsLabel} (R${total}) for ${dayLabel} at ${hourLabel}.${note ? ' ' + note : ''}</div>
+              <div class="wm-typing" id="wmTyping">${w.name.split(' ')[0]} is typing…</div>
+            </div>
+          </div>
+        </div>
+      `;
+      document.getElementById('wmClose').addEventListener('click', closeWorkerModal);
+
+      // Simulated reply — in production this would be a real message thread with the specialist
+      setTimeout(() => {
+        const seed = hashStr(currentSlug + w.name + itemsLabel) + bookingDay * 3 + bookingHour;
+        const replies = [
+          `That works for me — see you ${dayLabel} at ${hourLabel} for ${itemsLabel}! I'll confirm the day before.`,
+          `I'm actually booked right at ${hourLabel} — could you do an hour later on ${dayLabel}?`,
+          `Yes! Just holding your spot for ${itemsLabel}. Let me know if anything changes before ${dayLabel}.`
+        ];
+        const reply = replies[seed % replies.length];
+        const typing = document.getElementById('wmTyping');
+        if (typing) typing.remove();
+        const chat = document.getElementById('wmChat');
+        const area = document.getElementById('wmChatArea');
+        if (chat && area){
+          chat.insertAdjacentHTML('beforeend', `<div class="wm-bubble them">${reply}</div>`);
+          area.insertAdjacentHTML('beforeend', `<div class="wm-proto-note">Prototype — this reply is simulated. Real booking would message ${w.name.split(' ')[0]} directly and hold the slot.</div>`);
+          addFollowUpComposer(chat, w.name.split(' ')[0], accent);
+        }
+      }, 1100);
+    }
+
+    // Lets someone keep the conversation going after a booking is sent — announce running late, confirm, etc.
+    function addFollowUpComposer(chatEl, personFirstName, accent){
+      const area = document.getElementById('wmChatArea');
+      if (!area) return;
+      area.insertAdjacentHTML('beforeend', `
+        <div class="wm-followup" style="display:flex; gap:8px; margin-top:14px;">
+          <input type="text" id="wmFollowInput" placeholder="Message ${personFirstName} — e.g. 'Running 10 min late'"
+                 style="flex:1; border:1px solid var(--line); border-radius:9px; padding:10px 12px; font-family:inherit; font-size:12.5px; background:#fff; color:var(--espresso);">
+          <button type="button" id="wmFollowSend"
+                  style="background:${accent}; color:#fff; font-family:-apple-system, sans-serif; font-size:12.5px; font-weight:700; padding:0 16px; border-radius:9px;">Send</button>
+        </div>
+      `);
+      const input = document.getElementById('wmFollowInput');
+      const btn = document.getElementById('wmFollowSend');
+      const ACKS = ["Got it, thanks for letting us know!", "No problem — see you then.", "Thanks for the update, we'll be ready."];
+      function send(){
+        const val = input.value.trim();
+        if (!val) return;
+        chatEl.insertAdjacentHTML('beforeend', `<div class="wm-bubble me">${val}</div>`);
+        input.value = '';
+        const seed = hashStr(val) + val.length;
+        setTimeout(() => {
+          chatEl.insertAdjacentHTML('beforeend', `<div class="wm-bubble them">${ACKS[seed % ACKS.length]}</div>`);
+        }, 700);
+      }
+      btn.addEventListener('click', send);
+      input.addEventListener('keydown', (e) => { if (e.key === 'Enter'){ e.preventDefault(); send(); } });
+    }
+
+    // ---------- Book directly with the salon (from the hero "Book at ..." button) ----------
+    // Same calendar + message flow as booking a specific specialist, but starts from the salon's
+    // full menu instead of one person's profile, and is themed with the same background/accent/font.
+    let selectedMenuItems = [];
+
+    function salonMenuSummary(){
+      const names = selectedMenuItems.map(i => i.name);
+      const total = selectedMenuItems.reduce((sum, i) => sum + Number(i.price), 0);
+      return { names, total };
+    }
+
+    function updateSalonMenuContinue(accent){
+      const continueBtn = document.getElementById('wmMenuContinue');
+      if (!continueBtn) return;
+      if (selectedMenuItems.length === 0){
+        continueBtn.disabled = true;
+        continueBtn.textContent = 'Choose at least one item to continue';
+      } else {
+        const { names, total } = salonMenuSummary();
+        continueBtn.disabled = false;
+        continueBtn.textContent = names.length === 1
+          ? `Continue with ${names[0]} · R${total}`
+          : `Continue with ${names.length} items · R${total}`;
+      }
+    }
+
+    function openSalonMenu(){
+      const salon = currentSalon;
+      const accent = salon.theme.accent;
+      selectedMenuItems = [];
+      bookingDay = null;
+      bookingHour = null;
+
+      workerBox.innerHTML = `
+        <button type="button" class="modal-close" id="wmClose">✕</button>
+        <div class="wm-hero" style="background:linear-gradient(135deg, ${accent}, ${salon.theme.accentDark});">
+          <div class="wm-avatar">${initials(salon.name)}</div>
+          <h3>Book at ${salon.name}</h3>
+          <div class="wm-role">Pick one or more — you can combine services</div>
+        </div>
+        <div class="wm-body">
+          <div class="wm-label">Menu</div>
+          <div class="wm-services" id="wmSalonMenu">
+            ${salon.tags.map(tag => (SERVICE_CATALOG[tag] || []).map(([name, price]) => `
+              <div class="wm-svc-row" data-name="${name}" data-price="${price}" style="cursor:pointer; padding:10px 12px; border:1px solid var(--line); border-radius:9px; background:#fff; display:flex; align-items:center; gap:10px;">
+                <span class="wm-svc-check" style="width:18px; height:18px; border-radius:5px; border:1.5px solid #cbbfa9; flex:none; display:flex; align-items:center; justify-content:center; font-size:12px; color:#fff;"></span>
+                <span style="flex:1;">${name} <span style="color:#a89a86; font-size:11px;">· ${tag}</span></span>
+                <b>R${price}</b>
+              </div>
+            `).join('')).join('')}
+          </div>
+          <div class="wm-actions">
+            <button type="button" class="wm-btn primary" id="wmMenuContinue" style="background:${accent};" disabled>Choose at least one item to continue</button>
+          </div>
+        </div>
+      `;
+
+      document.getElementById('wmClose').addEventListener('click', closeWorkerModal);
+      document.querySelectorAll('#wmSalonMenu .wm-svc-row').forEach(row => {
+        row.addEventListener('click', () => {
+          const name = row.dataset.name, price = row.dataset.price;
+          const idx = selectedMenuItems.findIndex(i => i.name === name);
+          const check = row.querySelector('.wm-svc-check');
+          if (idx >= 0){
+            selectedMenuItems.splice(idx, 1);
+            row.style.borderColor = 'var(--line)';
+            row.style.background = '#fff';
+            check.style.background = 'transparent';
+            check.textContent = '';
+          } else {
+            selectedMenuItems.push({ name, price });
+            row.style.borderColor = accent;
+            row.style.background = 'rgba(0,0,0,0.02)';
+            check.style.background = accent;
+            check.style.borderColor = accent;
+            check.textContent = '✓';
+          }
+          updateSalonMenuContinue(accent);
+        });
+      });
+      document.getElementById('wmMenuContinue').addEventListener('click', () => { if (selectedMenuItems.length) openSalonCalendar(); });
+
+      workerOverlay.classList.add('open');
+    }
+
+    function openSalonCalendar(){
+      const salon = currentSalon;
+      const accent = salon.theme.accent;
+      const seed = hashStr(currentSlug) + 5;
+      const days = nextDays(7);
+      const { names, total } = salonMenuSummary();
+
+      workerBox.innerHTML = `
+        <button type="button" class="modal-close" id="wmClose">✕</button>
+        <div class="wm-hero" style="background:linear-gradient(135deg, ${accent}, ${salon.theme.accentDark});">
+          <div class="wm-avatar">${initials(salon.name)}</div>
+          <h3>${names.join(' + ')}</h3>
+          <div class="wm-role">${salon.name} · R${total}</div>
+        </div>
+        <div class="wm-body">
+          <div class="wm-label">Choose a day</div>
+          <div class="wm-day-row" id="wmDayRow">
+            ${days.map((d, i) => `
+              <div class="wm-day" data-i="${i}">
+                <div class="d-dow">${DOW[d.getDay()]}</div>
+                <div class="d-num">${d.getDate()}</div>
+              </div>
+            `).join('')}
+          </div>
+          <div id="wmHoursWrap"></div>
+          <div id="wmNoteWrap"></div>
+        </div>
+      `;
+      document.getElementById('wmClose').addEventListener('click', closeWorkerModal);
+
+      document.querySelectorAll('#wmDayRow .wm-day').forEach(el => {
+        el.addEventListener('click', () => {
+          document.querySelectorAll('#wmDayRow .wm-day').forEach(d => { d.classList.remove('active'); d.style.background = ''; d.style.color = ''; });
+          el.classList.add('active');
+          el.style.background = accent;
+          bookingDay = Number(el.dataset.i);
+          bookingHour = null;
+          renderSalonHours(seed, bookingDay, accent);
+          document.getElementById('wmNoteWrap').innerHTML = '';
+        });
+      });
+    }
+
+    function renderSalonHours(seed, dayIdx, accent){
+      const wrap = document.getElementById('wmHoursWrap');
+      wrap.innerHTML = `
+        <div class="wm-label">Available hours</div>
+        <div class="wm-hours" id="wmHours">
+          ${HOURS.map((h, hi) => {
+            const taken = hourTaken(seed, dayIdx, hi);
+            return `<div class="wm-hour ${taken ? 'taken' : ''}" data-h="${hi}">${h}</div>`;
+          }).join('')}
+        </div>
+      `;
+      document.querySelectorAll('#wmHours .wm-hour').forEach(el => {
+        if (el.classList.contains('taken')) return;
+        el.addEventListener('click', () => {
+          document.querySelectorAll('#wmHours .wm-hour').forEach(h => { h.classList.remove('active'); h.style.background = ''; });
+          el.classList.add('active');
+          el.style.background = accent;
+          bookingHour = Number(el.dataset.h);
+          renderSalonNote(accent);
+        });
+      });
+    }
+
+    function renderSalonNote(accent){
+      const salon = currentSalon;
+      const wrap = document.getElementById('wmNoteWrap');
+      wrap.innerHTML = `
+        <div class="wm-label">Add a note for ${salon.name}</div>
+        <div class="wm-message">
+          <textarea id="wmBookNote" placeholder="e.g. 'It's my first visit' or 'Can I bring a reference photo?'"></textarea>
+        </div>
+        <div class="wm-actions">
+          <button type="button" class="wm-btn primary" id="wmSendRequest" style="background:${accent};">Send booking request</button>
+        </div>
+      `;
+      document.getElementById('wmSendRequest').addEventListener('click', () => sendSalonBookingRequest(accent));
+    }
+
+    function sendSalonBookingRequest(accent){
+      const salon = currentSalon;
+      const day = nextDays(7)[bookingDay];
+      const dayLabel = `${DOW[day.getDay()]} ${day.getDate()}`;
+      const hourLabel = HOURS[bookingHour];
+      const noteEl = document.getElementById('wmBookNote');
+      const note = (noteEl && noteEl.value.trim()) || null;
+      const { names, total } = salonMenuSummary();
+      const itemsLabel = names.join(', ');
+
+      workerBox.innerHTML = `
+        <button type="button" class="modal-close" id="wmClose">✕</button>
+        <div class="wm-hero" style="background:linear-gradient(135deg, ${accent}, ${salon.theme.accentDark});">
+          <div class="wm-avatar">${initials(salon.name)}</div>
+          <h3>${salon.name}</h3>
+          <div class="wm-role">${names.join(' + ')} · ${dayLabel} · ${hourLabel}</div>
+        </div>
+        <div class="wm-body">
+          <div id="wmChatArea">
+            <div class="wm-chat" id="wmChat">
+              <div class="wm-bubble me">Hi! I'd like to book ${itemsLabel} (R${total}) for ${dayLabel} at ${hourLabel}.${note ? ' ' + note : ''}</div>
+              <div class="wm-typing" id="wmTyping">${salon.name} is typing…</div>
+            </div>
+          </div>
+        </div>
+      `;
+      document.getElementById('wmClose').addEventListener('click', closeWorkerModal);
+
+      setTimeout(() => {
+        const seed = hashStr(currentSlug + itemsLabel) + bookingDay * 3 + bookingHour;
+        const replies = [
+          `Perfect, you're booked for ${itemsLabel} on ${dayLabel} at ${hourLabel}. See you then!`,
+          `We're fully booked right at ${hourLabel} that day — could you do an hour later?`,
+          `Got it! We'll have someone ready for your ${itemsLabel} on ${dayLabel}.`
+        ];
+        const reply = replies[seed % replies.length];
+        const typing = document.getElementById('wmTyping');
+        if (typing) typing.remove();
+        const chat = document.getElementById('wmChat');
+        const area = document.getElementById('wmChatArea');
+        if (chat && area){
+          chat.insertAdjacentHTML('beforeend', `<div class="wm-bubble them">${reply}</div>`);
+          area.insertAdjacentHTML('beforeend', `<div class="wm-proto-note">Prototype — this reply is simulated. Real booking would message ${salon.name} directly and hold the slot.</div>`);
+          addFollowUpComposer(chat, salon.name, accent);
+        }
+      }, 1100);
+    }
+
+    // ---------- Rent-a-Chair modal: pick weeks and/or days → inquiry emailed to the owner →
+    // owner may want a short interview, otherwise it goes straight to payment → after payment
+    // the chair becomes the renter's own slot on this page (they manage their own photos/work).
+    // Messaging is intentionally disabled here — renter and owner don't chat until the email
+    // inquiry is answered and payment is done.
+    const chairModalOverlay = document.getElementById('chairModalOverlay');
+    const chairModalBox = document.getElementById('chairModalBox');
+    const DOW_SHORT = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    let chairWeeks = [];
+    let chairMode = 'weeks';        // 'weeks' | 'days'
+    let chairSelectedWeeks = new Set(); // indices into chairWeeks
+    let chairSelectedDays = new Set();  // 0=Mon … 6=Sun
+
+    function nextMondays(n){
+      const out = [];
+      const d = new Date();
+      const day = d.getDay();
+      const daysUntilMonday = (8 - day) % 7 || 7;
+      d.setDate(d.getDate() + daysUntilMonday);
+      for (let i = 0; i < n; i++){
+        const nd = new Date(d);
+        nd.setDate(d.getDate() + i * 7);
+        out.push(nd);
+      }
+      return out;
+    }
+    function fmtChairDate(d){ return d.toLocaleDateString('en-ZA', { day:'numeric', month:'short' }); }
+
+    function styleChairTabs(){
+      const accent = currentSalon.theme.accent;
+      const wBtn = document.getElementById('chairTabWeeks');
+      const dBtn = document.getElementById('chairTabDays');
+      [ [wBtn, chairMode === 'weeks'], [dBtn, chairMode === 'days'] ].forEach(([btn, active]) => {
+        btn.style.background = active ? accent : 'transparent';
+        btn.style.color = active ? '#fff' : '#3A322C';
+        btn.style.borderColor = active ? accent : '#E6DCCB';
+      });
+    }
+
+    function renderChairWeeksSelector(){
+      const area = document.getElementById('chairSelectorArea');
+      area.innerHTML = `
+        <div style="font-size:12.5px; font-weight:700; color:${currentSalon.theme.accent}; margin-bottom:4px;">Choose your week(s)</div>
+        <div style="font-size:11.5px; color:#8a7c6c; margin-bottom:10px;">Tap a couple of weeks — pick a second, later week right after your first and everything in between fills in too.</div>
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px;" id="chairWeekGrid">
+          ${chairWeeks.map((w, i) => `<button class="chair-week-chip" data-week="${i}" type="button" style="text-align:center; padding:10px 6px; border-radius:10px; border:1.5px solid #E6DCCB; font-size:12px; font-weight:600; color:#3A322C;">w/c ${fmtChairDate(w)}</button>`).join('')}
+        </div>
+      `;
+      updateChairWeekChipStyles();
+      area.querySelectorAll('.chair-week-chip').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const i = Number(btn.dataset.week);
+          if (chairSelectedWeeks.size === 1 && !chairSelectedWeeks.has(i)){
+            const [only] = chairSelectedWeeks;
+            if (i > only){
+              for (let k = only; k <= i; k++) chairSelectedWeeks.add(k);
+            } else {
+              chairSelectedWeeks.add(i);
+            }
+          } else if (chairSelectedWeeks.has(i)){
+            chairSelectedWeeks.delete(i);
+          } else {
+            chairSelectedWeeks.add(i);
+          }
+          updateChairWeekChipStyles();
+          updateChairSummary();
+        });
+      });
+    }
+
+    function updateChairWeekChipStyles(){
+      const accent = currentSalon.theme.accent;
+      document.querySelectorAll('.chair-week-chip').forEach(b => {
+        const active = chairSelectedWeeks.has(Number(b.dataset.week));
+        b.style.borderColor = active ? accent : '#E6DCCB';
+        b.style.background = active ? 'linear-gradient(135deg,#E7F0E9,#D5E6D9)' : 'transparent';
+        b.style.color = active ? '#2E403D' : '#3A322C';
+      });
+    }
+
+    function renderChairDaysSelector(){
+      const area = document.getElementById('chairSelectorArea');
+      area.innerHTML = `
+        <div style="font-size:12.5px; font-weight:700; color:${currentSalon.theme.accent}; margin-bottom:4px;">Choose which days you need the chair</div>
+        <div style="font-size:11.5px; color:#8a7c6c; margin-bottom:10px;">We'll work out a part-week rate from the full weekly price.</div>
+        <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:6px;" id="chairDayGrid">
+          ${DOW_SHORT.map((d, i) => `<button class="chair-day-chip" data-day="${i}" type="button" style="text-align:center; padding:10px 0; border-radius:10px; border:1.5px solid #E6DCCB; font-size:11.5px; font-weight:600; color:#3A322C;">${d}</button>`).join('')}
+        </div>
+      `;
+      updateChairDayChipStyles();
+      area.querySelectorAll('.chair-day-chip').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const i = Number(btn.dataset.day);
+          if (chairSelectedDays.has(i)) chairSelectedDays.delete(i); else chairSelectedDays.add(i);
+          updateChairDayChipStyles();
+          updateChairSummary();
+        });
+      });
+    }
+
+    function updateChairDayChipStyles(){
+      const accent = currentSalon.theme.accent;
+      document.querySelectorAll('.chair-day-chip').forEach(b => {
+        const active = chairSelectedDays.has(Number(b.dataset.day));
+        b.style.borderColor = active ? accent : '#E6DCCB';
+        b.style.background = active ? 'linear-gradient(135deg,#E7F0E9,#D5E6D9)' : 'transparent';
+        b.style.color = active ? '#2E403D' : '#3A322C';
+      });
+    }
+
+    // Builds the itemized list + running total shown under either selector, and returns it
+    // (also used later when composing the emailed inquiry).
+    function chairSelectionSummary(){
+      const price = CHAIR_LISTINGS[currentSlug];
+      if (chairMode === 'weeks'){
+        const idxs = [...chairSelectedWeeks].sort((a, b) => a - b);
+        const rows = idxs.map(i => ({ label: `Week of ${fmtChairDate(chairWeeks[i])}`, amount: price }));
+        const total = rows.reduce((s, r) => s + r.amount, 0);
+        return { rows, total, unit: '', kind: 'weeks', count: idxs.length };
+      } else {
+        const dailyRate = Math.round(price / 7);
+        const idxs = [...chairSelectedDays].sort((a, b) => a - b);
+        const rows = idxs.map(i => ({ label: DOW_SHORT[i], amount: dailyRate }));
+        const total = rows.reduce((s, r) => s + r.amount, 0);
+        return { rows, total, unit: '/week', kind: 'days', count: idxs.length };
+      }
+    }
+
+    function updateChairSummary(){
+      const card = document.getElementById('chairSummaryCard');
+      const sendBtn = document.getElementById('chairSendBtn');
+      const s = chairSelectionSummary();
+      if (s.rows.length === 0){
+        card.style.display = 'none';
+        sendBtn.disabled = true; sendBtn.style.opacity = '0.45'; sendBtn.style.pointerEvents = 'none';
+        return;
+      }
+      card.style.display = 'block';
+      card.innerHTML = `
+        <div style="background:linear-gradient(135deg,#E7F0E9,#D5E6D9); border:1px solid #BFD6AE; border-radius:14px; padding:14px 16px; margin:14px 0;">
+          <div style="font-size:11px; color:#4B6B3E; text-transform:uppercase; letter-spacing:0.4px; font-weight:700; margin-bottom:8px;">${s.kind === 'weeks' ? 'Weeks selected' : 'Days selected'}</div>
+          <div style="display:flex; flex-direction:column; gap:5px; margin-bottom:8px;">
+            ${s.rows.map(r => `<div style="display:flex; justify-content:space-between; font-size:12.5px; color:#2E403D;"><span>${r.label}</span><span style="font-weight:700;">R${r.amount.toLocaleString()}</span></div>`).join('')}
+          </div>
+          <div style="border-top:1px dashed #BFD6AE; padding-top:8px; display:flex; justify-content:space-between; font-size:13px; font-weight:700; color:#2E403D;">
+            <span>Total</span><span>R${s.total.toLocaleString()}${s.unit}</span>
+          </div>
+        </div>`;
+      sendBtn.disabled = false; sendBtn.style.opacity = '1'; sendBtn.style.pointerEvents = 'auto';
+      sendBtn.textContent = `Email inquiry to ${currentSalon.name} · R${s.total.toLocaleString()}${s.unit}`;
+    }
+
+    function openChairModal(){
+      if (!(currentSlug in CHAIR_LISTINGS)) return;
+      const price = CHAIR_LISTINGS[currentSlug];
+      chairWeeks = nextMondays(16);
+      chairMode = 'weeks'; chairSelectedWeeks = new Set(); chairSelectedDays = new Set();
+
+      chairModalBox.innerHTML = `
+        <div class="wm-modal-head" style="padding:22px 22px 4px; font-family:-apple-system, sans-serif;">
+          <h3 style="font-family:Georgia, serif; font-size:19px; font-weight:400; margin-bottom:4px;">Rent a chair at ${currentSalon.name}</h3>
+          <p style="font-size:12.5px; color:#8a7c6c;">R${price} / week · ${chairPerksFor(currentSlug).join(' · ')}</p>
+        </div>
+        <div style="padding:16px 22px 24px; font-family:-apple-system, sans-serif;">
+          <div style="display:flex; gap:8px; margin-bottom:16px;">
+            <button id="chairTabWeeks" type="button" class="chair-tab" style="flex:1; padding:10px 0; border-radius:9px; border:1.5px solid #E6DCCB; font-size:12.5px; font-weight:700;">By week</button>
+            <button id="chairTabDays" type="button" class="chair-tab" style="flex:1; padding:10px 0; border-radius:9px; border:1.5px solid #E6DCCB; font-size:12.5px; font-weight:700;">By day</button>
+          </div>
+          <div id="chairSelectorArea"></div>
+          <div id="chairSummaryCard" style="display:none;"></div>
+          <button id="chairSendBtn" type="button" disabled style="display:block; width:100%; text-align:center; padding:13px; border-radius:10px; font-size:14px; font-weight:700; background:linear-gradient(180deg,#4E8A5D,#3F6B4A); color:#fff; opacity:0.45; pointer-events:none;">Email inquiry</button>
+          <div id="chairConfirmArea" style="display:none; margin-top:16px;"></div>
+        </div>`;
+
+      styleChairTabs();
+      renderChairWeeksSelector();
+
+      document.getElementById('chairTabWeeks').addEventListener('click', () => {
+        if (chairMode === 'weeks') return;
+        chairMode = 'weeks'; chairSelectedDays = new Set();
+        styleChairTabs(); renderChairWeeksSelector(); updateChairSummary();
+      });
+      document.getElementById('chairTabDays').addEventListener('click', () => {
+        if (chairMode === 'days') return;
+        chairMode = 'days'; chairSelectedWeeks = new Set();
+        styleChairTabs(); renderChairDaysSelector(); updateChairSummary();
+      });
+
+      document.getElementById('chairSendBtn').addEventListener('click', sendChairInquiry);
+
+      chairModalOverlay.classList.add('open');
+    }
+
+    // ---------- Step 2: the inquiry is "emailed" to the owner, who either wants a quick
+    // interview first, or approves it straight away — either way it ends at the payment step.
+    function sendChairInquiry(){
+      const s = chairSelectionSummary();
+      const salon = currentSalon;
+
+      document.getElementById('chairSelectorArea').style.display = 'none';
+      document.getElementById('chairSummaryCard').style.display = 'none';
+      document.getElementById('chairSendBtn').style.display = 'none';
+      document.querySelectorAll('.chair-tab').forEach(t => t.style.display = 'none');
+
+      const confirm = document.getElementById('chairConfirmArea');
+      confirm.style.display = 'block';
+      confirm.innerHTML = `
+        <div style="background:#F1E9DD; border-radius:14px; padding:18px 16px; text-align:center;">
+          <div style="font-size:22px; margin-bottom:6px;">✉️</div>
+          <div style="font-size:14px; font-weight:700; color:var(--espresso); margin-bottom:4px;">Inquiry emailed to ${salon.name}'s owner</div>
+          <div style="font-size:12.5px; color:#8a7c6c;">${s.rows.length} ${s.kind === 'weeks' ? (s.rows.length === 1 ? 'week' : 'weeks') : (s.rows.length === 1 ? 'day/week' : 'days/week')} · R${s.total.toLocaleString()}${s.unit}</div>
+          <div style="font-size:11.5px; color:#a89a86; margin-top:10px;">No chat opens yet — waiting for the owner to reply by email…</div>
+        </div>`;
+
+      // Simulated owner reply — in production this really would be an email to the owner's
+      // account, and this wait would be however long they take to respond.
+      const seed = hashStr(currentSlug + [...chairSelectedWeeks].join(',') + [...chairSelectedDays].join(','));
+      const wantsInterview = seed % 2 === 0;
+
+      setTimeout(() => {
+        confirm.innerHTML = `
+          <div style="background:#F1E9DD; border-radius:14px; padding:18px 16px; text-align:center;">
+            <div style="font-size:22px; margin-bottom:6px;">${wantsInterview ? '🗓️' : '✓'}</div>
+            <div style="font-size:14px; font-weight:700; color:var(--espresso); margin-bottom:4px;">
+              ${wantsInterview ? `${salon.name} would like a short interview first` : `${salon.name} has approved your request`}
+            </div>
+            <div style="font-size:12.5px; color:#8a7c6c; margin-bottom:12px; line-height:1.5;">
+              ${wantsInterview
+                ? `They'll email you to set up a quick call or in-person chat before confirming. Once that's done, come back here and pay to lock in your chair.`
+                : `No interview needed — you're clear to go straight to payment.`}
+            </div>
+            <div style="font-size:12.5px; color:#4B6B3E; font-weight:700; margin-bottom:14px;">${s.rows.length} ${s.kind === 'weeks' ? (s.rows.length === 1 ? 'week' : 'weeks') : (s.rows.length === 1 ? 'day/week' : 'days/week')} · R${s.total.toLocaleString()}${s.unit}</div>
+            <button type="button" id="chairPayBtn" style="width:100%; padding:13px; border-radius:10px; font-size:14px; font-weight:700; background:linear-gradient(180deg,#4E8A5D,#3F6B4A); color:#fff;">Proceed to payment</button>
+            <div style="font-size:11px; color:#a89a86; margin-top:10px;">Still no messaging until payment goes through — that keeps things simple and protects both sides.</div>
+          </div>`;
+        document.getElementById('chairPayBtn').addEventListener('click', () => simulateChairPayment(s));
+      }, 1300);
+    }
+
+    // ---------- Step 3: simulated payment, then the renter sets up (or later edits) their own
+    // slot — real uploaded photos, quick-pick specialty chips, and a "Save" that updates in place.
+    let chairProfilePhoto = null;
+    let chairWorkPhotos = [null, null, null, null];
+    let chairSelectedSpecialties = new Set();
+    let chairSlotName = '';
+    let chairSlotSaved = null; // { name, profilePhoto, workPhotos, specialties } once a slot has been saved
+
+    function specialtyPoolFor(salon){
+      const names = [];
+      salon.tags.forEach(tag => (SERVICE_CATALOG[tag] || []).forEach(([name]) => { if (!names.includes(name)) names.push(name); }));
+      return names;
+    }
+
+    function renderChairSlotForm(salon, isEdit){
+      const confirm = document.getElementById('chairConfirmArea');
+      confirm.style.textAlign = 'left';
+      confirm.style.display = 'block';
+      const pool = specialtyPoolFor(salon);
+
+      confirm.innerHTML = `
+        <div style="text-align:center; margin-bottom:16px;">
+          ${isEdit ? '' : `
+            <div style="font-size:22px; margin-bottom:6px;">🎉</div>
+            <div style="font-size:14px; font-weight:700; color:var(--espresso); margin-bottom:4px;">Payment received (prototype)</div>
+          `}
+          <div style="font-size:12px; color:#8a7c6c; line-height:1.5;">${isEdit ? `Edit your slot at ${salon.name} below.` : `Your chair at ${salon.name} is booked. Set up your own slot below — this is what visitors will see.`}</div>
+        </div>
+
+        <div style="font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; color:#a89a86; margin-bottom:8px;">Your name</div>
+        <input type="text" id="chairNameInput" value="${chairSlotName ? chairSlotName.replace(/"/g, '&quot;') : ''}" placeholder="e.g. Thabo M." style="width:100%; border:1px solid var(--line); border-radius:9px; padding:11px 13px; font-family:inherit; font-size:13px; background:#fff; color:var(--espresso); margin-bottom:6px; box-sizing:border-box;">
+        <div style="font-size:11px; color:#a89a86; margin-bottom:18px;">This shows on your card instead of "Your Chair".</div>
+
+        <div style="font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; color:#a89a86; margin-bottom:8px;">Profile picture</div>
+        <label for="chairProfileInput" style="display:flex; align-items:center; gap:12px; cursor:pointer; margin-bottom:18px;">
+          <div id="chairProfilePreview" style="width:56px; height:56px; border-radius:50%; background:var(--ivory-deep); display:flex; align-items:center; justify-content:center; font-size:10px; color:#a89a86; flex:none; overflow:hidden; background-size:cover; background-position:center; ${chairProfilePhoto ? `background-image:url(${chairProfilePhoto});` : ''}">${chairProfilePhoto ? '' : 'Add'}</div>
+          <span style="font-size:12.5px; font-weight:600; color:${salon.theme.accent};">${chairProfilePhoto ? 'Change profile picture' : 'Upload a profile picture'}</span>
+        </label>
+        <input type="file" accept="image/*" id="chairProfileInput" style="display:none;">
+
+        <div style="font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; color:#a89a86; margin-bottom:8px;">Your work — 4 photos</div>
+        <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:18px;">
+          ${[0, 1, 2, 3].map(i => `<label for="chairWorkInput${i}" id="chairWorkPreview${i}" style="aspect-ratio:1/1; border-radius:10px; background:var(--ivory-deep); display:flex; align-items:center; justify-content:center; font-size:16px; color:#a89a86; cursor:pointer; overflow:hidden; background-size:cover; background-position:center; ${chairWorkPhotos[i] ? `background-image:url(${chairWorkPhotos[i]});` : ''}">${chairWorkPhotos[i] ? '' : '＋'}</label>`).join('')}
+        </div>
+        ${[0, 1, 2, 3].map(i => `<input type="file" accept="image/*" id="chairWorkInput${i}" style="display:none;">`).join('')}
+
+        <div style="font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; color:#a89a86; margin-bottom:8px;">What you specialize in</div>
+        <div style="font-size:11px; color:#a89a86; margin-bottom:8px;">Tap what applies — or type your own below.</div>
+        <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px;" id="chairSpecialtyChips">
+          ${pool.map(name => `<button type="button" class="chair-specialty-chip" data-name="${name}" style="padding:7px 12px; border-radius:999px; border:1.5px solid #E6DCCB; font-family:-apple-system, sans-serif; font-size:11.5px; font-weight:600; color:#3A322C; background:transparent;">${name}</button>`).join('')}
+        </div>
+        <input type="text" id="chairSpecialtyInput" placeholder="Add your own, comma-separated…" style="width:100%; border:1px solid var(--line); border-radius:9px; padding:11px 13px; font-family:inherit; font-size:13px; background:#fff; color:var(--espresso); margin-bottom:18px; box-sizing:border-box;">
+
+        <button type="button" id="chairSaveSlotBtn" style="width:100%; padding:13px; border-radius:10px; font-size:14px; font-weight:700; background:linear-gradient(180deg,#4E8A5D,#3F6B4A); color:#fff;">Save my slot</button>
+      `;
+
+      updateSpecialtyChipStyles(salon);
+      document.querySelectorAll('.chair-specialty-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          const name = chip.dataset.name;
+          if (chairSelectedSpecialties.has(name)) chairSelectedSpecialties.delete(name); else chairSelectedSpecialties.add(name);
+          updateSpecialtyChipStyles(salon);
+        });
+      });
+      document.getElementById('chairProfileInput').addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          chairProfilePhoto = reader.result;
+          const preview = document.getElementById('chairProfilePreview');
+          preview.style.backgroundImage = `url(${reader.result})`;
+          preview.textContent = '';
+        };
+        reader.readAsDataURL(file);
+      });
+      [0, 1, 2, 3].forEach(i => {
+        document.getElementById(`chairWorkInput${i}`).addEventListener('change', (e) => {
+          const file = e.target.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = () => {
+            chairWorkPhotos[i] = reader.result;
+            const preview = document.getElementById(`chairWorkPreview${i}`);
+            preview.style.backgroundImage = `url(${reader.result})`;
+            preview.textContent = '';
+          };
+          reader.readAsDataURL(file);
+        });
+      });
+      document.getElementById('chairSaveSlotBtn').addEventListener('click', () => finalizeChairSlot(salon));
+    }
+
+    function updateSpecialtyChipStyles(salon){
+      const accent = salon.theme.accent;
+      document.querySelectorAll('.chair-specialty-chip').forEach(chip => {
+        const active = chairSelectedSpecialties.has(chip.dataset.name);
+        chip.style.borderColor = active ? accent : '#E6DCCB';
+        chip.style.background = active ? accent : 'transparent';
+        chip.style.color = active ? '#fff' : '#3A322C';
+      });
+    }
+
+    function simulateChairPayment(s){
+      const salon = currentSalon;
+      const confirm = document.getElementById('chairConfirmArea');
+      confirm.innerHTML = `<div style="text-align:center; padding:26px 0; font-family:-apple-system, sans-serif; font-size:13px; color:#8a7c6c;">Processing payment…</div>`;
+
+      setTimeout(() => {
+        chairSlotName = '';
+        chairProfilePhoto = null;
+        chairWorkPhotos = [null, null, null, null];
+        chairSelectedSpecialties = new Set();
+        renderChairSlotForm(salon, false);
+      }, 1300);
+    }
+
+    // Reopens straight into the upload/specialty step, pre-filled with whatever was saved before —
+    // used both when re-entering via "Edit my slot" and by clicking the saved card itself.
+    function openChairSlotEditor(){
+      if (!currentSlug || !(currentSlug in CHAIR_LISTINGS) || !chairSlotSaved) return;
+      chairSlotName = chairSlotSaved.name || '';
+      chairProfilePhoto = chairSlotSaved.profilePhoto;
+      chairWorkPhotos = [...chairSlotSaved.workPhotos];
+      chairSelectedSpecialties = new Set(chairSlotSaved.specialties.filter(sp => specialtyPoolFor(currentSalon).includes(sp)));
+      chairModalBox.innerHTML = `
+        <div class="wm-modal-head" style="padding:22px 22px 4px; font-family:-apple-system, sans-serif;">
+          <h3 style="font-family:Georgia, serif; font-size:19px; font-weight:400; margin-bottom:4px;">Edit your slot at ${currentSalon.name}</h3>
+        </div>
+        <div style="padding:16px 22px 24px; font-family:-apple-system, sans-serif;">
+          <div id="chairConfirmArea" style="display:block;"></div>
+        </div>`;
+      renderChairSlotForm(currentSalon, true);
+      chairModalOverlay.classList.add('open');
+    }
+
+    function chairSlotCardHtml(salon, name, profilePhoto, workPhotos, specialties){
+      const displayName = name && name.trim() ? name.trim() : 'Your Chair';
+      return `
+        <div class="staff-card" id="chairSlotCard" data-chair-slot="true" style="cursor:pointer;" title="View menu &amp; book">
+          <div class="staff-top">
+            <div class="staff-avatar" style="${profilePhoto ? `background-image:url(${profilePhoto}); background-size:cover; background-position:center; color:transparent;` : ''}">${profilePhoto ? '' : initials(displayName)}</div>
+            <div class="staff-id">
+              <h4>${displayName}</h4>
+              <div class="staff-role sans">Independent · rents a chair here</div>
+              <div class="staff-status working sans"><span class="dot"></span>Managed by you</div>
+            </div>
+          </div>
+          <div class="staff-portfolio-label">What I'm good at</div>
+          <div style="display:flex; flex-wrap:wrap; gap:6px; padding:0 16px 12px;">
+            ${specialties.length ? specialties.map(sp => `<span class="hero-tag" style="background:var(--ivory-deep); border:1px solid var(--line); color:var(--espresso-soft);">${sp}</span>`).join('') : '<span style="font-family:-apple-system, sans-serif; font-size:11px; color:#a89a86;">Add your specialties any time</span>'}
+          </div>
+          <div class="staff-portfolio-label">My work</div>
+          <div class="staff-portfolio photos-4">
+            ${workPhotos.map(p => `<div class="pf-thumb" style="${p ? `background-image:url(${p}); background-size:cover; background-position:center; color:transparent;` : ''}">Photo</div>`).join('')}
+          </div>
+          <div style="display:flex; gap:8px; margin:4px 16px 16px; margin-top:auto;">
+            <div class="staff-btn" style="flex:1; margin:0; background:${salon.theme.accent}; color:#fff;">View menu &amp; book</div>
+            <div class="staff-btn" data-chair-edit="true" style="flex:none; margin:0; padding-left:14px; padding-right:14px; background:var(--ivory-deep); color:var(--espresso-soft);">✎ Edit</div>
+          </div>
+        </div>`;
+    }
+
+    // ---------- Customer-facing: view the independent renter's own menu, add to cart, pay ----------
+    let chairMenuCart = [];
+
+    function chairMenuPriceFor(name, seed){
+      const key = Object.keys(PRICE_MAP).find(k => name.toLowerCase().includes(k.toLowerCase()));
+      const range = key ? PRICE_MAP[key] : [150, 400];
+      const val = range[0] + (seed % (range[1] - range[0] + 1));
+      return Math.round(val / 10) * 10;
+    }
+
+    function renderChairMenuCart(salon){
+      const wrap = document.getElementById('chairMenuCartWrap');
+      const btn = document.getElementById('chairMenuPayBtn');
+      if (chairMenuCart.length === 0){
+        wrap.style.display = 'none';
+        btn.disabled = true; btn.style.opacity = '0.45'; btn.style.pointerEvents = 'none';
+        btn.textContent = 'Add something to your cart first';
+        return;
+      }
+      const total = chairMenuCart.reduce((s, i) => s + i.price * i.qty, 0);
+      wrap.style.display = 'block';
+      wrap.innerHTML = `
+        <div style="background:var(--ivory-deep); border-radius:12px; padding:12px 14px; margin:14px 0;">
+          <div style="font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; color:#a89a86; margin-bottom:8px;">Your cart</div>
+          ${chairMenuCart.map(i => `<div style="display:flex; justify-content:space-between; font-size:12.5px; color:var(--espresso-soft); padding:3px 0;"><span>${i.qty > 1 ? `${i.qty} × ` : ''}${i.name}</span><span style="font-weight:700;">R${(i.price * i.qty).toLocaleString()}</span></div>`).join('')}
+          <div style="border-top:1px dashed var(--line); margin-top:8px; padding-top:8px; display:flex; justify-content:space-between; font-size:13px; font-weight:700; color:var(--espresso);"><span>Total</span><span>R${total.toLocaleString()}</span></div>
+        </div>`;
+      btn.disabled = false; btn.style.opacity = '1'; btn.style.pointerEvents = 'auto';
+      btn.textContent = `Pay R${total.toLocaleString()}`;
+    }
+
+    function openChairSlotMenu(){
+      if (!chairSlotSaved) return;
+      const salon = currentSalon;
+      chairMenuCart = [];
+      const items = chairSlotSaved.specialties.map((name, i) => ({ name, price: chairMenuPriceFor(name, hashStr(currentSlug + name + i)) }));
+
+      const menuDisplayName = chairSlotSaved.name && chairSlotSaved.name.trim() ? chairSlotSaved.name.trim() : 'Your Chair';
+      chairModalBox.innerHTML = `
+        <div class="wm-hero" style="background:linear-gradient(135deg, ${salon.theme.accent}, ${salon.theme.accentDark});">
+          <div class="wm-avatar" style="${chairSlotSaved.profilePhoto ? `background-image:url(${chairSlotSaved.profilePhoto}); background-size:cover; background-position:center; color:transparent;` : ''}">${chairSlotSaved.profilePhoto ? '' : initials(menuDisplayName)}</div>
+          <h3>${menuDisplayName}</h3>
+          <div class="wm-role">Independent · at ${salon.name}</div>
+        </div>
+        <div class="wm-body">
+          ${items.length === 0
+            ? `<div style="font-family:-apple-system, sans-serif; font-size:13px; color:#8a7c6c; text-align:center; padding:20px 0;">This specialist hasn't added their menu yet — check back soon.</div>`
+            : `
+              <div class="wm-label">Menu — pick what you'd like</div>
+              <div class="wm-services" id="chairMenuList">
+                ${items.map((it, i) => `
+                  <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; padding:10px 12px; border:1px solid var(--line); border-radius:9px; background:#fff;">
+                    <span style="flex:1; font-family:-apple-system, sans-serif; font-size:13px; color:var(--espresso-soft);">${it.name}</span>
+                    <b style="font-family:-apple-system, sans-serif; font-size:13px; color:var(--gold-deep);">R${it.price}</b>
+                    <button type="button" class="chair-menu-add" data-i="${i}" style="font-family:-apple-system, sans-serif; font-size:11.5px; font-weight:700; color:#fff; background:${salon.theme.accent}; padding:8px 12px; border-radius:8px;">Add</button>
+                  </div>
+                `).join('')}
+              </div>
+              <div id="chairMenuCartWrap" style="display:none;"></div>
+              <button type="button" id="chairMenuPayBtn" disabled style="display:block; width:100%; text-align:center; padding:13px; border-radius:10px; font-size:14px; font-weight:700; background:linear-gradient(180deg,#4E8A5D,#3F6B4A); color:#fff; opacity:0.45; pointer-events:none;">Add something to your cart first</button>
+              <div id="chairMenuPayArea" style="margin-top:16px;"></div>
+            `}
+        </div>`;
+
+      if (items.length){
+        document.querySelectorAll('.chair-menu-add').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const it = items[Number(btn.dataset.i)];
+            const existing = chairMenuCart.find(c => c.name === it.name);
+            if (existing) existing.qty++; else chairMenuCart.push({ name: it.name, price: it.price, qty: 1 });
+            renderChairMenuCart(salon);
+          });
+        });
+        document.getElementById('chairMenuPayBtn').addEventListener('click', () => payChairMenuCart(salon));
+      }
+
+      chairModalOverlay.classList.add('open');
+    }
+
+    function payChairMenuCart(salon){
+      const total = chairMenuCart.reduce((s, i) => s + i.price * i.qty, 0);
+      const area = document.getElementById('chairMenuPayArea');
+      document.getElementById('chairMenuList').style.display = 'none';
+      document.getElementById('chairMenuCartWrap').style.display = 'none';
+      document.getElementById('chairMenuPayBtn').style.display = 'none';
+      area.innerHTML = `<div style="text-align:center; padding:20px 0; font-family:-apple-system, sans-serif; font-size:13px; color:#8a7c6c;">Processing payment…</div>`;
+      setTimeout(() => {
+        area.innerHTML = `
+          <div style="background:#F1E9DD; border-radius:14px; padding:18px 16px; text-align:center; font-family:-apple-system, sans-serif;">
+            <div style="font-size:22px; margin-bottom:6px;">✓</div>
+            <div style="font-size:14px; font-weight:700; color:var(--espresso); margin-bottom:4px;">Payment received (prototype)</div>
+            <div style="font-size:12.5px; color:#8a7c6c;">R${total.toLocaleString()} sent — your booking with ${chairSlotSaved.name && chairSlotSaved.name.trim() ? chairSlotSaved.name.trim() : 'Your Chair'} at ${salon.name} is confirmed.</div>
+          </div>`;
+      }, 1300);
+    }
+
+    function finalizeChairSlot(salon){
+      chairSlotName = (document.getElementById('chairNameInput').value || '').trim();
+      const typed = document.getElementById('chairSpecialtyInput').value.trim();
+      const typedList = typed ? typed.split(',').map(x => x.trim()).filter(Boolean) : [];
+      const specialties = [...new Set([...chairSelectedSpecialties, ...typedList])];
+      chairSlotSaved = { name: chairSlotName, profilePhoto: chairProfilePhoto, workPhotos: [...chairWorkPhotos], specialties };
+
+      const html = chairSlotCardHtml(salon, chairSlotName, chairProfilePhoto, chairWorkPhotos, specialties);
+      const existing = document.getElementById('chairSlotCard');
+      if (existing){
+        existing.outerHTML = html;
+      } else {
+        const grid = document.querySelector('#page .staff-grid');
+        if (grid) grid.insertAdjacentHTML('beforeend', html);
+      }
+
+      const confirm = document.getElementById('chairConfirmArea');
+      confirm.style.textAlign = 'center';
+      confirm.innerHTML = `
+        <div style="background:#F1E9DD; border-radius:14px; padding:18px 16px; text-align:center;">
+          <div style="font-size:22px; margin-bottom:6px;">⏳</div>
+          <div style="font-size:14px; font-weight:700; color:var(--espresso); margin-bottom:4px;">Saving your slot…</div>
+        </div>`;
+
+      saveChairSlot(currentSlug, chairSlotSaved).then(() => {
+        confirm.innerHTML = `
+          <div style="background:#F1E9DD; border-radius:14px; padding:18px 16px; text-align:center;">
+            <div style="font-size:22px; margin-bottom:6px;">✓</div>
+            <div style="font-size:14px; font-weight:700; color:var(--espresso); margin-bottom:4px;">Your slot is live — and saved</div>
+            <div style="font-size:12px; color:#8a7c6c; line-height:1.5; margin-bottom:14px;">Close this and scroll down to "Who's working today" — your card is right there alongside ${salon.name}'s own team. It'll still be here next time this page loads.</div>
+            <button type="button" id="chairEditAgainBtn" style="width:100%; padding:12px; border-radius:10px; font-size:13px; font-weight:700; background:var(--ivory-deep); color:var(--espresso-soft);">Edit my slot again</button>
+          </div>`;
+        document.getElementById('chairEditAgainBtn').addEventListener('click', () => renderChairSlotForm(salon, true));
+      });
+    }
+    chairModalOverlay.addEventListener('click', (e) => { if (e.target === chairModalOverlay) chairModalOverlay.classList.remove('open'); });
+
+    // Open the worker modal from either a card click (profile) or its Book button (straight to calendar)
+    document.addEventListener('click', (e) => {
+      const chairBtn = e.target.closest('#chairRentBtn');
+      if (chairBtn){
+        e.preventDefault();
+        openChairModal();
+        return;
+      }
+      const salonBookBtn = e.target.closest('[data-open="salon-book"]');
+      if (salonBookBtn){
+        e.preventDefault();
+        openSalonMenu();
+        return;
+      }
+      const editChip = e.target.closest('[data-chair-edit]');
+      if (editChip){
+        e.preventDefault();
+        openChairSlotEditor();
+        return;
+      }
+      const bookBtn = e.target.closest('.staff-btn');
+      if (bookBtn && !bookBtn.classList.contains('disabled') && !e.target.closest('[data-chair-slot]')){
+        e.preventDefault();
+        openWorkerProfile(Number(bookBtn.dataset.idx), true);
+        return;
+      }
+      const slotCard = e.target.closest('[data-chair-slot]');
+      if (slotCard){
+        openChairSlotMenu();
+        return;
+      }
+      const card = e.target.closest('.staff-card');
+      if (card){
+        openWorkerProfile(Number(card.dataset.idx), false);
+      }
+    });
+
+    workerOverlay.addEventListener('click', (e) => {
+      if (e.target === workerOverlay) closeWorkerModal();
+    });
+
+    // ---------- Palette customizer — in the real product this lives in the owner's dashboard;
+    // here it re-themes the live page so you can preview it against your own brand colour. ----------
+    const PALETTE_PRESETS = ['#7A1F2A','#C9A961','#3F6B4A','#5E8C86','#7B5EA7','#D63C7A','#B8794A','#A23B4E','#6E8B8B','#D97B56','#241E1A','#3A322C'];
+    let salonDefaultTheme = null;
+
+    function darkenColor(hex, amt){
+      const c = hex.replace('#', '');
+      const num = parseInt(c, 16);
+      let r = (num >> 16) & 255, g = (num >> 8) & 255, b = num & 255;
+      r = Math.round(r * (1 - amt)); g = Math.round(g * (1 - amt)); b = Math.round(b * (1 - amt));
+      return '#' + [r, g, b].map(x => Math.max(0, Math.min(255, x)).toString(16).padStart(2, '0')).join('');
+    }
+
+    function reattachChairSlotIfAny(){
+      if (!chairSlotSaved) return;
+      const grid = document.querySelector('#page .staff-grid');
+      if (grid) grid.insertAdjacentHTML('beforeend', chairSlotCardHtml(currentSalon, chairSlotSaved.name, chairSlotSaved.profilePhoto, chairSlotSaved.workPhotos, chairSlotSaved.specialties));
+    }
+
+    function applyPaletteColor(hex){
+      if (!currentSalon) return;
+      if (!salonDefaultTheme) salonDefaultTheme = { accent: currentSalon.theme.accent, accentDark: currentSalon.theme.accentDark };
+      currentSalon.theme.accent = hex;
+      currentSalon.theme.accentDark = darkenColor(hex, 0.35);
+      render();
+      reattachChairSlotIfAny();
+    }
+
+    document.getElementById('paletteSwatches').innerHTML = PALETTE_PRESETS.map(c => `<button type="button" class="palette-swatch" data-color="${c}" style="background:${c};"></button>`).join('');
+    document.querySelectorAll('.palette-swatch').forEach(sw => {
+      sw.addEventListener('click', () => applyPaletteColor(sw.dataset.color));
+    });
+    document.getElementById('paletteCustomInput').addEventListener('input', (e) => applyPaletteColor(e.target.value));
+    document.getElementById('paletteFab').addEventListener('click', () => {
+      document.getElementById('palettePanel').classList.toggle('open');
+    });
+    document.getElementById('paletteResetBtn').addEventListener('click', () => {
+      if (!salonDefaultTheme || !currentSalon) return;
+      currentSalon.theme.accent = salonDefaultTheme.accent;
+      currentSalon.theme.accentDark = salonDefaultTheme.accentDark;
+      render();
+      reattachChairSlotIfAny();
+    });
+
+    render();
+  </script>
+
+  <script>
+  (function(){
+    const burgerBtn = document.getElementById('burgerBtn');
+    const menuPanel = document.getElementById('menuPanel');
+    if (burgerBtn && menuPanel){
+      burgerBtn.addEventListener('click', function(e){
+        e.stopPropagation();
+        menuPanel.classList.toggle('open');
+      });
+      document.addEventListener('click', function(e){
+        if (!menuPanel.contains(e.target) && e.target !== burgerBtn){
+          menuPanel.classList.remove('open');
+        }
+      });
+    }
+  })();
+  </script>
+</body>
+</html>

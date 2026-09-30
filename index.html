@@ -1,0 +1,2135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>@MySalon — Beauty & Wellness Marketplace</title>
+<style>
+  :root{
+    --ivory:#FAF6F0;
+    --ivory-deep:#F1E9DD;
+    --espresso:#241E1A;
+    --espresso-soft:#3A322C;
+    --gold:#C9A961;
+    --gold-deep:#A9863F;
+    --blush:#D9AFA6;
+    --line:#E6DCCB;
+    --white:#FFFFFF;
+    --shadow: 0 20px 40px -20px rgba(36,30,26,0.35);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family: "Georgia", "Iowan Old Style", serif;
+    background: var(--ivory);
+    color: var(--espresso);
+    -webkit-font-smoothing: antialiased;
+  }
+  .sans{ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+  a{ text-decoration:none; color:inherit; }
+  button{ font-family:inherit; cursor:pointer; border:none; background:none; }
+  img, .ph{ display:block; }
+
+  /* ---------- TOP BAR ---------- */
+  .topbar{
+    position: sticky; top:0; z-index: 50;
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 18px 32px;
+    background: var(--espresso);
+    color: var(--ivory);
+  }
+  .brand-group{ display:flex; align-items:center; gap:10px; min-width:0; overflow:hidden; }
+  .home-icon{
+    width:34px; height:34px; border-radius:50%; flex:none;
+    background: rgba(250,246,240,0.10);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .home-icon:hover{ background: rgba(250,246,240,0.18); }
+  .home-icon svg{ width:16px; height:16px; }
+  .brand{
+    font-size: 22px; letter-spacing: 0.5px;
+    font-weight: 400;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .brand b{ color: var(--gold); font-weight:600; }
+  .topbar-right{ display:flex; align-items:center; gap:8px; flex:none; }
+  .icon-btn{
+    width:46px; height:46px; border-radius:9px; display:flex; align-items:center; justify-content:center;
+    position:relative; flex:none;
+  }
+  .icon-btn:hover{ background: rgba(255,255,255,0.08); }
+  .icon-btn svg{ width:21px; height:21px; }
+  .burger{
+    width:46px; height:46px; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:6px;
+    border-radius: 9px;
+    position:relative; flex:none;
+  }
+  .burger:hover{ background: rgba(255,255,255,0.08); }
+  .burger span{ width:24px; height:2.5px; background: var(--ivory); display:block; border-radius:2px; }
+
+  .menu-panel{
+    position:absolute; top: 68px; right: 32px; z-index:70;
+    background: var(--white); border-radius: 14px;
+    box-shadow: var(--shadow); border:1px solid var(--line);
+    min-width: 260px; padding: 10px;
+    display:none; flex-direction:column; gap:2px;
+  }
+  .menu-panel.open{ display:flex; }
+  .menu-panel a{
+    font-family:-apple-system, sans-serif; font-size:15px; color: var(--espresso);
+    padding: 13px 16px; border-radius: 9px;
+  }
+  .menu-panel a:hover{ background: var(--ivory-deep); }
+  .menu-divider{ height:1px; background: var(--line); margin: 6px 4px; }
+
+  /* ---------- CATEGORY STRIP ---------- */
+  .cat-strip{
+    display:flex; gap:10px; overflow-x:auto;
+    padding: 16px 32px;
+    background: var(--ivory-deep);
+    border-bottom: 1px solid var(--line);
+  }
+  .cat-strip::-webkit-scrollbar{ display:none; }
+  .cat-chip{
+    flex:none;
+    display:inline-flex; align-items:center; gap:8px;
+    padding: 9px 18px 9px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: var(--white);
+    font-size: 14px;
+    color: var(--espresso-soft);
+    white-space:nowrap;
+    transition: all .15s ease;
+  }
+  .cat-chip .dot{
+    width:10px; height:10px; border-radius:50%;
+    background: var(--c, var(--gold));
+    flex:none;
+  }
+  .cat-chip:hover{ border-color: var(--c, var(--gold)); color: var(--espresso); }
+  .cat-chip.active{
+    background: var(--c, var(--espresso));
+    color: var(--white);
+    border-color: var(--c, var(--espresso));
+  }
+  .cat-chip.active .dot{ background: var(--white); }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position: relative;
+    min-height: 78vh;
+    display:flex; align-items:center;
+    padding: 60px 32px;
+    background:
+      radial-gradient(1200px 500px at 85% -10%, rgba(201,169,97,0.20), transparent 60%),
+      linear-gradient(180deg, var(--espresso) 0%, #171310 100%);
+    color: var(--ivory);
+    overflow:hidden;
+  }
+  .hero::after{
+    content:"";
+    position:absolute; inset:0;
+    background-image:
+      linear-gradient(rgba(250,246,240,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(250,246,240,0.03) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events:none;
+  }
+  .hero-inner{
+    position:relative; z-index:2;
+    max-width: 1180px; margin:0 auto;
+    display:grid; grid-template-columns: 1.1fr 0.9fr; gap: 56px; align-items:center;
+    width:100%;
+  }
+  .eyebrow{
+    font-family: -apple-system, sans-serif;
+    text-transform: uppercase; letter-spacing: 3px; font-size: 12px;
+    color: var(--gold); margin-bottom: 18px;
+  }
+  .hero h1{
+    font-size: 52px; line-height:1.08; font-weight:400;
+    margin-bottom: 22px;
+  }
+  .hero h1 em{ font-style:italic; color: var(--gold); }
+  .hero p{
+    font-family: -apple-system, sans-serif;
+    font-size: 17px; line-height:1.6; color: rgba(250,246,240,0.78);
+    max-width: 480px; margin-bottom: 32px;
+  }
+  .hero-ctas{ display:flex; gap:14px; flex-wrap:wrap; }
+  .btn{
+    font-family: -apple-system, sans-serif;
+    font-size: 14px; font-weight:600; letter-spacing:0.3px;
+    padding: 15px 28px; border-radius: 6px;
+    transition: all .2s ease;
+    display:inline-flex; align-items:center; gap:8px;
+  }
+  .btn-gold{ background: linear-gradient(180deg, var(--gold), var(--gold-deep)); color: var(--espresso); }
+  .btn-gold:hover{ transform: translateY(-2px); box-shadow: 0 14px 24px -10px rgba(201,169,97,0.5); }
+  .btn-outline{ border: 1px solid rgba(250,246,240,0.35); color: var(--ivory); }
+  .btn-outline:hover{ border-color: var(--gold); color: var(--gold); }
+
+  .hero-visual{
+    position:relative; aspect-ratio: 4/5; border-radius: 18px;
+    background:
+      linear-gradient(160deg, rgba(201,169,97,0.35), rgba(217,175,166,0.25)),
+      var(--espresso-soft);
+    border: 1px solid rgba(201,169,97,0.35);
+    box-shadow: var(--shadow);
+    display:flex; align-items:center; justify-content:center;
+    overflow:hidden;
+  }
+  .hero-visual-label{
+    font-family: -apple-system, sans-serif;
+    color: rgba(250,246,240,0.55); font-size:13px; text-align:center; padding: 20px;
+    border: 1px dashed rgba(250,246,240,0.25); border-radius: 12px;
+  }
+  .sponsor-label{
+    position:absolute; bottom: 78px; left:18px;
+    font-family:-apple-system, sans-serif; font-size:11px; letter-spacing:2px;
+    text-transform:uppercase; color: rgba(250,246,240,0.55);
+  }
+  .sponsor-strip{
+    position:absolute; bottom:18px; left:18px; right:18px;
+    display:flex; gap:10px; overflow-x:auto; scroll-snap-type:x mandatory;
+    padding-bottom:2px;
+  }
+  .sponsor-strip::-webkit-scrollbar{ display:none; }
+  .sponsor-card{
+    flex:none; scroll-snap-align:start;
+    background: rgba(36,30,26,0.78); backdrop-filter: blur(6px);
+    border: 1px solid rgba(201,169,97,0.4);
+    border-radius: 10px; padding: 12px 16px; min-width: 210px;
+    font-family: -apple-system, sans-serif; font-size:13px; color: var(--ivory);
+    display:flex; justify-content:space-between; align-items:center; gap:10px;
+  }
+  .sponsor-card .stars{ color: var(--gold); font-size:12px; white-space:nowrap; }
+
+  /* ---------- SEARCH + MAP ---------- */
+  .search-section{
+    padding: 56px 32px 0;
+    max-width: 1180px; margin: 0 auto;
+  }
+  .search-section.map-block{ padding-top:0; padding-bottom:56px; }
+  .search-bar{
+    display:flex; gap:10px; background: var(--white);
+    border: 1px solid var(--line); border-radius: 14px;
+    padding: 10px; box-shadow: var(--shadow);
+    margin-bottom: 8px;
+  }
+  .search-bar input{
+    flex:1; border:none; outline:none; font-family:-apple-system, sans-serif;
+    font-size:15px; padding: 12px 16px; color: var(--espresso); background:transparent;
+  }
+  .search-bar button{
+    background: var(--espresso); color: var(--gold);
+    font-family:-apple-system, sans-serif; font-size:14px; font-weight:600;
+    padding: 0 26px; border-radius: 9px;
+  }
+  .location-btn{
+    flex:none; width:46px; padding:0 !important; display:flex; align-items:center; justify-content:center;
+    background: var(--ivory-deep) !important; color: var(--espresso-soft) !important;
+    border-radius: 9px; transition: background .15s ease, color .15s ease;
+  }
+  .location-btn svg{ width:19px; height:19px; }
+  .location-btn:hover{ background: var(--line) !important; }
+  .location-btn.locating svg{ animation: locSpin 1s linear infinite; }
+  .location-btn.active{ background: var(--gold) !important; color: var(--espresso) !important; }
+  @keyframes locSpin{ to{ transform: rotate(360deg); } }
+  .search-msg{ display:none; font-size:12.5px; color: var(--gold-deep); margin: 0 0 16px 6px; font-weight:600; }
+  .you-are-here{
+    width:100%; height:100%; border-radius:50%; background:#2E7DD1; border:3px solid #fff;
+    box-shadow: 0 0 0 0 rgba(46,125,209,0.55); animation: youPulse 1.8s ease-out infinite;
+  }
+  @keyframes youPulse{
+    0%{ box-shadow: 0 0 0 0 rgba(46,125,209,0.55); }
+    70%{ box-shadow: 0 0 0 14px rgba(46,125,209,0); }
+    100%{ box-shadow: 0 0 0 0 rgba(46,125,209,0); }
+  }
+  .map-shell{
+    position:relative;
+    height: 440px; border-radius: 18px; overflow:hidden;
+    border: 1px solid var(--line);
+    background: #F3EEE3;
+    box-shadow: var(--shadow), inset 0 0 0 1px rgba(36,30,26,0.04);
+  }
+  #leafletMap{ position:absolute; inset:0; width:100%; height:100%; background:#F3EEE3; font-family:-apple-system, sans-serif; }
+  .leaflet-container{ font-family:-apple-system, sans-serif; }
+
+  @keyframes pinDrop{ from{ transform: translateY(-16px) rotate(-45deg) scale(0.5); opacity:0; } to{ transform: translateY(0) rotate(-45deg) scale(1); opacity:1; } }
+  @keyframes pinPulse{
+    0%{ box-shadow: 0 6px 14px rgba(36,30,26,0.35), 0 0 0 0 rgba(201,169,97,0.55); }
+    70%{ box-shadow: 0 6px 14px rgba(36,30,26,0.35), 0 0 0 16px rgba(201,169,97,0); }
+    100%{ box-shadow: 0 6px 14px rgba(36,30,26,0.35), 0 0 0 0 rgba(201,169,97,0); }
+  }
+  /* Custom colored teardrop pins rendered inside Leaflet divIcon markers */
+  .map-pin{
+    position:relative;
+    width:100%; height:100%;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    display:flex; align-items:center; justify-content:center;
+    box-shadow: 0 6px 14px rgba(36,30,26,0.35);
+    border: 2px solid rgba(255,255,255,0.9);
+    cursor:pointer;
+    transition: box-shadow .2s ease, transform .15s ease;
+    animation: pinDrop .35s ease both;
+  }
+  .leaflet-marker-icon:hover .map-pin{ transform: rotate(-45deg) scale(1.15); }
+  .map-pin::after{ content:""; border-radius:50%; background: rgba(255,255,255,0.85); transform: rotate(45deg); display:block; }
+  .map-pin.pin-service::after{ width:6px; height:6px; }
+  .map-pin.pin-big::after{ width:11px; height:11px; }
+  .map-pin.pin-match{ animation: pinDrop .35s ease both, pinPulse 1.4s ease-out .35s infinite; }
+
+  /* Premium-tier perk: their own little logo badge on the map pin, like a verified business marker */
+  .pin-premium-badge{
+    position:absolute; top:-5px; right:-5px; width:14px; height:14px; border-radius:50%;
+    background: linear-gradient(135deg, #F3D68A, #C9A961);
+    border:1.5px solid #fff; box-shadow:0 2px 5px rgba(36,30,26,0.4);
+    display:flex; align-items:center; justify-content:center;
+    transform: rotate(45deg); z-index:2;
+    font-size:8px; color:#4A3A12; font-weight:800; line-height:1;
+  }
+
+  /* Brand the Leaflet popup to match the rest of the site */
+  .leaflet-popup-content-wrapper{ border-radius:14px; box-shadow: var(--shadow); border:1px solid var(--line); }
+  .leaflet-popup-content{ margin:16px; width:190px !important; font-family:-apple-system, sans-serif; }
+  .popup-tag{
+    display:inline-block; font-size:10px; font-weight:700; color:var(--white);
+    padding:3px 9px; border-radius:999px; margin-bottom:9px; text-transform:uppercase; letter-spacing:0.3px;
+  }
+  .leaflet-popup-content h4{ font-family:Georgia, serif; font-size:15px; margin:0 0 6px; color:var(--espresso); line-height:1.3; }
+  .leaflet-popup-content p{ font-size:12px; color:#6b5d4f; line-height:1.5; margin:0 0 12px; }
+  .popup-btn{
+    display:block; text-align:center; background: linear-gradient(180deg, var(--gold), var(--gold-deep));
+    color: var(--espresso); font-size:12.5px; font-weight:700; padding:9px; border-radius:8px; margin-bottom:8px;
+  }
+  .popup-note{ font-size:10px; color:#a89a86; line-height:1.4; display:block; }
+  .map-legend{
+    display:flex; gap:18px; flex-wrap:wrap;
+    font-family:-apple-system, sans-serif; font-size:12px; color:#8a7c6c;
+    margin-top:14px;
+  }
+  .map-legend span{ display:inline-flex; align-items:center; gap:6px; }
+  .map-legend .lg-dot{ width:9px; height:9px; border-radius:50%; display:inline-block; }
+  .map-legend .lg-dot.big{ width:13px; height:13px; }
+  .map-toggle{
+    position:absolute; top:16px; right:16px; z-index:1001;
+    background: var(--white); border-radius: 999px; padding:6px;
+    display:flex; gap:4px; box-shadow: var(--shadow);
+    font-family:-apple-system, sans-serif; font-size:13px;
+  }
+  .map-toggle span{ padding:8px 16px; border-radius:999px; }
+  .map-toggle span.active{ background: var(--espresso); color: var(--gold); }
+
+  /* ---------- QUICK NAV (Salon / Specialist / Market / Pricing / How It Works) ---------- */
+  .quick-nav{
+    padding: 8px 32px 56px;
+    max-width: 1180px; margin: 0 auto;
+    display:grid; grid-template-columns: repeat(7, 1fr); gap: 14px;
+  }
+  .qn-btn{
+    font-family:-apple-system, sans-serif;
+    display:flex; flex-direction:column; align-items:flex-start; gap:8px;
+    padding: 20px 18px;
+    border-radius: 14px;
+    color: var(--white);
+    background: var(--qc, var(--espresso));
+    transition: transform .15s ease, box-shadow .15s ease;
+    text-align:left;
+  }
+  .qn-btn:hover{ transform: translateY(-3px); box-shadow: var(--shadow); }
+  .qn-btn .qn-title{ font-size:15px; font-weight:700; }
+  .qn-btn .qn-sub{ font-size:12px; opacity:0.85; line-height:1.4; }
+
+  /* ---------- SECTION HEADERS ---------- */
+  .section{ padding: 56px 32px; max-width: 1180px; margin:0 auto; }
+  .section-head{ display:flex; justify-content:space-between; align-items:flex-end; margin-bottom: 30px; }
+  .section-head h2{ font-size: 30px; font-weight:400; }
+  .section-head span{ color: var(--gold-deep); font-style:italic; }
+  .section-head a{
+    font-family:-apple-system, sans-serif; font-size:13px; color: var(--gold-deep);
+    font-weight:600; letter-spacing:0.3px;
+  }
+
+  /* ---------- CARD GRID ---------- */
+  .grid{ display:grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  .card{
+    display:block; background: var(--white); border:1px solid var(--line); border-radius:14px;
+    overflow:hidden; transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .card:hover{ transform: translateY(-4px); box-shadow: var(--shadow); }
+  .card-img{
+    height: 140px;
+    background: linear-gradient(135deg, var(--ivory-deep), var(--blush));
+    display:flex; align-items:center; justify-content:center;
+    font-family:-apple-system, sans-serif; font-size:12px; color: var(--gold-deep);
+  }
+  .card-body{ padding: 16px; font-family:-apple-system, sans-serif; }
+  .card-body h3{ font-family: Georgia, serif; font-size:16px; font-weight:600; margin-bottom:4px; }
+  .card-body .meta{ font-size:12.5px; color:#8a7c6c; margin-bottom:8px; }
+  .card-body .price{ font-size:14px; font-weight:700; color: var(--gold-deep); }
+
+  /* ---------- AI TOOLS ---------- */
+  .ai-band{
+    background: var(--espresso); color: var(--ivory);
+    padding: 64px 32px; margin-top: 20px;
+  }
+  .ai-inner{ max-width:1180px; margin:0 auto; }
+  .ai-grid{ display:grid; grid-template-columns: repeat(4,1fr); gap:18px; margin-top:30px; }
+  .ai-grid-3{ grid-template-columns: repeat(3,1fr); }
+  .ai-card{
+    border:1px solid rgba(201,169,97,0.3); border-radius:14px; padding:22px;
+    background: rgba(255,255,255,0.03);
+  }
+  .ai-card .ico{ width:38px; height:38px; border-radius:10px; background: var(--gold); margin-bottom:16px; }
+  .ai-card h3{ font-size:16px; font-weight:600; margin-bottom:6px; font-family: Georgia, serif; }
+  .ai-card p{ font-family:-apple-system, sans-serif; font-size:13px; color:rgba(250,246,240,0.65); line-height:1.5; }
+
+  /* ---------- RENT A CHAIR / SHOP banners ---------- */
+  .banner-row{ display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  .banner{
+    border-radius:16px; padding:34px; min-height:200px;
+    display:flex; flex-direction:column; justify-content:flex-end;
+    position:relative; overflow:hidden;
+  }
+  .banner.b1{ background: linear-gradient(135deg, #3A322C, #241E1A); color: var(--ivory); }
+  .banner.b2{ background: linear-gradient(135deg, #F3D68A, #E0B23C); color: #3A2E1E; }
+
+  /* ---------- POPULAR SERVICES (smaller cards than the standard grid) ---------- */
+  .popular-grid{ gap:14px; }
+  .popular-grid .card-img{ height:96px; font-size:11px; }
+  .popular-grid .card-body{ padding:12px; }
+  .popular-grid .card-body h3{ font-size:13.5px; margin-bottom:3px; }
+  .popular-grid .card-body .meta{ font-size:11px; margin-bottom:5px; }
+  .popular-grid .card-body .price{ font-size:12.5px; }
+
+  /* ---------- MARKET PRODUCTS ---------- */
+  .market-products{ margin-top:24px; }
+  .market-products .grid{ grid-template-columns: repeat(6, 1fr); }
+  .market-products .card-img{ background: linear-gradient(135deg, #F6E3AE, #E0B23C); color:#3A2E1E; }
+  .market-products .card-body .price{ color:#A9863F; }
+  @media (max-width: 900px){
+    .market-products .grid{ grid-template-columns: repeat(3, 1fr); }
+  }
+  .banner h3{ font-size:22px; margin-bottom:8px; }
+  .banner p{ font-family:-apple-system, sans-serif; font-size:13px; opacity:0.8; margin-bottom:16px; max-width:320px; }
+  .banner .btn{ align-self:flex-start; }
+
+  /* ---------- AI GENERATOR MODAL ---------- */
+  .ai-card.clickable{ cursor:pointer; transition: transform .15s ease, border-color .15s ease; }
+  .ai-card.clickable:hover{ transform: translateY(-3px); border-color: var(--gold); }
+
+  .modal-overlay{
+    position:fixed; inset:0; z-index:100;
+    background: rgba(24,20,17,0.6); backdrop-filter: blur(3px);
+    display:none; align-items:center; justify-content:center;
+    padding: 24px;
+  }
+  .modal-overlay.open{ display:flex; }
+  .modal-box{
+    background: var(--ivory); border-radius: 20px; max-width: 560px; width:100%;
+    max-height: 88vh; overflow-y:auto;
+    box-shadow: 0 30px 60px -20px rgba(0,0,0,0.4);
+    font-family: -apple-system, sans-serif;
+  }
+  .modal-head{
+    display:flex; justify-content:space-between; align-items:flex-start;
+    padding: 24px 24px 0;
+  }
+  .modal-head h3{ font-family: Georgia, serif; font-size:22px; font-weight:400; color: var(--espresso); }
+  .modal-head p{ font-size:13px; color:#8a7c6c; margin-top:6px; max-width:400px; }
+  .modal-close{
+    width:32px; height:32px; border-radius:50%; background: var(--ivory-deep);
+    display:flex; align-items:center; justify-content:center; font-size:16px; color: var(--espresso);
+    flex:none;
+  }
+  .modal-close:hover{ background: var(--line); }
+  .modal-body{ padding: 20px 24px 24px; }
+
+  .upload-zone{
+    border: 2px dashed var(--line); border-radius: 14px;
+    padding: 32px 20px; text-align:center; cursor:pointer;
+    transition: border-color .15s ease, background .15s ease;
+  }
+  .upload-zone:hover, .upload-zone.dragover{ border-color: var(--gold); background: var(--ivory-deep); }
+  .upload-zone .icon{
+    width:44px; height:44px; margin:0 auto 12px; border-radius:12px;
+    background: var(--ivory-deep); display:flex; align-items:center; justify-content:center;
+    font-size:20px;
+  }
+  .upload-zone .primary-text{ font-size:14px; font-weight:600; color: var(--espresso); margin-bottom:4px; }
+  .upload-zone .secondary-text{ font-size:12px; color:#8a7c6c; }
+  .upload-zone input[type="file"]{ display:none; }
+
+  .preview-row{ display:flex; gap:14px; align-items:center; margin-top:14px; }
+  .preview-thumb{
+    width:72px; height:72px; border-radius:12px; object-fit:cover;
+    border:1px solid var(--line);
+  }
+  .preview-info{ font-size:13px; }
+  .preview-info .fname{ font-weight:600; color:var(--espresso); }
+  .preview-info button{ color:var(--gold-deep); font-size:12.5px; font-weight:600; margin-top:4px; }
+
+  .style-section{ margin-top: 22px; }
+  .style-section h4{ font-size:13px; font-weight:700; color: var(--espresso); margin-bottom:10px; letter-spacing:0.2px; }
+  .style-tabs{ display:flex; gap:8px; margin-bottom:14px; }
+  .style-tab{
+    flex:1; padding:9px; text-align:center; border-radius:9px; border:1px solid var(--line);
+    background: var(--white); font-size:13px; font-weight:600; color:#8a7c6c;
+  }
+  .style-tab.active{ background: var(--espresso); color: var(--gold); border-color: var(--espresso); }
+  .chip-row{ display:flex; gap:8px; flex-wrap:wrap; }
+  .style-chip{
+    padding: 8px 14px; border-radius:999px; border:1px solid var(--line);
+    background: var(--white); font-size:13px; color: var(--espresso-soft);
+  }
+  .style-chip.selected{ background: var(--gold); border-color: var(--gold); color: var(--espresso); font-weight:600; }
+
+  /* ---------- Icon-grid style picker (hairstyle & beard catalog) ---------- */
+  .style-grid{ display:grid; grid-template-columns: repeat(auto-fill, minmax(76px,1fr)); gap:8px; }
+  .style-grid .style-chip{
+    flex-direction:column; align-items:center; justify-content:flex-start; gap:7px;
+    padding:10px 4px 9px; border-radius:12px; text-align:center; font-size:11px; line-height:1.25;
+    display:flex; cursor:pointer; color:var(--espresso-soft);
+  }
+  .style-grid .style-chip.selected{ box-shadow: 0 0 0 2px var(--gold) inset; }
+  .chip-icon{
+    width:34px; height:34px; border-radius:50%; background:#e7c49c; position:relative;
+    flex:none; box-shadow: inset 0 0 0 1px rgba(0,0,0,.08); overflow:visible;
+  }
+  .chip-icon::before{ content:''; position:absolute; left:0; right:0; top:0; background:#2b2119; border-radius:50% 50% 0 0; }
+  .chip-icon::after{ content:''; position:absolute; display:none; }
+  /* hair families */
+  .ic-buzz::before{ height:12%; }
+  .ic-crop::before{ height:24%; }
+  .ic-fade::before{ height:34%; border-radius:50% 50% 8px 8px; }
+  .ic-fade::after{ display:block; left:1px; right:1px; top:34%; height:20%; background:linear-gradient(180deg, rgba(43,33,25,.55), rgba(43,33,25,0)); }
+  .ic-flattop::before{ height:42%; border-radius:6px 6px 0 0; left:6px; right:6px; }
+  .ic-afro{ width:42px; height:42px; }
+  .ic-afro::before{ height:100%; border-radius:50%; background: radial-gradient(circle at 30% 30%, #3a2c22, #241a14 70%); }
+  .ic-curly::before{ height:46%; border-radius:50% 50% 40% 40%; background: repeating-radial-gradient(circle at 6px 6px, #2b2119 0 2px, #241a14 2px 5px); }
+  .ic-swept::before{ height:40%; border-radius:50% 60% 0 0; transform: skewX(-8deg); }
+  .ic-bun::before{ height:22%; }
+  .ic-bun::after{ display:block; width:9px; height:9px; border-radius:50%; background:#2b2119; top:-5px; right:4px; }
+  .ic-mohawk::before{ left:13px; right:13px; height:62%; border-radius:6px 6px 0 0; }
+  .ic-braided::before{ height:40%; background: repeating-linear-gradient(90deg, #2b2119 0 3px, #4a382b 3px 5px); }
+  .ic-locs::before{ height:34%; }
+  .ic-locs::after{ display:block; left:4px; right:4px; top:32%; height:22px; background: repeating-linear-gradient(90deg, #2b2119 0 3px, transparent 3px 7px); }
+  .ic-bangs::before{ height:30%; }
+  .ic-bangs::after{ display:block; left:2px; right:2px; top:26%; height:9px; background:#2b2119; border-radius:0 0 6px 6px; }
+  .ic-straightshort::before{ height:46%; left:-2px; right:-2px; border-radius:40% 40% 50% 50%; }
+  .ic-straightlong::before{ height:34%; }
+  .ic-straightlong::after{ display:block; left:1px; right:1px; top:30%; height:16px; background:#2b2119; border-radius:0 0 10px 10px; }
+  .ic-jagged::after{ clip-path: polygon(0 0,15% 100%,30% 20%,45% 100%,60% 15%,75% 100%,90% 20%,100% 0); }
+  .ic-shine::before{ background: linear-gradient(120deg,#2b2119 55%, #55402f 60%, #2b2119 65%); }
+  .ic-design::after{ display:block; width:4px; height:4px; border-radius:50%; background:var(--gold-deep); top:38%; right:5px; }
+  /* beard families (drawn at the base of the head) */
+  .ic-beardnone::after{ display:none; }
+  .ic-stubble::after{ display:block; left:5px; right:5px; bottom:2px; height:8px; border-radius:0 0 17px 17px; background: repeating-radial-gradient(circle at 3px 3px, #4a382b 0 1px, transparent 1px 4px); }
+  .ic-goatee::after{ display:block; left:12px; right:12px; bottom:1px; height:11px; border-radius:0 0 10px 10px; background:#2b2119; }
+  .ic-full::after{ display:block; left:3px; right:3px; bottom:0; height:17px; border-radius:0 0 17px 17px; background:#2b2119; }
+  .ic-chinstrap::after{ display:block; left:2px; right:2px; bottom:3px; height:3px; background:#2b2119; }
+  .ic-muttonchops::after{ display:block; left:2px; right:2px; bottom:8px; height:13px; background:
+      linear-gradient(90deg,#2b2119 0 7px, transparent 7px calc(100% - 7px), #2b2119 calc(100% - 7px) 100%); }
+  .ic-mustache::before{ content:''; position:absolute; display:block; left:10px; right:10px; bottom:9px; height:3px; background:#2b2119; border-radius:2px; }
+  .ic-fade::after, .chip-icon.ic-full.ic-beardfade::after{ }
+  .ic-beardfade::before{ content:''; position:absolute; display:block; left:0; right:0; bottom:16px; height:6px; background:linear-gradient(0deg, rgba(43,33,25,.5), rgba(43,33,25,0)); }
+
+  /* ---------- API key control for the AI generators ---------- */
+  .ai-key-row{
+    display:flex; align-items:center; gap:8px; margin-top:12px; padding:10px 12px;
+    background: var(--ivory-deep); border-radius:10px; font-size:12px; color:#8a7c6c; flex-wrap:wrap;
+  }
+  .ai-key-row input{
+    flex:1; min-width:160px; border:1px solid var(--line); border-radius:7px; padding:7px 9px;
+    font-size:12.5px; background: var(--white); color: var(--espresso);
+  }
+  .ai-key-row button{
+    padding:7px 12px; border-radius:7px; background: var(--espresso); color: var(--gold);
+    font-size:12px; font-weight:700; flex:none;
+  }
+  .ai-key-row .ai-key-status{ font-size:11.5px; flex:none; }
+  .ai-key-row a{ color: var(--gold-deep); font-weight:600; }
+  .result-note.error{ background:#fbe4e1; color:#8a2f22; }
+
+  .modal-actions{ margin-top:22px; }
+  .generate-btn{
+    width:100%; padding:15px; border-radius:9px;
+    background: linear-gradient(180deg, var(--gold), var(--gold-deep)); color: var(--espresso);
+    font-size:14px; font-weight:700;
+  }
+  .generate-btn:disabled{ opacity:0.5; cursor:not-allowed; }
+
+  .result-panel{
+    margin-top:20px; border-radius:14px; border:1px solid var(--line); background: var(--white);
+    padding: 18px; display:none;
+  }
+  .result-panel.show{ display:block; }
+  .result-panel .result-head{ display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; color: var(--espresso); margin-bottom:12px; }
+  .result-panel .spinner{
+    width:14px; height:14px; border-radius:50%; border:2px solid var(--line); border-top-color: var(--gold-deep);
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin{ to{ transform: rotate(360deg); } }
+  .result-split{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .result-split .col{ text-align:center; }
+  .result-split img{ width:100%; aspect-ratio:1; object-fit:cover; border-radius:10px; border:1px solid var(--line); }
+  .result-split .placeholder-box{
+    width:100%; aspect-ratio:1; border-radius:10px; border:1px dashed var(--line);
+    background: var(--ivory-deep); display:flex; align-items:center; justify-content:center;
+    font-size:11.5px; color:#8a7c6c; padding:12px; text-align:center;
+  }
+  .result-split .col span{ display:block; font-size:11.5px; color:#8a7c6c; margin-top:6px; }
+  .result-note{
+    margin-top:14px; font-size:12px; color:#8a7c6c; line-height:1.5;
+    background: var(--ivory-deep); border-radius:8px; padding:10px 12px;
+  }
+
+  /* ---------- NEXT STEP: book with a salon/specialist ---------- */
+  .next-step{ margin-top:22px; padding-top:20px; border-top:1px solid var(--line); display:none; }
+  .next-step.show{ display:block; }
+  .next-step .ns-label{
+    font-family:-apple-system, sans-serif; font-size:11px; text-transform:uppercase;
+    letter-spacing:1.5px; color: var(--gold-deep); font-weight:700; margin-bottom:4px;
+  }
+  .next-step h4{ font-family:Georgia, serif; font-size:18px; font-weight:400; margin-bottom:14px; color:var(--espresso); }
+  .ns-group{ margin-bottom:18px; }
+  .ns-group-label{ font-family:-apple-system, sans-serif; font-size:12px; font-weight:700; color: var(--espresso-soft); margin-bottom:8px; }
+  .ns-strip{ display:flex; gap:10px; overflow-x:auto; padding-bottom:4px; }
+  .ns-strip::-webkit-scrollbar{ display:none; }
+  .ns-card{ flex:none; width:134px; background: var(--white); border:1px solid var(--line); border-radius:12px; overflow:hidden; }
+  .ns-card .ns-img{
+    height:70px; background: linear-gradient(135deg, var(--ivory-deep), var(--blush));
+    display:flex; align-items:center; justify-content:center; font-size:10px; color: var(--gold-deep);
+    font-family:-apple-system, sans-serif;
+  }
+  .ns-card .ns-body{ padding:9px; font-family:-apple-system, sans-serif; }
+  .ns-card h5{ font-family:Georgia, serif; font-size:12.5px; font-weight:600; margin-bottom:2px; color:var(--espresso); }
+  .ns-card .ns-meta{ font-size:10.5px; color:#8a7c6c; margin-bottom:7px; }
+  .ns-card .ns-book{
+    display:block; text-align:center; font-size:11px; font-weight:700; padding:7px;
+    border-radius:6px; background: var(--espresso); color: var(--gold);
+  }
+
+  /* ---------- MASSAGE BODY MAP MODAL ---------- */
+  .body-modal .modal-box{ max-width: 760px; }
+  .body-grid{
+    display:grid; grid-template-columns: 1fr 1fr; gap: 22px;
+  }
+  .body-toolbar{ display:flex; flex-direction:column; gap:10px; margin-bottom:12px; }
+  .toolbar-row{ display:flex; gap:8px; flex-wrap:wrap; }
+  .pill-toggle{ display:inline-flex; background: var(--white); border:1px solid var(--line); border-radius:999px; padding:3px; }
+  .pill-toggle span{ padding:7px 16px; border-radius:999px; font-size:12.5px; font-weight:600; color:#8a7c6c; cursor:pointer; }
+  .pill-toggle span.active{ background: var(--espresso); color: var(--gold); }
+  .part-chip{
+    padding: 6px 13px; border-radius:999px; border:1px solid var(--line); background:var(--white);
+    font-size:12px; color: var(--espresso-soft); cursor:pointer;
+  }
+  .part-chip.active{ background: var(--gold); border-color:var(--gold); color:var(--espresso); font-weight:600; }
+
+  .body-stage-wrap{
+    position:relative; height: 380px; border-radius:14px; overflow:hidden;
+    background: var(--ivory-deep); border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .body-stage{
+    width:70%; height:100%; transition: transform .3s ease;
+    display:flex; align-items:center; justify-content:center;
+    cursor: crosshair;
+  }
+  .body-stage svg{ width:100%; height:100%; --sil:#C9BBA3; }
+  .body-hint{
+    position:absolute; bottom:10px; left:0; right:0; text-align:center;
+    font-size:11px; color:#9a8d7a; pointer-events:none;
+  }
+  .body-actions-row{ display:flex; justify-content:space-between; align-items:center; margin-top:10px; }
+  .clear-points{ font-size:12px; color: var(--gold-deep); font-weight:600; }
+
+  .body-side h4{ font-size:13px; font-weight:700; color:var(--espresso); margin-bottom:8px; }
+  .body-textarea{
+    width:100%; min-height:90px; resize:vertical; border:1px solid var(--line); border-radius:10px;
+    padding:12px; font-family:-apple-system, sans-serif; font-size:13px; color:var(--espresso);
+    background:var(--white); margin-bottom:18px;
+  }
+  .save-focus-btn{
+    width:100%; padding:14px; border-radius:9px; margin-top:20px;
+    background: linear-gradient(180deg, var(--gold), var(--gold-deep)); color: var(--espresso);
+    font-size:14px; font-weight:700;
+  }
+  .body-summary{
+    margin-top:16px; border-radius:12px; border:1px solid var(--line); background:var(--white);
+    padding:16px; display:none; font-size:12.5px; color:var(--espresso-soft); line-height:1.7;
+  }
+  .body-summary.show{ display:block; }
+  .body-summary b{ color:var(--espresso); }
+
+  @media (max-width: 640px){
+    .body-grid{ grid-template-columns:1fr; }
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    background: var(--espresso); color: rgba(250,246,240,0.7);
+    padding: 56px 32px 100px; margin-top: 20px;
+  }
+  .footer-inner{ max-width:1180px; margin:0 auto; display:grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap:32px; font-family:-apple-system, sans-serif; font-size:13.5px;}
+  .footer-inner h4{ color: var(--gold); font-family:Georgia, serif; font-size:15px; margin-bottom:14px; font-weight:600;}
+  .footer-inner ul{ list-style:none; display:flex; flex-direction:column; gap:9px; }
+  .footer-bottom{ max-width:1180px; margin: 32px auto 0; padding-top:24px; border-top:1px solid rgba(250,246,240,0.12); font-family:-apple-system, sans-serif; font-size:12px; display:flex; justify-content:space-between; }
+
+  /* ---------- MOBILE BOTTOM NAV ---------- */
+  @media (max-width: 900px){
+    .hero-inner{ grid-template-columns:1fr; }
+    .hero h1{ font-size:38px; }
+    .grid{ grid-template-columns: repeat(2,1fr); }
+    .ai-grid{ grid-template-columns: repeat(2,1fr); }
+    .ai-grid-3{ grid-template-columns: 1fr; }
+    .banner-row{ grid-template-columns:1fr; }
+    .footer-inner{ grid-template-columns: 1fr 1fr; }
+    .quick-nav{ grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 420px){
+    .topbar{ padding: 14px 14px; }
+    .menu-panel{ right: 14px; }
+  }
+</style>
+<style>
+/* Leaflet 1.9.4 core CSS (BSD-2-Clause, leafletjs.com) — inlined so it always loads with the page */
+.leaflet-pane,.leaflet-tile,.leaflet-marker-icon,.leaflet-marker-shadow,.leaflet-tile-container,.leaflet-pane>svg,.leaflet-pane>canvas,.leaflet-zoom-box,.leaflet-image-layer,.leaflet-layer{position:absolute;left:0;top:0}
+.leaflet-container{overflow:hidden}
+.leaflet-tile,.leaflet-marker-icon,.leaflet-marker-shadow{-webkit-user-select:none;-moz-user-select:none;user-select:none;-webkit-user-drag:none}
+.leaflet-tile::selection{background:transparent}
+.leaflet-safari .leaflet-tile{image-rendering:-webkit-optimize-contrast}
+.leaflet-safari .leaflet-tile-container{width:1600px;height:1600px;-webkit-transform-origin:0 0}
+.leaflet-marker-icon,.leaflet-marker-shadow{display:block}
+.leaflet-container .leaflet-overlay-pane svg{max-width:none!important;max-height:none!important}
+.leaflet-container .leaflet-marker-pane img,.leaflet-container .leaflet-shadow-pane img,.leaflet-container .leaflet-tile-pane img,.leaflet-container img.leaflet-image-layer,.leaflet-container .leaflet-tile{max-width:none!important;max-height:none!important;width:auto;padding:0}
+.leaflet-container img.leaflet-tile{mix-blend-mode:plus-lighter}
+.leaflet-container.leaflet-touch-zoom{-ms-touch-action:pan-x pan-y;touch-action:pan-x pan-y}
+.leaflet-container.leaflet-touch-drag{-ms-touch-action:pinch-zoom;touch-action:none;touch-action:pinch-zoom}
+.leaflet-container.leaflet-touch-drag.leaflet-touch-zoom{-ms-touch-action:none;touch-action:none}
+.leaflet-container{-webkit-tap-highlight-color:transparent}
+.leaflet-container a{-webkit-tap-highlight-color:rgba(51,181,229,0.4)}
+.leaflet-tile{filter:inherit;visibility:hidden}
+.leaflet-tile-loaded{visibility:inherit}
+.leaflet-zoom-box{width:0;height:0;box-sizing:border-box;z-index:800}
+.leaflet-overlay-pane svg{-moz-user-select:none}
+.leaflet-pane{z-index:400}
+.leaflet-tile-pane{z-index:200}
+.leaflet-overlay-pane{z-index:400}
+.leaflet-shadow-pane{z-index:500}
+.leaflet-marker-pane{z-index:600}
+.leaflet-tooltip-pane{z-index:650}
+.leaflet-popup-pane{z-index:700}
+.leaflet-map-pane canvas{z-index:100}
+.leaflet-map-pane svg{z-index:200}
+.leaflet-vml-shape{width:1px;height:1px}
+.lvml{behavior:url(#default#VML);display:inline-block;position:absolute}
+.leaflet-control{position:relative;z-index:800;pointer-events:auto}
+.leaflet-top,.leaflet-bottom{position:absolute;z-index:1000;pointer-events:none}
+.leaflet-top{top:0}
+.leaflet-right{right:0}
+.leaflet-bottom{bottom:0}
+.leaflet-left{left:0}
+.leaflet-control{float:left;clear:both}
+.leaflet-right .leaflet-control{float:right}
+.leaflet-top .leaflet-control{margin-top:10px}
+.leaflet-bottom .leaflet-control{margin-bottom:10px}
+.leaflet-left .leaflet-control{margin-left:10px}
+.leaflet-right .leaflet-control{margin-right:10px}
+.leaflet-fade-anim .leaflet-popup{opacity:0;transition:opacity .2s linear}
+.leaflet-fade-anim .leaflet-map-pane .leaflet-popup{opacity:1}
+.leaflet-zoom-animated{transform-origin:0 0}
+svg.leaflet-zoom-animated{will-change:transform}
+.leaflet-zoom-anim .leaflet-zoom-animated{transition:transform .25s cubic-bezier(0,0,.25,1)}
+.leaflet-zoom-anim .leaflet-tile,.leaflet-pan-anim .leaflet-tile{transition:none}
+.leaflet-zoom-anim .leaflet-zoom-hide{visibility:hidden}
+.leaflet-interactive{cursor:pointer}
+.leaflet-grab{cursor:grab}
+.leaflet-crosshair,.leaflet-crosshair .leaflet-interactive{cursor:crosshair}
+.leaflet-popup-pane,.leaflet-control{cursor:auto}
+.leaflet-dragging .leaflet-grab,.leaflet-dragging .leaflet-grab .leaflet-interactive,.leaflet-dragging .leaflet-marker-draggable{cursor:grabbing}
+.leaflet-marker-icon,.leaflet-marker-shadow,.leaflet-image-layer,.leaflet-pane>svg path,.leaflet-tile-container{pointer-events:none}
+.leaflet-marker-icon.leaflet-interactive,.leaflet-image-layer.leaflet-interactive,.leaflet-pane>svg path.leaflet-interactive,svg.leaflet-image-layer.leaflet-interactive path{pointer-events:visiblePainted;pointer-events:auto}
+.leaflet-container{background:#ddd;outline-offset:1px}
+.leaflet-container a{color:#0078A8}
+.leaflet-zoom-box{border:2px dotted #38f;background:rgba(255,255,255,.5)}
+.leaflet-bar{box-shadow:0 1px 5px rgba(0,0,0,.65);border-radius:4px}
+.leaflet-bar a{background-color:#fff;border-bottom:1px solid #ccc;width:26px;height:26px;line-height:26px;display:block;text-align:center;text-decoration:none;color:#000}
+.leaflet-bar a,.leaflet-control-layers-toggle{background-position:50% 50%;background-repeat:no-repeat;display:block}
+.leaflet-bar a:hover,.leaflet-bar a:focus{background-color:#f4f4f4}
+.leaflet-bar a:first-child{border-top-left-radius:4px;border-top-right-radius:4px}
+.leaflet-bar a:last-child{border-bottom-left-radius:4px;border-bottom-right-radius:4px;border-bottom:none}
+.leaflet-bar a.leaflet-disabled{cursor:default;background-color:#f4f4f4;color:#bbb}
+.leaflet-touch .leaflet-bar a{width:30px;height:30px;line-height:30px}
+.leaflet-control-zoom-in,.leaflet-control-zoom-out{font:bold 18px 'Lucida Console',Monaco,monospace;text-indent:1px}
+.leaflet-control-layers{box-shadow:0 1px 5px rgba(0,0,0,.4);background:#fff;border-radius:5px}
+.leaflet-control-layers-toggle{width:36px;height:36px}
+.leaflet-control-layers .leaflet-control-layers-list,.leaflet-control-layers-expanded .leaflet-control-layers-toggle{display:none}
+.leaflet-control-layers-expanded .leaflet-control-layers-list{display:block;position:relative}
+.leaflet-control-layers-expanded{padding:6px 10px 6px 6px;color:#333;background:#fff}
+.leaflet-control-layers-scrollbar{overflow-y:scroll;overflow-x:hidden;padding-right:5px}
+.leaflet-control-layers-selector{margin-top:2px;position:relative;top:1px}
+.leaflet-control-layers label{display:block;font-size:13px}
+.leaflet-control-layers-separator{height:0;border-top:1px solid #ddd;margin:5px -10px 5px -6px}
+.leaflet-container .leaflet-control-attribution{background:rgba(255,255,255,.8);margin:0}
+.leaflet-control-attribution,.leaflet-control-scale-line{padding:0 5px;color:#333;line-height:1.4}
+.leaflet-control-attribution a{text-decoration:none}
+.leaflet-control-attribution a:hover,.leaflet-control-attribution a:focus{text-decoration:underline}
+.leaflet-attribution-flag{display:inline!important;vertical-align:baseline!important;width:1em;height:.6669em}
+.leaflet-left .leaflet-control-scale{margin-left:5px}
+.leaflet-bottom .leaflet-control-scale{margin-bottom:5px}
+.leaflet-control-scale-line{border:2px solid #777;border-top:none;line-height:1.1;padding:2px 5px 1px;white-space:nowrap;box-sizing:border-box;background:rgba(255,255,255,.8);text-shadow:1px 1px #fff}
+.leaflet-control-scale-line:not(:first-child){border-top:2px solid #777;border-bottom:none;margin-top:-2px}
+.leaflet-control-scale-line:not(:first-child):not(:last-child){border-bottom:2px solid #777}
+.leaflet-popup{position:absolute;text-align:center;margin-bottom:20px}
+.leaflet-popup-content-wrapper{padding:1px;text-align:left;border-radius:12px}
+.leaflet-popup-content{margin:13px 24px 13px 20px;line-height:1.3;font-size:13px;min-height:1px}
+.leaflet-popup-content p{margin:17px 0}
+.leaflet-popup-tip-container{width:40px;height:20px;position:absolute;left:50%;margin-top:-1px;margin-left:-20px;overflow:hidden;pointer-events:none}
+.leaflet-popup-tip{width:17px;height:17px;padding:1px;margin:-10px auto 0;pointer-events:auto;transform:rotate(45deg)}
+.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#fff;color:#333;box-shadow:0 3px 14px rgba(0,0,0,.4)}
+.leaflet-container a.leaflet-popup-close-button{position:absolute;top:0;right:0;border:none;text-align:center;width:24px;height:24px;font:16px/24px Tahoma,Verdana,sans-serif;color:#757575;text-decoration:none;background:transparent}
+.leaflet-container a.leaflet-popup-close-button:hover,.leaflet-container a.leaflet-popup-close-button:focus{color:#585858}
+.leaflet-popup-scrolled{overflow:auto}
+.leaflet-div-icon{background:#fff;border:1px solid #666}
+.leaflet-tooltip{position:absolute;padding:6px;background-color:#fff;border:1px solid #fff;border-radius:3px;color:#222;white-space:nowrap;user-select:none;pointer-events:none;box-shadow:0 1px 3px rgba(0,0,0,.4)}
+.leaflet-tooltip.leaflet-interactive{cursor:pointer;pointer-events:auto}
+.leaflet-tooltip-top:before,.leaflet-tooltip-bottom:before,.leaflet-tooltip-left:before,.leaflet-tooltip-right:before{position:absolute;pointer-events:none;border:6px solid transparent;background:transparent;content:""}
+.leaflet-tooltip-bottom{margin-top:6px}
+.leaflet-tooltip-top{margin-top:-6px}
+.leaflet-tooltip-bottom:before,.leaflet-tooltip-top:before{left:50%;margin-left:-6px}
+.leaflet-tooltip-top:before{bottom:0;margin-bottom:-12px;border-top-color:#fff}
+.leaflet-tooltip-bottom:before{top:0;margin-top:-12px;margin-left:-6px;border-bottom-color:#fff}
+.leaflet-tooltip-left{margin-left:-6px}
+.leaflet-tooltip-right{margin-left:6px}
+.leaflet-tooltip-left:before,.leaflet-tooltip-right:before{top:50%;margin-top:-6px}
+.leaflet-tooltip-left:before{right:0;margin-right:-12px;border-left-color:#fff}
+.leaflet-tooltip-right:before{left:0;margin-left:-12px;border-right-color:#fff}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+</head>
+<body>
+
+  <!-- TOP BAR -->
+  <header class="topbar" id="top">
+    <div class="brand-group">
+      <a class="home-icon" href="#top" aria-label="Home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--ivory)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg>
+      </a>
+      <div class="brand">@<b>MySalon</b></div>
+    </div>
+    <div class="topbar-right">
+      <a class="icon-btn" href="profile.html" aria-label="Profile / Sign in">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--ivory)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c1.5-4 5-6 8-6s6.5 2 8 6"/></svg>
+      </a>
+      <a class="icon-btn" href="market.html" aria-label="Market">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--ivory)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12l-1 12H7L6 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+      </a>
+      <button class="burger icon-btn" id="burgerBtn" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="menu-panel" id="menuPanel">
+      <a href="profile.html">Profile</a>
+      <a href="about.html">About Us</a>
+      <div class="menu-divider"></div>
+      <a href="#search">Search</a>
+      <a href="#">Bookings</a>
+      <a href="salons.html">Salons</a>
+      <a href="specialists.html">Specialists</a>
+      <a href="beauty-spa.html">Beauty / Spa</a>
+      <a href="makeup-artists.html">Makeup Artists</a>
+      <a href="market.html">Market</a>
+      <a href="rent-a-chair.html">Rent a Chair</a>
+      <div class="menu-divider"></div>
+      <a href="billing.html">Billing</a>
+      <a href="list-your-business.html">List Your Business</a>
+    </div>
+  </header>
+
+  <!-- CATEGORY STRIP -->
+  <nav class="cat-strip sans" id="catStrip">
+    <button class="cat-chip active" data-cat="all"><span class="dot" style="--c:#8a7c6c"></span>All</button>
+    <button class="cat-chip" data-cat="barbers" style="--c:#C1502E"><span class="dot"></span>Barbers</button>
+    <button class="cat-chip" data-cat="braids" style="--c:#B8794A"><span class="dot"></span>Braids</button>
+    <button class="cat-chip" data-cat="wigs" style="--c:#C98A8A"><span class="dot"></span>Wigs</button>
+    <button class="cat-chip" data-cat="colors" style="--c:#7B5EA7"><span class="dot"></span>Colors</button>
+    <button class="cat-chip" data-cat="massage" style="--c:#7C9070"><span class="dot"></span>Massage</button>
+    <button class="cat-chip" data-cat="makeup" style="--c:#A23B4E"><span class="dot"></span>Makeup</button>
+    <button class="cat-chip" data-cat="nails" style="--c:#D97B56"><span class="dot"></span>Nails</button>
+    <button class="cat-chip" data-cat="facials" style="--c:#5E8C86"><span class="dot"></span>Facials</button>
+    <button class="cat-chip" data-cat="locs" style="--c:#6B4A3A"><span class="dot"></span>Locs</button>
+    <button class="cat-chip" data-cat="spa" style="--c:#6E8B8B"><span class="dot"></span>Spa</button>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-inner">
+      <div>
+        <div class="eyebrow">South Africa's Beauty Marketplace</div>
+        <h1>Everyday beauty,<br><em>elevated.</em></h1>
+        <p class="sans">Discover trusted salons, barbers, and independent specialists near you — book instantly, pay securely, and step out looking your best.</p>
+        <div class="hero-ctas">
+          <a href="#search" class="btn btn-gold">Find Near Me</a>
+          <a href="#services" class="btn btn-outline">Explore Services</a>
+          <a href="#" class="btn btn-outline open-hair-modal">Try a New Look</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-visual-label">Hero image goes here<br>(attach your photo and I'll drop it in)</div>
+        <div class="sponsor-label">Sponsored</div>
+        <div class="sponsor-strip">
+          <div class="sponsor-card"><span>Thabo's Barber Studio · Sandton</span><span class="stars">★★★★★</span></div>
+          <div class="sponsor-card"><span>Velvet &amp; Vine · Rosebank</span><span class="stars">★★★★★</span></div>
+          <div class="sponsor-card"><span>The Colour Bar · Centurion</span><span class="stars">★★★★☆</span></div>
+          <div class="sponsor-card"><span>MUA Studio · Sandton</span><span class="stars">★★★★★</span></div>
+          <div class="sponsor-card"><span>Serenity Massage · Menlyn</span><span class="stars">★★★★★</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AI TOOLS (between hero and search) -->
+  <section class="ai-band">
+    <div class="ai-inner">
+      <div class="section-head" style="margin-bottom:0;">
+        <h2>Try before you <span>book</span></h2>
+        <a href="#" class="open-hair-modal" style="color:var(--gold);">Try a New Look →</a>
+      </div>
+      <div class="ai-grid ai-grid-3">
+        <div class="ai-card clickable" id="hairBeardCard"><div class="ico"></div><h3>Hairstyle &amp; Beard Studio</h3><p class="sans">Preview a new cut, color, or — if you rock a beard — a new shape and length, all in one place.</p></div>
+        <div class="ai-card clickable" id="nailArtCard"><div class="ico"></div><h3>Nail Art Generator</h3><p class="sans">Preview nail designs before your appointment.</p></div>
+        <div class="ai-card clickable" id="massageCard"><div class="ico"></div><h3>Massage Body Map</h3><p class="sans">Mark focus areas so your therapist knows exactly what you need.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEARCH -->
+  <section class="search-section" id="search">
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search a salon, specialist, or service — try 'braids' or 'Thabo'...">
+      <button id="locationBtn" type="button" class="location-btn" title="Use my location" aria-label="Use my location">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+      </button>
+      <button id="searchBtn" type="button">Search</button>
+    </div>
+    <div class="search-msg sans" id="searchMsg"></div>
+  </section>
+
+  <!-- MAP -->
+  <section class="search-section map-block" id="explore">
+    <div class="map-shell" id="mapShell">
+      <div id="leafletMap"></div>
+      <div class="map-toggle">
+        <span class="active">Map</span>
+        <span>List</span>
+      </div>
+      <!-- markers injected by script -->
+    </div>
+    <div class="map-legend" id="mapLegend"></div>
+  </section>
+
+  <!-- QUICK NAV: Salon / Specialist / Market / Pricing / How It Works -->
+  <nav class="quick-nav" id="quickNav">
+    <a class="qn-btn" href="salons.html" style="--qc:#7A1F2A">
+      <span class="qn-title">Salons</span>
+      <span class="qn-sub">Established studios & storefronts</span>
+    </a>
+    <a class="qn-btn" href="specialists.html" style="--qc:#1F3A5F">
+      <span class="qn-title">Specialists</span>
+      <span class="qn-sub">Independent pros without their own shop</span>
+    </a>
+    <a class="qn-btn" href="market.html" style="--qc:#E0B23C; color:#3A2E1E;">
+      <span class="qn-title">Market</span>
+      <span class="qn-sub" style="opacity:0.75;">Shops & stores selling through @MySalon</span>
+    </a>
+    <a class="qn-btn" href="rent-a-chair.html" style="--qc:#3F6B4A">
+      <span class="qn-title">Rent a Chair</span>
+      <span class="qn-sub">Spare chairs at pro & sponsored salons</span>
+    </a>
+    <a class="qn-btn" href="makeup-artists.html" style="--qc:#D63C7A">
+      <span class="qn-title">Makeup Artist</span>
+      <span class="qn-sub">Bridal, editorial & everyday makeup pros</span>
+    </a>
+    <a class="qn-btn" href="beauty-spa.html" style="--qc:#1A1A1A">
+      <span class="qn-title">Beauty / Spa</span>
+      <span class="qn-sub">Therapists, masseuses & spa specialists</span>
+    </a>
+    <a class="qn-btn" href="billing.html" style="--qc:#5C3A66">
+      <span class="qn-title">Billing</span>
+      <span class="qn-sub">Plans & pricing for providers</span>
+    </a>
+  </nav>
+
+  <!-- SPONSORED -->
+  <section class="section">
+    <div class="section-head">
+      <h2>Sponsored <span>for you</span></h2>
+      <a href="#">View all →</a>
+    </div>
+    <div class="grid">
+      <div class="card"><div class="card-img">Photo</div><div class="card-body"><h3>The Gold Chair</h3><div class="meta">Salon · Sandton · ★4.9</div><div class="price">Book now</div></div></div>
+      <div class="card"><div class="card-img">Photo</div><div class="card-body"><h3>Thabo's Barber Studio</h3><div class="meta">Specialist · Sandton · ★4.8</div><div class="price">Book now</div></div></div>
+      <div class="card"><div class="card-img">Photo</div><div class="card-body"><h3>Serenity Massage</h3><div class="meta">Massage / Spa · Menlyn · ★4.9</div><div class="price">Book now</div></div></div>
+      <div class="card"><div class="card-img">Photo</div><div class="card-body"><h3>MUA Studio Sandton</h3><div class="meta">Makeup Artist · Sandton · ★5.0</div><div class="price">Book now</div></div></div>
+    </div>
+  </section>
+
+  <!-- POPULAR SERVICES -->
+  <section class="section" id="services">
+    <div class="section-head">
+      <h2>Popular <span>services</span></h2>
+      <a href="#">View all →</a>
+    </div>
+    <div class="grid popular-grid">
+      <div class="card"><div class="card-img">Photo</div><div class="card-body"><h3>Full Braids</h3><div class="meta">Menlyn · 3.5 hrs</div><div class="price">From R450</div></div></div>
+      <div class="card"><div class="card-img">Photo</div><div class="card-body"><h3>Skin Fade</h3><div class="meta">Hatfield · 40 min</div><div class="price">From R120</div></div></div>
+      <div class="card"><div class="card-img">Photo</div><div class="card-body"><h3>Deep Tissue Massage</h3><div class="meta">Rosebank · 60 min</div><div class="price">From R380</div></div></div>
+      <div class="card"><div class="card-img">Photo</div><div class="card-body"><h3>Gel Manicure</h3><div class="meta">Centurion · 45 min</div><div class="price">From R220</div></div></div>
+    </div>
+  </section>
+
+  <!-- MARKET -->
+  <section class="section" id="rentChair">
+    <div class="banner b2">
+      <h3>Market</h3>
+      <p class="sans">Curated beauty products from the specialists you already trust.</p>
+      <a href="market.html" class="btn" style="background:var(--espresso); color:var(--gold);">Visit Shop</a>
+    </div>
+
+    <div class="market-products">
+      <div class="grid">
+        <a class="card" href="market-shop.html?shop=midrand-beauty-bar"><div class="card-img">Photo</div><div class="card-body"><h3>Ionic Hair Dryer</h3><div class="meta">Midrand Beauty Bar</div><div class="price">R899</div></div></a>
+        <a class="card" href="market-shop.html?shop=velvet-and-vine"><div class="card-img">Photo</div><div class="card-body"><h3>Wide-Tooth Detangling Comb</h3><div class="meta">Velvet & Vine</div><div class="price">R89</div></div></a>
+        <a class="card" href="market-shop.html?shop=studio-hatfield"><div class="card-img">Photo</div><div class="card-body"><h3>Hair Food Growth Cream</h3><div class="meta">Studio Hatfield</div><div class="price">R145</div></div></a>
+        <a class="card" href="market-shop.html?shop=the-gold-chair"><div class="card-img">Photo</div><div class="card-body"><h3>Professional Barber Clippers</h3><div class="meta">The Gold Chair</div><div class="price">R1,299</div></div></a>
+        <a class="card" href="market-shop.html?shop=the-colour-bar"><div class="card-img">Photo</div><div class="card-body"><h3>Edge Control Gel</h3><div class="meta">The Colour Bar</div><div class="price">R79</div></div></a>
+        <a class="card" href="market-shop.html?shop=midrand-beauty-bar"><div class="card-img">Photo</div><div class="card-body"><h3>Ceramic Flat Iron</h3><div class="meta">Midrand Beauty Bar</div><div class="price">R749</div></div></a>
+      </div>
+    </div>
+
+    <!-- RENT A CHAIR -->
+    <div class="banner b1" style="margin-top:32px;">
+      <h3>Rent a Chair</h3>
+      <p class="sans">Salons with a spare chair — list it and let independent specialists rent the space, book through @MySalon.</p>
+      <div style="display:flex; gap:10px; align-self:flex-start;">
+        <a href="rent-a-chair.html" class="btn" style="background:rgba(255,255,255,0.12); color:var(--ivory);">Find a Chair</a>
+        <a href="list-your-business.html" class="btn btn-gold">List Your Chair</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- HAIRSTYLE & BEARD STUDIO MODAL -->
+  <div class="modal-overlay" id="hairModalOverlay">
+    <div class="modal-box">
+      <div class="modal-head">
+        <div>
+          <h3>Hairstyle &amp; Beard Studio</h3>
+          <p>Upload a clear front-facing photo and preview a new look before you book.</p>
+        </div>
+        <button class="modal-close" id="hairModalClose" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+
+        <div class="upload-zone" id="uploadZone">
+          <div class="icon">📷</div>
+          <div class="primary-text">Click to upload, or drag a photo here</div>
+          <div class="secondary-text">Front-facing photo works best · JPG or PNG</div>
+          <input type="file" id="photoInput" accept="image/*">
+        </div>
+        <div class="preview-row" id="previewRow" style="display:none;">
+          <img class="preview-thumb" id="previewThumb" alt="Your uploaded photo">
+          <div class="preview-info">
+            <div class="fname" id="previewName">photo.jpg</div>
+            <button id="removePhoto">Remove &amp; upload another</button>
+          </div>
+        </div>
+
+        <div class="style-section">
+          <h4>What are we styling?</h4>
+          <div class="style-tabs">
+            <div class="style-tab active" data-target="hairstyle">Hairstyle</div>
+            <div class="style-tab" data-target="beard">Beard</div>
+          </div>
+
+          <div class="chip-row style-grid" data-group="hairstyle">
+            <div class="style-chip selected"><div class="chip-icon ic-fade"></div>Skin Fade</div>
+            <div class="style-chip"><div class="chip-icon ic-fade"></div>Taper Fade</div>
+            <div class="style-chip"><div class="chip-icon ic-fade ic-design"></div>Bald Fade + Design</div>
+            <div class="style-chip"><div class="chip-icon ic-fade"></div>Undercut</div>
+            <div class="style-chip"><div class="chip-icon ic-flattop"></div>High Top</div>
+            <div class="style-chip"><div class="chip-icon ic-buzz"></div>Buzz Cut</div>
+            <div class="style-chip"><div class="chip-icon ic-crop"></div>Crew Cut</div>
+            <div class="style-chip"><div class="chip-icon ic-afro"></div>Afro</div>
+            <div class="style-chip"><div class="chip-icon ic-curly"></div>Curly Crop</div>
+            <div class="style-chip"><div class="chip-icon ic-curly"></div>Waves</div>
+            <div class="style-chip"><div class="chip-icon ic-swept"></div>Pompadour</div>
+            <div class="style-chip"><div class="chip-icon ic-crop ic-shine"></div>Slick Back</div>
+            <div class="style-chip"><div class="chip-icon ic-swept"></div>Quiff</div>
+            <div class="style-chip"><div class="chip-icon ic-bun"></div>Man Bun</div>
+            <div class="style-chip"><div class="chip-icon ic-mohawk"></div>Mohawk</div>
+            <div class="style-chip"><div class="chip-icon ic-braided"></div>Cornrows</div>
+            <div class="style-chip"><div class="chip-icon ic-locs"></div>Box Braids</div>
+            <div class="style-chip"><div class="chip-icon ic-locs"></div>Twists</div>
+            <div class="style-chip"><div class="chip-icon ic-locs"></div>Locs / Dreadlocks</div>
+            <div class="style-chip"><div class="chip-icon ic-bangs"></div>Bangs / Fringe</div>
+            <div class="style-chip"><div class="chip-icon ic-bangs"></div>Curtain Fringe</div>
+            <div class="style-chip"><div class="chip-icon ic-straightshort"></div>Bob Cut</div>
+            <div class="style-chip"><div class="chip-icon ic-crop"></div>Pixie Cut</div>
+            <div class="style-chip"><div class="chip-icon ic-straightlong"></div>Long Layers</div>
+            <div class="style-chip"><div class="chip-icon ic-straightlong ic-jagged"></div>Shag Cut</div>
+            <div class="style-chip"><div class="chip-icon ic-straightlong"></div>Straight Long Hair</div>
+          </div>
+          <div class="chip-row style-grid" data-group="beard" style="display:none;">
+            <div class="style-chip"><div class="chip-icon ic-beardnone"></div>Clean Shave</div>
+            <div class="style-chip"><div class="chip-icon ic-stubble"></div>Stubble</div>
+            <div class="style-chip"><div class="chip-icon ic-goatee"></div>Goatee</div>
+            <div class="style-chip"><div class="chip-icon ic-goatee ic-mustache"></div>Van Dyke</div>
+            <div class="style-chip"><div class="chip-icon ic-goatee ic-mustache"></div>Circle Beard</div>
+            <div class="style-chip"><div class="chip-icon ic-goatee ic-mustache"></div>Balbo</div>
+            <div class="style-chip"><div class="chip-icon ic-goatee"></div>Anchor Beard</div>
+            <div class="style-chip"><div class="chip-icon ic-chinstrap"></div>Chin Strap</div>
+            <div class="style-chip"><div class="chip-icon ic-muttonchops"></div>Mutton Chops</div>
+            <div class="style-chip selected"><div class="chip-icon ic-full"></div>Full Beard</div>
+            <div class="style-chip"><div class="chip-icon ic-full"></div>Garibaldi</div>
+            <div class="style-chip"><div class="chip-icon ic-full ic-beardfade"></div>Beard Fade</div>
+          </div>
+        </div>
+
+        <div class="ai-key-row" id="hairKeyRow">
+          <span>🔑</span>
+          <input type="password" id="hairApiKey" placeholder="Paste your Google AI Studio (Gemini) API key">
+          <button id="hairApiKeySave">Save key</button>
+          <span class="ai-key-status" id="hairApiKeyStatus">Not saved yet</span>
+          <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">Get a free key →</a>
+        </div>
+
+        <div class="modal-actions">
+          <button class="generate-btn" id="generateBtn" disabled>Upload a photo to generate</button>
+        </div>
+
+        <div class="result-panel" id="resultPanel">
+          <div class="result-head" id="resultHead">Generating your preview…</div>
+          <div class="result-split">
+            <div class="col">
+              <img id="resultBefore" alt="Before">
+              <span>Before</span>
+            </div>
+            <div class="col">
+              <div class="placeholder-box" id="resultAfter">AI preview renders here</div>
+              <span>After · <span id="resultStyleName">Skin Fade</span></span>
+            </div>
+          </div>
+          <div class="result-note" id="resultNote">Generated with Google Gemini (nano banana) image editing. Your photo is sent directly from your browser to Google's API and is never stored by @MySalon.</div>
+
+          <div class="next-step" id="hairNextStep">
+            <div class="ns-label">Next step</div>
+            <h4>Book this look</h4>
+            <div class="ns-group">
+              <div class="ns-group-label">Sponsored salons offering this style</div>
+              <div class="ns-strip">
+                <div class="ns-card"><div class="ns-img">Photo</div><div class="ns-body"><h5>The Gold Chair</h5><div class="ns-meta">Sandton · ★4.9</div><a href="#" class="ns-book">Book</a></div></div>
+                <div class="ns-card"><div class="ns-img">Photo</div><div class="ns-body"><h5>Studio Hatfield</h5><div class="ns-meta">Hatfield · ★4.7</div><a href="#" class="ns-book">Book</a></div></div>
+                <div class="ns-card"><div class="ns-img">Photo</div><div class="ns-body"><h5>Velvet &amp; Vine</h5><div class="ns-meta">Rosebank · ★4.8</div><a href="#" class="ns-book">Book</a></div></div>
+                <div class="ns-card"><div class="ns-img">Photo</div><div class="ns-body"><h5>Midrand Beauty Bar</h5><div class="ns-meta">Midrand · ★4.9</div><a href="#" class="ns-book">Book</a></div></div>
+                <div class="ns-card"><div class="ns-img">Photo</div><div class="ns-body"><h5>The Colour Bar</h5><div class="ns-meta">Centurion · ★4.6</div><a href="#" class="ns-book">Book</a></div></div>
+              </div>
+            </div>
+            <div class="ns-group">
+              <div class="ns-group-label">Independent specialists</div>
+              <div class="ns-strip">
+                <div class="ns-card"><div class="ns-img">Photo</div><div class="ns-body"><h5>Thabo's Barber Studio</h5><div class="ns-meta">Sandton · ★5.0</div><a href="#" class="ns-book">Book</a></div></div>
+                <div class="ns-card"><div class="ns-img">Photo</div><div class="ns-body"><h5>Locs &amp; Twists Studio</h5><div class="ns-meta">Menlyn · ★4.8</div><a href="#" class="ns-book">Book</a></div></div>
+                <div class="ns-card"><div class="ns-img">Photo</div><div class="ns-body"><h5>Wig Studio Menlyn</h5><div class="ns-meta">Menlyn · ★4.7</div><a href="#" class="ns-book">Book</a></div></div>
+                <div class="ns-card"><div class="ns-img">Photo</div><div class="ns-body"><h5>MUA Studio Sandton</h5><div class="ns-meta">Sandton · ★4.9</div><a href="#" class="ns-book">Book</a></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- NAIL ART GENERATOR MODAL -->
+  <div class="modal-overlay" id="nailModalOverlay">
+    <div class="modal-box">
+      <div class="modal-head">
+        <div>
+          <h3>Nail Art Generator</h3>
+          <p>Upload a photo of your hand and tell us what you want your nails to look like.</p>
+        </div>
+        <button class="modal-close" id="nailModalClose" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+
+        <div class="upload-zone" id="nailUploadZone">
+          <div class="icon">💅</div>
+          <div class="primary-text">Click to upload, or drag a photo here</div>
+          <div class="secondary-text">A clear photo of your hand, nails visible · JPG or PNG</div>
+          <input type="file" id="nailPhotoInput" accept="image/*">
+        </div>
+        <div class="preview-row" id="nailPreviewRow" style="display:none;">
+          <img class="preview-thumb" id="nailPreviewThumb" alt="Your uploaded photo">
+          <div class="preview-info">
+            <div class="fname" id="nailPreviewName">photo.jpg</div>
+            <button id="nailRemovePhoto">Remove &amp; upload another</button>
+          </div>
+        </div>
+
+        <div class="style-section">
+          <h4>Design your nails</h4>
+          <div class="style-tabs">
+            <div class="style-tab" data-target="shape">Shape</div>
+            <div class="style-tab active" data-target="length">Length</div>
+            <div class="style-tab" data-target="finish">Finish &amp; Color</div>
+          </div>
+
+          <div class="chip-row" data-group="shape" style="display:none;">
+            <div class="style-chip selected">Stiletto (Sharp)</div>
+            <div class="style-chip">Coffin</div>
+            <div class="style-chip">Square</div>
+            <div class="style-chip">Round</div>
+            <div class="style-chip">Almond</div>
+          </div>
+          <div class="chip-row" data-group="length">
+            <div class="style-chip">Short</div>
+            <div class="style-chip selected">Medium</div>
+            <div class="style-chip">Tall / Long</div>
+          </div>
+          <div class="chip-row" data-group="finish" style="display:none;">
+            <div class="style-chip selected">Clear</div>
+            <div class="style-chip">Glossy Color</div>
+            <div class="style-chip">Matte Color</div>
+            <div class="style-chip">French Tip</div>
+            <div class="style-chip">Nail Art Design</div>
+            <div class="style-chip">Chrome / Glitter</div>
+          </div>
+        </div>
+
+        <div class="ai-key-row" id="nailKeyRow">
+          <span>🔑</span>
+          <input type="password" id="nailApiKey" placeholder="Paste your Google AI Studio (Gemini) API key">
+          <button id="nailApiKeySave">Save key</button>
+          <span class="ai-key-status" id="nailApiKeyStatus">Not saved yet</span>
+          <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">Get a free key →</a>
+        </div>
+
+        <div class="modal-actions">
+          <button class="generate-btn" id="nailGenerateBtn" disabled>Upload a hand photo to generate</button>
+        </div>
+
+        <div class="result-panel" id="nailResultPanel">
+          <div class="result-head" id="nailResultHead">Generating your preview…</div>
+          <div class="result-split">
+            <div class="col">
+              <img id="nailResultBefore" alt="Before">
+              <span>Before</span>
+            </div>
+            <div class="col">
+              <div class="placeholder-box" id="nailResultAfter">AI preview renders here</div>
+              <span>After · <span id="nailResultStyleName">Medium</span></span>
+            </div>
+          </div>
+          <div class="result-note" id="nailResultNote">Generated with Google Gemini (nano banana) image editing. Your photo is sent directly from your browser to Google's API and is never stored by @MySalon.</div>
+
+          <div class="next-step" id="nailNextStep">
+            <div class="ns-label">Next step</div>
+            <h4>Book this design</h4>
+            <div class="ns-group">
+              <div class="ns-group-label">Sponsored salons offering this style</div>
+              <div class="ns-strip">
+                <div class="ns-card"><div class="ns-img">Photo</div><div class="ns-body"><h5>Nail Bar Rosebank</h5><div class="ns-meta">Rosebank · ★4.9</div><a href="#" class="ns-book">Book</a></div></div>
+                <div class="ns-card"><div class="ns-img">Photo</div><div class="ns-body"><h5>The Gold Chair</h5><div class="ns-meta">Sandton · ★4.9</div><a href="#" class="ns-book">Book</a></div></div>
+                <div class="ns-card"><div class="ns-img">Photo</div><div class="ns-body"><h5>Velvet &amp; Vine</h5><div class="ns-meta">Rosebank · ★4.8</div><a href="#" class="ns-book">Book</a></div></div>
+                <div class="ns-card"><div class="ns-img">Photo</div><div class="ns-body"><h5>Midrand Beauty Bar</h5><div class="ns-meta">Midrand · ★4.9</div><a href="#" class="ns-book">Book</a></div></div>
+                <div class="ns-card"><div class="ns-img">Photo</div><div class="ns-body"><h5>Studio Hatfield</h5><div class="ns-meta">Hatfield · ★4.7</div><a href="#" class="ns-book">Book</a></div></div>
+              </div>
+            </div>
+            <div class="ns-group">
+              <div class="ns-group-label">Independent specialists</div>
+              <div class="ns-strip">
+                <div class="ns-card"><div class="ns-img">Photo</div><div class="ns-body"><h5>Precision Nails · Lerato N.</h5><div class="ns-meta">Menlyn · ★4.9</div><a href="#" class="ns-book">Book</a></div></div>
+                <div class="ns-card"><div class="ns-img">Photo</div><div class="ns-body"><h5>The Nail Loft · Palesa M.</h5><div class="ns-meta">Centurion · ★4.8</div><a href="#" class="ns-book">Book</a></div></div>
+                <div class="ns-card"><div class="ns-img">Photo</div><div class="ns-body"><h5>Glow Nails · Aisha K.</h5><div class="ns-meta">Sandton · ★4.7</div><a href="#" class="ns-book">Book</a></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- MASSAGE BODY MAP MODAL -->
+  <div class="modal-overlay body-modal" id="massageModalOverlay">
+    <div class="modal-box">
+      <div class="modal-head">
+        <div>
+          <h3>Massage Body Map</h3>
+          <p>Tap anywhere on the body to mark where it hurts or where you'd like the focus. Switch views, zoom in, and tell your therapist more below.</p>
+        </div>
+        <button class="modal-close" id="massageModalClose" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+
+        <div class="body-grid">
+          <div class="body-side">
+            <div class="body-toolbar">
+              <div class="toolbar-row">
+                <div class="pill-toggle" id="viewToggle">
+                  <span class="active" data-view="front">Front</span>
+                  <span data-view="back">Back</span>
+                </div>
+                <div class="pill-toggle" id="genderToggle">
+                  <span data-gender="female" class="active">Female</span>
+                  <span data-gender="male">Male</span>
+                </div>
+              </div>
+              <div class="toolbar-row" id="zoomChips">
+                <div class="part-chip active" data-zoom="full">Full Body</div>
+                <div class="part-chip" data-zoom="head">Head/Neck</div>
+                <div class="part-chip" data-zoom="arms">Arms</div>
+                <div class="part-chip" data-zoom="torso">Back/Torso</div>
+                <div class="part-chip" data-zoom="legs">Legs</div>
+                <div class="part-chip" data-zoom="feet">Feet</div>
+              </div>
+            </div>
+
+            <div class="body-stage-wrap">
+              <div class="body-stage" id="bodyStage"></div>
+              <div class="body-hint">Tap the body to mark a focus point</div>
+            </div>
+            <div class="body-actions-row">
+              <span class="sans" style="font-size:11.5px; color:#9a8d7a;" id="pointCountLabel">0 points marked</span>
+              <button class="clear-points" id="clearPoints">Clear this view</button>
+            </div>
+          </div>
+
+          <div class="body-side">
+            <h4>Tell your therapist more</h4>
+            <textarea class="body-textarea" id="bodyMessage" placeholder="e.g. Tight lower back and right shoulder, please go easy on my neck..."></textarea>
+
+            <h4>Add-ons</h4>
+            <div class="chip-row" id="addOnChips">
+              <div class="style-chip">Massage Oils</div>
+              <div class="style-chip">Hot Stone</div>
+              <div class="style-chip">Mud Wrap</div>
+              <div class="style-chip">Herbal Bath</div>
+              <div class="style-chip">Aromatherapy</div>
+              <div class="style-chip">Cupping</div>
+            </div>
+
+            <button class="save-focus-btn" id="saveFocusBtn">Save Focus Areas</button>
+
+            <div class="body-summary" id="bodySummary"></div>
+
+            <div class="next-step" id="massageNextStep">
+              <div class="ns-label">Next step</div>
+              <h4>Book your massage</h4>
+              <div class="ns-group">
+                <div class="ns-group-label">Sponsored salons offering massage</div>
+                <div class="ns-strip">
+                  <div class="ns-card"><div class="ns-img">Photo</div><div class="ns-body"><h5>Velvet &amp; Vine</h5><div class="ns-meta">Rosebank · ★4.8</div><a href="#" class="ns-book">Book</a></div></div>
+                  <div class="ns-card"><div class="ns-img">Photo</div><div class="ns-body"><h5>The Gold Chair</h5><div class="ns-meta">Sandton · ★4.9</div><a href="#" class="ns-book">Book</a></div></div>
+                  <div class="ns-card"><div class="ns-img">Photo</div><div class="ns-body"><h5>Midrand Beauty Bar</h5><div class="ns-meta">Midrand · ★4.9</div><a href="#" class="ns-book">Book</a></div></div>
+                  <div class="ns-card"><div class="ns-img">Photo</div><div class="ns-body"><h5>Studio Hatfield</h5><div class="ns-meta">Hatfield · ★4.7</div><a href="#" class="ns-book">Book</a></div></div>
+                </div>
+              </div>
+              <div class="ns-group">
+                <div class="ns-group-label">Independent specialists</div>
+                <div class="ns-strip">
+                  <div class="ns-card"><div class="ns-img">Photo</div><div class="ns-body"><h5>Serenity Massage · Thandi K.</h5><div class="ns-meta">Menlyn · ★4.9</div><a href="#" class="ns-book">Book</a></div></div>
+                  <div class="ns-card"><div class="ns-img">Photo</div><div class="ns-body"><h5>Deep Tissue by Sipho</h5><div class="ns-meta">Centurion · ★4.8</div><a href="#" class="ns-book">Book</a></div></div>
+                  <div class="ns-card"><div class="ns-img">Photo</div><div class="ns-body"><h5>Calm Hands Therapy · Naledi</h5><div class="ns-meta">Sandton · ★4.7</div><a href="#" class="ns-book">Book</a></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div>
+        <h4>@MySalon</h4>
+        <p style="max-width:260px; line-height:1.6; color:rgba(250,246,240,0.6);">South Africa's marketplace for beauty and wellness — discovery, booking, and payment, all in one place.</p>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <ul><li>Find a Salon</li><li>Barbers</li><li>Specialists</li><li>Rent a Chair</li></ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul><li>About</li><li>Careers</li><li>Pricing</li><li>Contact</li></ul>
+      </div>
+      <div>
+        <h4>Support</h4>
+        <ul><li>Help Center</li><li>Terms</li><li>Privacy</li></ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 @MySalon. All rights reserved.</span>
+      <span>Made in South Africa 🇿🇦</span>
+    </div>
+  </footer>
+
+  <script>
+    // Category colors — must match the chip --c values above
+    const CATEGORY_COLORS = {
+      barbers: '#C1502E',
+      braids:  '#B8794A',
+      wigs:    '#C98A8A',
+      colors:  '#7B5EA7',
+      massage: '#7C9070',
+      makeup:  '#A23B4E',
+      nails:   '#D97B56',
+      facials: '#5E8C86',
+      locs:    '#6B4A3A',
+      spa:     '#6E8B8B'
+    };
+    const CATEGORY_LABELS = {
+      barbers: 'Barbers', braids: 'Braids', wigs: 'Wigs', colors: 'Colors',
+      massage: 'Massage', makeup: 'Makeup', nails: 'Nails', facials: 'Facials', locs: 'Locs', spa: 'Spa'
+    };
+
+    // Type colors — big-pin categories, matching the quick-nav buttons below the map
+    const TYPE_COLORS = {
+      salon:      '#7A1F2A',
+      specialist: '#1F3A5F',
+      market:     '#E0B23C',
+      rentchair:  '#3F6B4A'
+    };
+    const TYPE_LABELS = { salon: 'Salons', specialist: 'Specialists', market: 'Market', rentchair: 'Rent a Chair' };
+
+    // Sample pins: mix of individual services (small) and salons/specialists (bigger)
+    // Real Gauteng neighbourhood centers the pins are scattered around
+    const AREA_COORDS = {
+      sandton:   [-26.1076, 28.0567],
+      rosebank:  [-26.1465, 28.0436],
+      centurion: [-25.8603, 28.1894],
+      menlyn:    [-25.7830, 28.2769],
+      hatfield:  [-25.7487, 28.2379],
+      midrand:   [-25.9992, 28.1263]
+    };
+
+    const PINS = [
+      { cat:'barbers', type:'specialist', area:'sandton',   name:"Thabo's Barber Studio" },
+      { cat:'barbers', type:'service',    area:'sandton',   name:'Skin Fade' },
+      { cat:'braids',  type:'salon',      area:'rosebank',  name:'Velvet & Vine' },
+      { cat:'braids',  type:'service',    area:'rosebank',  name:'Full Braids' },
+      { cat:'wigs',    type:'specialist', area:'menlyn',    name:'Wig Studio Menlyn' },
+      { cat:'wigs',    type:'service',    area:'menlyn',    name:'Wig Install' },
+      { cat:'colors',  type:'salon',      area:'centurion', name:'The Colour Bar', premium:true },
+      { cat:'colors',  type:'service',    area:'centurion', name:'Balayage' },
+      { cat:'massage', type:'specialist', area:'menlyn',    name:'Serenity Massage', premium:true },
+      { cat:'massage', type:'service',    area:'menlyn',    name:'Deep Tissue' },
+      { cat:'makeup',  type:'specialist', area:'sandton',   name:'MUA Studio Sandton', premium:true },
+      { cat:'makeup',  type:'service',    area:'sandton',   name:'Bridal Makeup' },
+      { cat:'nails',   type:'service',    area:'rosebank',  name:'Gel Manicure' },
+      { cat:'nails',   type:'salon',      area:'rosebank',  name:'Nail Bar Rosebank' },
+      { cat:'facials', type:'service',    area:'hatfield',  name:'Signature Facial' },
+      { cat:'locs',    type:'specialist', area:'midrand',   name:'Locs & Twists Studio' },
+      { cat:'spa',     type:'salon',      area:'hatfield',  name:'The Ritual Spa', premium:true },
+      { cat:'spa',     type:'service',    area:'hatfield',  name:'Hot Stone Spa Day' },
+      // Market pins — shops/stores selling products through @MySalon
+      { cat:'market',  type:'market', area:'sandton',  name:'The Beauty Edit Shop' },
+      { cat:'market',  type:'market', area:'menlyn',   name:'Glow Supply Co.' },
+      { cat:'market',  type:'market', area:'centurion',name:'Curl & Co Market' },
+      // Rent a Chair pins — salons with a spare chair listed for rent
+      { cat:'rentchair', type:'rentchair', area:'sandton',  name:'The Gold Chair · Spare Seat' },
+      { cat:'rentchair', type:'rentchair', area:'hatfield', name:'Studio Hatfield · Spare Seat' },
+      { cat:'rentchair', type:'rentchair', area:'midrand',  name:'Midrand Beauty Bar · Spare Seat' }
+    ];
+
+    // Small deterministic spread so pins in the same neighbourhood don't stack on top of each other
+    function pinLatLng(p, idx){
+      const base = AREA_COORDS[p.area] || AREA_COORDS.sandton;
+      const angle = (idx * 137.508) * Math.PI / 180;
+      const r = 0.006 + (idx % 3) * 0.002;
+      return [ base[0] + Math.sin(angle) * r, base[1] + Math.cos(angle) * r ];
+    }
+
+    const mapShell = document.getElementById('mapShell');
+    const legend = document.getElementById('mapLegend');
+    let activeCat = 'all';     // service-category filter (from the top strip)
+    let activeType = null;     // salon / specialist / market filter (from quick-nav)
+    let searchActive = false;  // true while a search result set is being shown
+    let searchMatchIdxs = new Set();
+    let lastQuery = '';
+
+    function clearSearchMode(){
+      searchActive = false;
+      searchMsg.style.display = 'none';
+    }
+
+    // Real Leaflet map, centered over the Johannesburg–Pretoria corridor
+    const leafletMap = L.map('leafletMap', { scrollWheelZoom: false, zoomControl: true }).setView([-25.98, 28.15], 10);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(leafletMap);
+    const markerLayer = L.layerGroup().addTo(leafletMap);
+    const markersByIdx = {};
+
+    function popupHtml(pin){
+      const catColor = (searchActive || !activeType) ? CATEGORY_COLORS[pin.cat] : TYPE_COLORS[pin.type];
+      const catLabel = (searchActive || !activeType) ? CATEGORY_LABELS[pin.cat] : TYPE_LABELS[pin.type];
+      return (
+        '<span class="popup-tag" style="background:' + catColor + '">' + catLabel + '</span>' +
+        (pin.premium ? '<span class="popup-tag" style="background:#C9A961; color:#241E1A; margin-left:4px;">★ Premium</span>' : '') +
+        '<h4>' + pin.name + '</h4>' +
+        '<p>Tap below to view this profile and book straight from the map.</p>' +
+        '<a href="#" class="popup-btn">View &amp; Book</a>' +
+        '<span class="popup-note">Prototype pin — full profile pages are coming in the live app.</span>'
+      );
+    }
+
+    function renderPins(){
+      markerLayer.clearLayers();
+      for (const k in markersByIdx) delete markersByIdx[k];
+
+      let visible;
+      if (searchActive){
+        visible = PINS.filter((p, i) => searchMatchIdxs.has(i));
+      } else if (activeType){
+        // Type filter takes over: show only that type, colored by type
+        visible = PINS.filter(p => p.type === activeType);
+      } else {
+        visible = activeCat === 'all' ? PINS.filter(p => p.type !== 'market' && p.type !== 'rentchair') : PINS.filter(p => p.cat === activeCat);
+      }
+
+      visible.forEach(p => {
+        const idx = PINS.indexOf(p);
+        const isBig = p.type === 'salon' || p.type === 'specialist' || p.type === 'market' || p.type === 'rentchair';
+        const size = isBig ? 34 : 18;
+        const color = (searchActive || !activeType) ? CATEGORY_COLORS[p.cat] : TYPE_COLORS[p.type];
+        const cls = 'map-pin ' + (isBig ? 'pin-big' : 'pin-service') + (searchActive ? ' pin-match' : '');
+        const badge = (isBig && p.premium) ? '<span class="pin-premium-badge" title="Premium tier">★</span>' : '';
+
+        const icon = L.divIcon({
+          className: '',
+          html: '<div class="' + cls + '" style="background:' + color + '">' + badge + '</div>',
+          iconSize: [size, size],
+          iconAnchor: [size / 2, size]
+        });
+
+        const marker = L.marker(pinLatLng(p, idx), { icon: icon, title: p.name });
+        marker.bindPopup(popupHtml(p));
+        marker.addTo(markerLayer);
+        markersByIdx[idx] = marker;
+      });
+
+      // legend
+      if (searchActive){
+        legend.innerHTML = `<span>${visible.length} result${visible.length === 1 ? '' : 's'} for "${lastQuery}" — tap a pulsing pin</span>`;
+      } else if (activeType){
+        legend.innerHTML = `<span><span class="lg-dot big" style="background:${TYPE_COLORS[activeType]}"></span>${TYPE_LABELS[activeType]}</span>`;
+      } else {
+        const cats = activeCat === 'all' ? Object.keys(CATEGORY_COLORS) : [activeCat];
+        legend.innerHTML = cats.map(c =>
+          `<span><span class="lg-dot" style="background:${CATEGORY_COLORS[c]}"></span>${CATEGORY_LABELS[c]}</span>`
+        ).join('') + `<span><span class="lg-dot big" style="background:#8a7c6c"></span>Salon / Specialist</span><span><span class="lg-dot" style="background:#8a7c6c"></span>Individual service</span>`;
+      }
+    }
+
+    document.querySelectorAll('.cat-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        clearSearchMode();
+        document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        activeCat = chip.dataset.cat;
+        activeType = null;
+        renderPins();
+        document.getElementById('explore').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+
+    // Quick-nav: Salon / Specialist / Market filter the map's big pins; Pricing / How It Works just scroll down
+    document.querySelectorAll('.qn-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (btn.dataset.type){
+          clearSearchMode();
+          document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
+          activeType = btn.dataset.type;
+          renderPins();
+          document.getElementById('explore').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else if (btn.dataset.cat){
+          clearSearchMode();
+          document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
+          const chip = document.querySelector('.cat-chip[data-cat="' + btn.dataset.cat + '"]');
+          if (chip) chip.classList.add('active');
+          activeCat = btn.dataset.cat;
+          activeType = null;
+          renderPins();
+          document.getElementById('explore').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else if (btn.dataset.scroll){
+          document.getElementById(btn.dataset.scroll).scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    // Burger menu links that filter the map — same behavior as the quick-nav row and category strip
+    document.querySelectorAll('.menu-type-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        clearSearchMode();
+        document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
+        activeType = link.dataset.type;
+        renderPins();
+        menuPanel.classList.remove('open');
+        document.getElementById('explore').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+    document.querySelectorAll('.menu-cat-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        clearSearchMode();
+        document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
+        const chip = document.querySelector('.cat-chip[data-cat="' + link.dataset.cat + '"]');
+        if (chip) chip.classList.add('active');
+        activeCat = link.dataset.cat;
+        activeType = null;
+        renderPins();
+        menuPanel.classList.remove('open');
+        document.getElementById('explore').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+
+    // Search bar — matches provider/service names, categories ("braids", "massage") and types ("salon", "specialist")
+    const searchInput = document.getElementById('searchInput');
+    const searchBtn = document.getElementById('searchBtn');
+    const searchMsg = document.getElementById('searchMsg');
+
+    function runSearch(){
+      const raw = searchInput.value.trim();
+      const q = raw.toLowerCase();
+      if (!q){ clearSearchMode(); renderPins(); return; }
+
+      const idxs = [];
+      PINS.forEach((p, i) => {
+        const cat = (CATEGORY_LABELS[p.cat] || '').toLowerCase();
+        const type = (TYPE_LABELS[p.type] || '').toLowerCase();
+        if (p.name.toLowerCase().includes(q) || cat.includes(q) || type.includes(q) || p.cat.includes(q) || p.type.includes(q)){
+          idxs.push(i);
+        }
+      });
+
+      lastQuery = raw;
+      document.getElementById('explore').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      if (!idxs.length){
+        searchActive = false;
+        searchMatchIdxs = new Set();
+        searchMsg.textContent = `No results for "${raw}" — try a category like braids, massage, or makeup.`;
+        searchMsg.style.display = 'block';
+        renderPins();
+        return;
+      }
+
+      searchMsg.style.display = 'none';
+      document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
+      searchActive = true;
+      searchMatchIdxs = new Set(idxs);
+      renderPins();
+
+      // fly straight to the first match and open its card, so search feels like it "goes to" the result
+      const firstMarker = markersByIdx[idxs[0]];
+      if (firstMarker){
+        leafletMap.flyTo(firstMarker.getLatLng(), 13);
+        setTimeout(() => firstMarker.openPopup(), idxs.length ? 350 : 0);
+      }
+    }
+
+    searchBtn.addEventListener('click', (e) => { e.preventDefault(); runSearch(); });
+    searchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter'){ e.preventDefault(); runSearch(); }
+    });
+
+    // "Use my location" — finds the nearest salons / specialists / massage-spa / makeup pins
+    const locationBtn = document.getElementById('locationBtn');
+    let userMarker = null;
+
+    function haversineKm(lat1, lon1, lat2, lon2){
+      const R = 6371;
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a = Math.sin(dLat / 2) ** 2 +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) ** 2;
+      return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    }
+
+    function useMyLocation(){
+      if (!navigator.geolocation){
+        searchMsg.textContent = "Location isn't available in this browser.";
+        searchMsg.style.display = 'block';
+        return;
+      }
+      locationBtn.classList.add('locating');
+      searchMsg.style.display = 'none';
+
+      navigator.geolocation.getCurrentPosition((pos) => {
+        locationBtn.classList.remove('locating');
+        locationBtn.classList.add('active');
+        const { latitude, longitude } = pos.coords;
+
+        if (userMarker) leafletMap.removeLayer(userMarker);
+        userMarker = L.marker([latitude, longitude], {
+          icon: L.divIcon({ className: '', html: '<div class="you-are-here"></div>', iconSize: [18, 18], iconAnchor: [9, 9] }),
+          zIndexOffset: 1000
+        }).addTo(leafletMap).bindPopup('<strong>You are here</strong>');
+
+        // nearest bookable pins — salons, specialists, and service pins (massage/spa, makeup, etc.); skip market & rent-a-chair
+        const nearest = PINS.map((p, i) => {
+          const [lat, lng] = pinLatLng(p, i);
+          return { i, d: haversineKm(latitude, longitude, lat, lng) };
+        }).filter(x => PINS[x.i].type !== 'market' && PINS[x.i].type !== 'rentchair')
+          .sort((a, b) => a.d - b.d)
+          .slice(0, 6);
+
+        document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
+        searchActive = true;
+        searchMatchIdxs = new Set(nearest.map(x => x.i));
+        lastQuery = 'near you';
+        renderPins();
+
+        leafletMap.flyTo([latitude, longitude], 12);
+        document.getElementById('explore').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        if (nearest.length){
+          setTimeout(() => {
+            const m = markersByIdx[nearest[0].i];
+            if (m) m.openPopup();
+          }, 500);
+        }
+      }, () => {
+        locationBtn.classList.remove('locating');
+        searchMsg.textContent = "Couldn't get your location — check your browser's location permission and try again.";
+        searchMsg.style.display = 'block';
+      }, { enableHighAccuracy: true, timeout: 10000 });
+    }
+
+    locationBtn.addEventListener('click', useMyLocation);
+
+    renderPins();
+
+    // Burger menu — Pricing now lives here instead of on the page
+    const burgerBtn = document.getElementById('burgerBtn');
+    const menuPanel = document.getElementById('menuPanel');
+    burgerBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      menuPanel.classList.toggle('open');
+    });
+    document.addEventListener('click', (e) => {
+      if (!menuPanel.contains(e.target) && e.target !== burgerBtn){
+        menuPanel.classList.remove('open');
+      }
+    });
+
+    // ---------- Gemini ("nano banana") image-editing helper ----------
+    const GEMINI_MODEL = 'gemini-2.5-flash-image';
+    const GEMINI_KEY_STORAGE = 'mysalon_gemini_api_key';
+
+    function getSavedGeminiKey(){
+      try { return localStorage.getItem(GEMINI_KEY_STORAGE) || ''; } catch(e){ return ''; }
+    }
+    function saveGeminiKey(key){
+      try { localStorage.setItem(GEMINI_KEY_STORAGE, key); } catch(e){}
+    }
+    function initApiKeyRow(inputId, saveBtnId, statusId){
+      const input = document.getElementById(inputId);
+      const saveBtn = document.getElementById(saveBtnId);
+      const status = document.getElementById(statusId);
+      if (!input || !saveBtn) return;
+      const existing = getSavedGeminiKey();
+      if (existing){ input.value = existing; status.textContent = '✓ Key saved on this device'; }
+      saveBtn.addEventListener('click', () => {
+        const val = input.value.trim();
+        saveGeminiKey(val);
+        status.textContent = val ? '✓ Key saved on this device' : 'Not saved yet';
+      });
+    }
+    initApiKeyRow('hairApiKey', 'hairApiKeySave', 'hairApiKeyStatus');
+    initApiKeyRow('nailApiKey', 'nailApiKeySave', 'nailApiKeyStatus');
+
+    function dataUrlToInline(dataUrl){
+      const mimeType = dataUrl.substring(5, dataUrl.indexOf(';'));
+      const data = dataUrl.substring(dataUrl.indexOf(',') + 1);
+      return { mimeType, data };
+    }
+
+    async function generateWithGemini(photoDataUrl, promptText){
+      const apiKey = getSavedGeminiKey();
+      if (!apiKey){
+        throw { userMessage: 'Add your free Google AI Studio API key above first, then generate.' };
+      }
+      const { mimeType, data } = dataUrlToInline(photoDataUrl);
+      const url = 'https://generativelanguage.googleapis.com/v1beta/models/' + GEMINI_MODEL + ':generateContent';
+      let res;
+      try {
+        res = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
+          body: JSON.stringify({
+            contents: [{
+              parts: [
+                { inline_data: { mime_type: mimeType, data: data } },
+                { text: promptText }
+              ]
+            }],
+            generationConfig: { responseModalities: ['IMAGE'] }
+          })
+        });
+      } catch (networkErr){
+        throw { userMessage: "Couldn't reach Google's AI service — check your connection and try again." };
+      }
+      const json = await res.json().catch(() => null);
+      if (!res.ok){
+        const msg = (json && json.error && json.error.message) ? json.error.message : ('Request failed (HTTP ' + res.status + ')');
+        throw { userMessage: msg };
+      }
+      const parts = (json && json.candidates && json.candidates[0] && json.candidates[0].content && json.candidates[0].content.parts) || [];
+      for (const part of parts){
+        const inline = part.inlineData || part.inline_data;
+        if (inline && inline.data){
+          const mt = inline.mimeType || inline.mime_type || 'image/png';
+          return 'data:' + mt + ';base64,' + inline.data;
+        }
+      }
+      throw { userMessage: "The model didn't return an image for that request — try a clearer, front-facing photo or a different style." };
+    }
+
+    // Generic AI generator modal controller — used for Hairstyle & Beard, and Nail Art
+    function initGeneratorModal(cfg){
+      const overlay = document.getElementById(cfg.overlayId);
+      const closeBtn = document.getElementById(cfg.closeId);
+      const uploadZone = document.getElementById(cfg.uploadZoneId);
+      const fileInput = document.getElementById(cfg.fileInputId);
+      const previewRow = document.getElementById(cfg.previewRowId);
+      const previewThumb = document.getElementById(cfg.previewThumbId);
+      const previewName = document.getElementById(cfg.previewNameId);
+      const removeBtn = document.getElementById(cfg.removeBtnId);
+      const generateBtn = document.getElementById(cfg.generateBtnId);
+      const resultPanel = document.getElementById(cfg.resultPanelId);
+      const resultHead = document.getElementById(cfg.resultHeadId);
+      const resultBefore = document.getElementById(cfg.resultBeforeId);
+      const resultAfter = document.getElementById(cfg.resultAfterId);
+      const resultStyleName = document.getElementById(cfg.resultStyleNameId);
+      const resultNote = cfg.resultNoteId ? document.getElementById(cfg.resultNoteId) : null;
+      const defaultNote = resultNote ? resultNote.textContent : '';
+
+      let uploadedPhotoUrl = null;
+      const modalRoot = overlay;
+      const selections = {};
+      modalRoot.querySelectorAll('.chip-row[data-group]').forEach(row => {
+        const sel = row.querySelector('.style-chip.selected') || row.querySelector('.style-chip');
+        if (sel){ sel.classList.add('selected'); selections[row.dataset.group] = sel.textContent.trim(); }
+      });
+
+      function open(e){ if (e) e.preventDefault(); overlay.classList.add('open'); }
+      function close(){ overlay.classList.remove('open'); }
+      document.querySelectorAll(cfg.triggerSelector).forEach(el => el.addEventListener('click', open));
+      closeBtn.addEventListener('click', close);
+      overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
+
+      function updateGenerateState(){
+        if (uploadedPhotoUrl){
+          generateBtn.disabled = false;
+          generateBtn.textContent = cfg.generateLabel;
+        } else {
+          generateBtn.disabled = true;
+          generateBtn.textContent = cfg.uploadPromptLabel;
+        }
+      }
+
+      uploadZone.addEventListener('click', () => fileInput.click());
+      uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.classList.add('dragover'); });
+      uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+      uploadZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadZone.classList.remove('dragover');
+        if (e.dataTransfer.files && e.dataTransfer.files[0]) handlePhoto(e.dataTransfer.files[0]);
+      });
+      fileInput.addEventListener('change', (e) => {
+        if (e.target.files && e.target.files[0]) handlePhoto(e.target.files[0]);
+      });
+
+      function handlePhoto(file){
+        if (!file.type.startsWith('image/')) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          uploadedPhotoUrl = ev.target.result;
+          previewThumb.src = uploadedPhotoUrl;
+          previewName.textContent = file.name;
+          previewRow.style.display = 'flex';
+          uploadZone.style.display = 'none';
+          resultPanel.classList.remove('show');
+          updateGenerateState();
+        };
+        reader.readAsDataURL(file);
+      }
+
+      removeBtn.addEventListener('click', () => {
+        uploadedPhotoUrl = null;
+        fileInput.value = '';
+        previewRow.style.display = 'none';
+        uploadZone.style.display = 'block';
+        resultPanel.classList.remove('show');
+        updateGenerateState();
+      });
+
+      // Tabs (data-target) toggle chip groups (data-group) within this modal only
+      modalRoot.querySelectorAll('.style-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          modalRoot.querySelectorAll('.style-tab').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          modalRoot.querySelectorAll('.chip-row').forEach(row => {
+            row.style.display = (row.dataset.group === tab.dataset.target) ? 'flex' : 'none';
+          });
+        });
+      });
+
+      modalRoot.querySelectorAll('.style-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          const row = chip.parentElement;
+          row.querySelectorAll('.style-chip').forEach(c => c.classList.remove('selected'));
+          chip.classList.add('selected');
+          if (row.dataset.group) selections[row.dataset.group] = chip.textContent.trim();
+        });
+      });
+
+      generateBtn.addEventListener('click', async () => {
+        if (!uploadedPhotoUrl) return;
+        const label = cfg.summarize(selections);
+        resultPanel.classList.add('show');
+        resultHead.innerHTML = '<span class="spinner"></span> Generating your preview…';
+        resultBefore.src = uploadedPhotoUrl;
+        resultAfter.innerHTML = '';
+        resultAfter.textContent = 'Generating…';
+        resultStyleName.textContent = label;
+        if (resultNote){ resultNote.classList.remove('error'); resultNote.textContent = defaultNote; }
+        resultPanel.scrollIntoView({ behavior:'smooth', block:'nearest' });
+        generateBtn.disabled = true;
+        try {
+          const prompt = cfg.buildPrompt(selections);
+          const imageDataUrl = await generateWithGemini(uploadedPhotoUrl, prompt);
+          resultHead.textContent = 'Preview ready';
+          resultAfter.innerHTML = '<img src="' + imageDataUrl + '" alt="AI generated preview" style="width:100%;height:100%;object-fit:cover;border-radius:10px;">';
+          if (cfg.nextStepId){
+            const ns = document.getElementById(cfg.nextStepId);
+            ns.classList.add('show');
+          }
+        } catch (err){
+          resultHead.textContent = "Couldn't generate that preview";
+          resultAfter.textContent = '⚠️';
+          if (resultNote){
+            resultNote.classList.add('error');
+            resultNote.textContent = (err && err.userMessage) ? err.userMessage : 'Something went wrong talking to the AI model — please try again.';
+          }
+        } finally {
+          updateGenerateState();
+        }
+      });
+    }
+
+    initGeneratorModal({
+      overlayId: 'hairModalOverlay', closeId: 'hairModalClose',
+      triggerSelector: '.open-hair-modal, #hairBeardCard',
+      uploadZoneId: 'uploadZone', fileInputId: 'photoInput',
+      previewRowId: 'previewRow', previewThumbId: 'previewThumb', previewNameId: 'previewName', removeBtnId: 'removePhoto',
+      generateBtnId: 'generateBtn', resultPanelId: 'resultPanel', resultHeadId: 'resultHead',
+      resultBeforeId: 'resultBefore', resultAfterId: 'resultAfter', resultStyleNameId: 'resultStyleName',
+      resultNoteId: 'resultNote',
+      generateLabel: 'Generate My Look', uploadPromptLabel: 'Upload a photo to generate',
+      nextStepId: 'hairNextStep',
+      summarize: (sel) => [sel.hairstyle, sel.beard].filter(Boolean).join(' + ') || 'New look',
+      buildPrompt: (sel) => {
+        const style = sel.hairstyle || 'Skin Fade';
+        const beard = sel.beard;
+        let p = 'Using the attached photo of a person, photorealistically edit ONLY their hair so they now have a "' + style + '" hairstyle';
+        if (beard) p += ', and edit their facial hair to a "' + beard + '" beard style';
+        p += '. Keep the exact same face, identity, facial features, skin tone, expression, pose, camera angle, lighting and background completely unchanged. ';
+        p += 'Do not add any text, watermark or border. The result must look like a real, unedited photograph, not an illustration.';
+        return p;
+      }
+    });
+
+    initGeneratorModal({
+      overlayId: 'nailModalOverlay', closeId: 'nailModalClose',
+      triggerSelector: '.open-nail-modal, #nailArtCard',
+      uploadZoneId: 'nailUploadZone', fileInputId: 'nailPhotoInput',
+      previewRowId: 'nailPreviewRow', previewThumbId: 'nailPreviewThumb', previewNameId: 'nailPreviewName', removeBtnId: 'nailRemovePhoto',
+      generateBtnId: 'nailGenerateBtn', resultPanelId: 'nailResultPanel', resultHeadId: 'nailResultHead',
+      resultBeforeId: 'nailResultBefore', resultAfterId: 'nailResultAfter', resultStyleNameId: 'nailResultStyleName',
+      resultNoteId: 'nailResultNote',
+      generateLabel: 'Generate My Nails', uploadPromptLabel: 'Upload a hand photo to generate',
+      nextStepId: 'nailNextStep',
+      summarize: (sel) => [sel.length, sel.shape].filter(Boolean).join(' ') + (sel.finish ? ', ' + sel.finish : ''),
+      buildPrompt: (sel) => {
+        const shape = sel.shape || 'Stiletto (Sharp)';
+        const length = sel.length || 'Medium';
+        const finish = sel.finish || 'Clear';
+        let p = 'Using the attached photo of a hand, photorealistically edit ONLY the fingernails so they become "' + shape + '" shaped, "' + length + '" length, with a "' + finish + '" finish/color. ';
+        p += 'Keep the exact same hand, fingers, skin tone, pose, lighting and background completely unchanged. ';
+        p += 'Do not add any text, watermark or border. The result must look like a real, unedited photograph, not an illustration.';
+        return p;
+      }
+    });
+
+    // ---------- Massage Body Map ----------
+    (function(){
+      const overlay = document.getElementById('massageModalOverlay');
+      const closeBtn = document.getElementById('massageModalClose');
+      const stage = document.getElementById('bodyStage');
+      const viewToggle = document.getElementById('viewToggle');
+      const genderToggle = document.getElementById('genderToggle');
+      const zoomChips = document.getElementById('zoomChips');
+      const pointCountLabel = document.getElementById('pointCountLabel');
+      const clearPointsBtn = document.getElementById('clearPoints');
+      const addOnChips = document.getElementById('addOnChips');
+      const bodyMessage = document.getElementById('bodyMessage');
+      const saveFocusBtn = document.getElementById('saveFocusBtn');
+      const bodySummary = document.getElementById('bodySummary');
+
+      const state = {
+        gender: 'female',
+        view: 'front',
+        points: { front: [], back: [] },
+        treatments: new Set()
+      };
+
+      const ZOOM = {
+        full:  { s: 1,   x: 50, y: 50 },
+        head:  { s: 2.6, x: 50, y: 8 },
+        arms:  { s: 1.9, x: 50, y: 32 },
+        torso: { s: 1.7, x: 50, y: 40 },
+        legs:  { s: 1.8, x: 50, y: 73 },
+        feet:  { s: 2.6, x: 50, y: 96 }
+      };
+
+      function bodyFigureSVG(gender){
+        const isFemale = gender === 'female';
+        const shoulderW = isFemale ? 78 : 92;
+        const hipW = isFemale ? 80 : 66;
+        const sx = 100 - shoulderW/2, hx = 100 - hipW/2;
+        const torsoPath = `M${sx+6},102 L${sx+shoulderW-6},102 L${hx+hipW-4},205 L${hx+4},205 Z`;
+        const hair = isFemale
+          ? `<rect x="70" y="46" width="9" height="50" rx="4.5" fill="var(--sil)"/><rect x="121" y="46" width="9" height="50" rx="4.5" fill="var(--sil)"/>`
+          : '';
+        return `
+          ${hair}
+          <ellipse cx="100" cy="34" rx="22" ry="26" fill="var(--sil)"/>
+          <rect x="90" y="58" width="20" height="12" rx="5" fill="var(--sil)"/>
+          <rect x="${sx}" y="68" width="${shoulderW}" height="36" rx="18" fill="var(--sil)"/>
+          <path d="${torsoPath}" fill="var(--sil)"/>
+          <rect x="${hx}" y="200" width="${hipW}" height="34" rx="16" fill="var(--sil)"/>
+          <rect x="26" y="74" width="25" height="145" rx="12.5" transform="rotate(8 38.5 146.5)" fill="var(--sil)"/>
+          <rect x="149" y="74" width="25" height="145" rx="12.5" transform="rotate(-8 161.5 146.5)" fill="var(--sil)"/>
+          <ellipse cx="37" cy="222" rx="12" ry="14" fill="var(--sil)"/>
+          <ellipse cx="163" cy="222" rx="12" ry="14" fill="var(--sil)"/>
+          <rect x="71" y="228" width="26" height="248" rx="13" fill="var(--sil)"/>
+          <rect x="103" y="228" width="26" height="248" rx="13" fill="var(--sil)"/>
+          <ellipse cx="84" cy="480" rx="16" ry="9" fill="var(--sil)"/>
+          <ellipse cx="116" cy="480" rx="16" ry="9" fill="var(--sil)"/>
+        `;
+      }
+
+      function drawStage(){
+        const spine = state.view === 'back'
+          ? '<line x1="100" y1="72" x2="100" y2="215" stroke="var(--ivory)" stroke-width="2" opacity="0.55"/>' : '';
+        const dots = state.points[state.view].map((p, i) =>
+          `<circle class="pain-dot" data-i="${i}" cx="${p.x}" cy="${p.y}" r="7" fill="#C0362C" fill-opacity="0.55" stroke="#C0362C" stroke-width="2"/>`
+        ).join('');
+        stage.innerHTML = `<svg viewBox="0 0 200 500" id="bodySvg">${bodyFigureSVG(state.gender)}${spine}${dots}</svg>`;
+
+        const svg = document.getElementById('bodySvg');
+        svg.addEventListener('click', (e) => {
+          if (e.target.classList.contains('pain-dot')){
+            const i = parseInt(e.target.dataset.i, 10);
+            state.points[state.view].splice(i, 1);
+            drawStage();
+            return;
+          }
+          const rect = svg.getBoundingClientRect();
+          const fx = (e.clientX - rect.left) / rect.width;
+          const fy = (e.clientY - rect.top) / rect.height;
+          state.points[state.view].push({ x: Math.round(fx*200), y: Math.round(fy*500) });
+          drawStage();
+        });
+
+        pointCountLabel.textContent = state.points[state.view].length + ' point' + (state.points[state.view].length === 1 ? '' : 's') + ' marked (' + (state.view === 'front' ? 'Front' : 'Back') + ')';
+      }
+
+      function openMassageModal(e){ if (e) e.preventDefault(); overlay.classList.add('open'); }
+      function closeMassageModal(){ overlay.classList.remove('open'); }
+      document.querySelectorAll('#massageCard').forEach(el => el.addEventListener('click', openMassageModal));
+      closeBtn.addEventListener('click', closeMassageModal);
+      overlay.addEventListener('click', (e) => { if (e.target === overlay) closeMassageModal(); });
+
+      viewToggle.querySelectorAll('span').forEach(s => {
+        s.addEventListener('click', () => {
+          viewToggle.querySelectorAll('span').forEach(t => t.classList.remove('active'));
+          s.classList.add('active');
+          state.view = s.dataset.view;
+          drawStage();
+        });
+      });
+      genderToggle.querySelectorAll('span').forEach(s => {
+        s.addEventListener('click', () => {
+          genderToggle.querySelectorAll('span').forEach(t => t.classList.remove('active'));
+          s.classList.add('active');
+          state.gender = s.dataset.gender;
+          drawStage();
+        });
+      });
+      zoomChips.querySelectorAll('.part-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          zoomChips.querySelectorAll('.part-chip').forEach(c => c.classList.remove('active'));
+          chip.classList.add('active');
+          const z = ZOOM[chip.dataset.zoom];
+          stage.style.transformOrigin = z.x + '% ' + z.y + '%';
+          stage.style.transform = 'scale(' + z.s + ')';
+        });
+      });
+      clearPointsBtn.addEventListener('click', () => {
+        state.points[state.view] = [];
+        drawStage();
+      });
+      addOnChips.querySelectorAll('.style-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          chip.classList.toggle('selected');
+          if (chip.classList.contains('selected')) state.treatments.add(chip.textContent);
+          else state.treatments.delete(chip.textContent);
+        });
+      });
+
+      saveFocusBtn.addEventListener('click', () => {
+        const frontN = state.points.front.length, backN = state.points.back.length;
+        const treatmentsText = state.treatments.size ? Array.from(state.treatments).join(', ') : 'None selected';
+        const msg = bodyMessage.value.trim();
+        bodySummary.innerHTML =
+          '<b>Saved for your therapist</b><br>' +
+          'Front focus points: <b>' + frontN + '</b> &nbsp;·&nbsp; Back focus points: <b>' + backN + '</b><br>' +
+          'Add-ons: <b>' + treatmentsText + '</b><br>' +
+          (msg ? 'Note: "' + msg + '"<br>' : '') +
+          '<span style="display:block; margin-top:8px; color:#9a8d7a;">In the full product this syncs straight to your booking so the therapist sees it before you arrive.</span>';
+        bodySummary.classList.add('show');
+        document.getElementById('massageNextStep').classList.add('show');
+        bodySummary.scrollIntoView({ behavior:'smooth', block:'nearest' });
+      });
+
+      drawStage();
+    })();
+  </script>
+
+</body>
+</html>

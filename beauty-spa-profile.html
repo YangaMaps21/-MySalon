@@ -1,0 +1,868 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Beauty / Spa Specialist — @MySalon</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ivory:#FAF6F0; --ivory-deep:#F1E9DD; --espresso:#241E1A; --espresso-soft:#3A322C;
+    --gold:#C9A961; --gold-deep:#A9863F; --blush:#D9AFA6; --line:#E6DCCB; --white:#FFFFFF;
+    --shadow: 0 20px 40px -20px rgba(36,30,26,0.35);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{ font-family:"Georgia", serif; background:var(--ivory); color:var(--espresso); -webkit-font-smoothing:antialiased; }
+  .sans{ font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+  a{ text-decoration:none; color:inherit; }
+  button{ font-family:inherit; cursor:pointer; border:none; background:none; }
+
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 18px 32px; background: var(--espresso); color: var(--ivory);
+  }
+  .brand{ font-size: 22px; }
+  .brand b{ color: var(--gold); font-weight:600; }
+  .back-link{ font-family:-apple-system, sans-serif; font-size:13px; color: var(--gold); }
+
+  .not-found{ max-width:600px; margin:80px auto; text-align:center; font-family:-apple-system, sans-serif; }
+  .not-found a{ color: var(--maroon); font-weight:600; }
+
+  /* ---------- Hero (per-specialist theme: template / bg / accent / font / headline) ---------- */
+  .hero{ padding: 54px 32px 46px; color:#fff; position:relative; overflow:hidden; }
+  .hero-inner{ max-width:1180px; margin:0 auto; position:relative; z-index:1; }
+  .hero-top{ display:flex; align-items:flex-end; justify-content:space-between; gap:24px; flex-wrap:wrap; }
+  .hero-avatar{
+    width:84px; height:84px; border-radius:50%; background: rgba(255,255,255,0.14);
+    display:flex; align-items:center; justify-content:center; font-family:-apple-system, sans-serif;
+    font-weight:700; font-size:26px; margin-bottom:14px; border:3px solid rgba(255,255,255,0.85); position:relative;
+    box-shadow:0 8px 20px rgba(0,0,0,0.28);
+  }
+  .hero-avatar-cam{
+    position:absolute; bottom:-2px; right:-2px; width:24px; height:24px; border-radius:50%;
+    background:#fff; color:#5A4E3E; font-size:12px; display:flex; align-items:center; justify-content:center;
+    box-shadow:0 2px 6px rgba(0,0,0,0.32);
+  }
+  .hero-cover{ position:absolute; top:0; left:0; right:0; height:70px; opacity:0.9; }
+  .hero .hero-inner{ padding-top:26px; }
+  .hero .eyebrow{ font-family:-apple-system, sans-serif; text-transform:uppercase; letter-spacing:3px; font-size:11px; opacity:0.85; margin-bottom:8px; }
+  .hero h1{ font-size:36px; font-weight:400; margin-bottom:8px; }
+  .hero .hero-meta{ font-family:-apple-system, sans-serif; font-size:13px; opacity:0.9; margin-bottom:16px; }
+  .hero .hero-meta .stars{ color:#FFE7A8; }
+  .hero-tags{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px; }
+  .hero-tag{
+    font-family:-apple-system, sans-serif; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.3px;
+    background: rgba(255,255,255,0.16); padding:5px 12px; border-radius:999px;
+  }
+  .hero-book{
+    display:inline-block; font-family:-apple-system, sans-serif; font-size:14px; font-weight:700;
+    background:#fff; padding:13px 26px; border-radius:999px; box-shadow: var(--shadow);
+  }
+  .hero .tier-chip{
+    font-family:-apple-system, sans-serif; font-size:10.5px; font-weight:700; text-transform:uppercase;
+    letter-spacing:0.5px; color:#4A3A12; background: linear-gradient(135deg, #F3D68A, #C9A961);
+    padding:5px 12px; border-radius:999px; display:inline-block; margin-bottom:12px;
+  }
+  .font-elegant, .font-elegant h1{ font-family:'Playfair Display', Georgia, serif; }
+  .font-modern, .font-modern h1{ font-family:'Poppins', -apple-system, sans-serif; font-weight:700; }
+
+  /* ---------- Portfolio / exhibition ---------- */
+  .exhibit-section{ max-width:1180px; margin:0 auto; padding: 40px 32px 8px; }
+  .exhibit-head{ display:flex; align-items:center; gap:12px; margin-bottom:6px; }
+  .exhibit-head h2{ font-size:26px; font-weight:400; }
+  .exhibit-sub{ font-family:-apple-system, sans-serif; font-size:13px; color:#8a7c6c; margin: 4px 0 18px; }
+  .exhibit-grid{ display:grid; grid-template-columns: repeat(4, 1fr); gap:12px; }
+  .exhibit-photo{
+    aspect-ratio:1/1; border-radius:14px; display:flex; align-items:center; justify-content:center;
+    font-family:-apple-system, sans-serif; font-size:11px; color:rgba(0,0,0,0.45); cursor:zoom-in;
+  }
+  @media (max-width: 700px){ .exhibit-grid{ grid-template-columns: repeat(2, 1fr); } }
+
+  /* ---------- Menu & pricing ---------- */
+  .menu-section{ max-width:1180px; margin:0 auto; padding: 40px 32px 8px; }
+  .menu-head h2{ font-size:26px; font-weight:400; margin-bottom:6px; }
+  .menu-head h2 span{ font-style:italic; color: var(--gold-deep); }
+  .menu-sub{ font-family:-apple-system, sans-serif; font-size:13px; color:#8a7c6c; margin-bottom:22px; }
+  .menu-groups{ display:grid; grid-template-columns: repeat(2, 1fr); gap:28px 40px; }
+  .menu-group h3{ font-size:17px; margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid var(--line); }
+  .menu-item{ display:flex; justify-content:space-between; padding:7px 0; font-family:-apple-system, sans-serif; font-size:13.5px; }
+  .menu-price{ color: var(--gold-deep); font-weight:700; }
+  @media (max-width: 700px){ .menu-groups{ grid-template-columns: 1fr; } }
+
+  /* ---------- Message + book CTA ---------- */
+  .contact-section{ max-width:1180px; margin:40px auto 0; padding: 0 32px 60px; }
+  .contact-box{
+    background: var(--white); border:1px solid var(--line); border-radius:18px; padding:26px;
+    display:flex; flex-wrap:wrap; gap:20px; align-items:center; justify-content:space-between;
+  }
+  .contact-box h3{ font-size:19px; margin-bottom:6px; }
+  .contact-box p{ font-family:-apple-system, sans-serif; font-size:13px; color:#8a7c6c; max-width:420px; }
+  .contact-actions{ display:flex; gap:10px; flex-wrap:wrap; }
+  .cta-btn{
+    font-family:-apple-system, sans-serif; font-size:13.5px; font-weight:700; padding:12px 22px; border-radius:999px;
+  }
+  .cta-btn.ghost{ border:1px solid var(--line); color: var(--espresso-soft); background:#fff; }
+  .cta-btn.primary{ color:#fff; }
+
+  /* ---------- Modal (booking) ---------- */
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(20,15,12,0.6); z-index:100; display:none;
+    align-items:center; justify-content:center; padding:20px;
+  }
+  .modal-overlay.open{ display:flex; }
+  .modal-box{
+    background:#fff; border-radius:18px; width:min(460px, 100%); max-height:88vh; overflow-y:auto;
+    box-shadow: var(--shadow); position:relative;
+  }
+  .modal-close{
+    position:absolute; top:14px; right:14px; width:30px; height:30px; border-radius:50%;
+    background: rgba(255,255,255,0.25); color:#fff; display:flex; align-items:center; justify-content:center;
+    font-size:14px; z-index:3;
+  }
+
+  .wm-hero{ padding:64px 26px 20px; color:#fff; border-radius:18px 18px 0 0; position:relative; overflow:hidden; }
+  .wm-hero .wm-avatar{
+    width:72px; height:72px; border-radius:50%; background: rgba(255,255,255,0.14);
+    display:flex; align-items:center; justify-content:center; font-family:-apple-system, sans-serif;
+    font-weight:700; font-size:20px; margin-bottom:12px; position:relative;
+    border:3px solid rgba(255,255,255,0.85); box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+  }
+  .wm-hero .wm-cover{ position:absolute; top:0; left:0; right:0; height:56px; opacity:0.9; }
+  .wm-hero .wm-avatar-cam{
+    position:absolute; bottom:-2px; right:-2px; width:20px; height:20px; border-radius:50%;
+    background:#fff; color:#5A4E3E; font-size:10px; display:flex; align-items:center; justify-content:center;
+    box-shadow:0 2px 5px rgba(0,0,0,0.3);
+  }
+  .wm-hero h3{ font-size:21px; margin-bottom:4px; }
+  .wm-hero .wm-role{ font-family:-apple-system, sans-serif; font-size:12.5px; opacity:0.85; }
+
+  .wm-body{ padding:22px 26px 26px; font-family:-apple-system, sans-serif; }
+  .wm-label{ font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; color:#a89a86; margin-bottom:10px; }
+  .wm-services{ display:flex; flex-direction:column; gap:8px; margin-bottom:22px; }
+  .wm-svc-row b{ color: var(--gold-deep); }
+
+  .wm-message textarea{
+    width:100%; border:1px solid var(--line); border-radius:10px; padding:12px 14px; font-family:inherit;
+    font-size:13px; resize:vertical; min-height:70px; background:#fff; color: var(--espresso);
+  }
+  .wm-actions{ display:flex; gap:10px; margin-top:14px; }
+  .wm-btn{ font-family:-apple-system, sans-serif; font-size:13px; font-weight:700; padding:11px 18px; border-radius:999px; flex:1; text-align:center; }
+  .wm-btn.primary{ color:#fff; }
+  .wm-btn.ghost{ border:1px solid var(--line); color: var(--espresso-soft); background:#fff; flex:none; }
+  .wm-btn[disabled]{ opacity:0.5; cursor:default; }
+
+  .wm-day-row{ display:flex; gap:8px; overflow-x:auto; margin-bottom:16px; }
+  .wm-day{
+    flex:none; width:52px; padding:10px 0; text-align:center; border-radius:12px; border:1px solid var(--line);
+    cursor:pointer; transition: background .15s ease;
+  }
+  .wm-day .d-dow{ font-size:10.5px; color:#8a7c6c; text-transform:uppercase; }
+  .wm-day .d-num{ font-size:16px; font-weight:700; }
+  .wm-day.active{ color:#fff; border-color:transparent; }
+  .wm-day.active .d-dow{ color: rgba(255,255,255,0.85); }
+
+  .wm-hours{ display:grid; grid-template-columns: repeat(3, 1fr); gap:8px; margin-bottom:18px; }
+  .wm-hour{
+    text-align:center; padding:10px 0; border-radius:10px; border:1px solid var(--line); font-size:13px; cursor:pointer;
+  }
+  .wm-hour.taken{ opacity:0.35; text-decoration:line-through; cursor:default; background: var(--ivory-deep); }
+  .wm-hour.active{ color:#fff; border-color:transparent; }
+
+  .wm-chat{ display:flex; flex-direction:column; gap:10px; margin-bottom:6px; }
+  .wm-bubble{ max-width:80%; padding:10px 14px; border-radius:14px; font-size:13.5px; line-height:1.4; }
+  .wm-bubble.me{ align-self:flex-end; background: var(--ivory-deep); color: var(--espresso); border-bottom-right-radius:4px; }
+  .wm-bubble.them{ align-self:flex-start; background: var(--espresso); color:#fff; border-bottom-left-radius:4px; }
+  .wm-typing{ align-self:flex-start; font-size:12px; color:#a89a86; font-style:italic; }
+  .wm-proto-note{ font-size:11px; color:#a89a86; margin-top:10px; font-style:italic; }
+  .wm-follow-row{ display:flex; gap:8px; margin-top:14px; }
+  .wm-follow-row input{
+    flex:1; border:1px solid var(--line); border-radius:999px; padding:10px 16px; font-family:inherit; font-size:13px;
+  }
+  .wm-follow-row button{ font-family:-apple-system, sans-serif; font-size:13px; font-weight:700; color:#fff; padding:10px 18px; border-radius:999px; }
+
+  /* ---------- Lightbox ---------- */
+  .lightbox-overlay{
+    position:fixed; inset:0; background:rgba(20,15,12,0.85); z-index:200; display:none;
+    align-items:center; justify-content:center; padding:24px;
+  }
+  .lightbox-overlay.open{ display:flex; }
+  .lightbox-box{ position:relative; width:min(520px, 92vw); }
+  .lightbox-photo{
+    width:100%; aspect-ratio:4/3; border-radius:16px; background: linear-gradient(135deg, var(--ivory-deep), var(--blush));
+    display:flex; align-items:center; justify-content:center; font-size:15px; color: var(--gold-deep); font-family:-apple-system, sans-serif;
+  }
+  .lightbox-close{
+    position:absolute; top:-14px; right:-14px; width:34px; height:34px; border-radius:50%;
+    background:#fff; color: var(--espresso); font-size:15px; display:flex; align-items:center; justify-content:center;
+    cursor:pointer; box-shadow: var(--shadow);
+  }
+  .lightbox-nav{ display:flex; justify-content:space-between; margin-top:14px; }
+  .lightbox-nav button{
+    font-family:-apple-system, sans-serif; font-size:12.5px; font-weight:600; color:#fff;
+    background: rgba(255,255,255,0.14); padding:8px 16px; border-radius:999px; cursor:pointer;
+  }
+  .lightbox-nav button[disabled]{ opacity:0.35; cursor:default; }
+
+  footer{ background: var(--espresso); color: rgba(250,246,240,0.6); text-align:center; padding: 28px; font-family:-apple-system, sans-serif; font-size:12px; margin-top:20px; }
+
+  /* ---------- Palette customizer — the business owner's own colour, applied live ---------- */
+  .palette-fab{
+    position:fixed; bottom:24px; right:24px; z-index:150; width:52px; height:52px; border-radius:50%;
+    background: var(--espresso); color: var(--gold); font-size:20px; display:flex; align-items:center; justify-content:center;
+    box-shadow: var(--shadow); cursor:pointer; border:none;
+  }
+  .palette-panel{
+    position:fixed; bottom:88px; right:24px; z-index:150; width:250px; background:#fff; border-radius:16px;
+    box-shadow: var(--shadow); padding:16px; display:none; font-family:-apple-system, sans-serif;
+  }
+  .palette-panel.open{ display:block; }
+  .palette-panel .p-label{ font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; color:#8a7c6c; margin-bottom:2px; }
+  .palette-panel .p-sub{ font-size:11px; color:#a89a86; margin-bottom:10px; }
+  .palette-swatches{ display:grid; grid-template-columns:repeat(6,1fr); gap:8px; margin-bottom:12px; }
+  .palette-swatch{ width:28px; height:28px; border-radius:50%; border:2px solid #fff; box-shadow:0 0 0 1px var(--line); cursor:pointer; padding:0; }
+  .palette-custom-row{ display:flex; align-items:center; gap:8px; margin-bottom:10px; }
+  .palette-custom-row input[type=color]{ width:34px; height:34px; border:none; border-radius:8px; padding:0; background:none; cursor:pointer; }
+  .palette-reset{ font-size:11.5px; color:#8a7c6c; text-decoration:underline; background:none; border:none; cursor:pointer; }
+
+  .topbar{ position:relative; }
+  .topbar-right{ display:flex; align-items:center; gap:8px; }
+  .icon-btn{
+    width:46px; height:46px; border-radius:9px; display:flex; align-items:center; justify-content:center;
+    position:relative;
+  }
+  .icon-btn:hover{ background: rgba(255,255,255,0.08); }
+  .icon-btn svg{ width:21px; height:21px; }
+  .burger{
+    width:46px; height:46px; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:6px;
+    border-radius: 9px;
+    position:relative;
+  }
+  .burger:hover{ background: rgba(255,255,255,0.08); }
+  .burger span{ width:24px; height:2.5px; background: var(--ivory); display:block; border-radius:2px; }
+
+  .menu-panel{
+    position:absolute; top: 68px; right: 32px; z-index:70;
+    background: var(--white); border-radius: 14px;
+    box-shadow: var(--shadow); border:1px solid var(--line);
+    min-width: 260px; padding: 10px;
+    display:none; flex-direction:column; gap:2px;
+  }
+  .menu-panel.open{ display:flex; }
+  .menu-panel a{
+    font-family:-apple-system, sans-serif; font-size:15px; color: var(--espresso);
+    padding: 13px 16px; border-radius: 9px;
+  }
+  .menu-panel a:hover{ background: var(--ivory-deep); }
+  .menu-divider{ height:1px; background: var(--line); margin: 6px 4px; }
+</style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">@<b>MySalon</b></div>
+    <div class="topbar-right">
+      <a class="back-link sans" href="beauty-spa.html">← Back to Beauty / Spa</a>
+      <button class="burger icon-btn" id="burgerBtn" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="menu-panel" id="menuPanel">
+      <a href="index.html">Home</a>
+      <a href="profile.html">Profile</a>
+      <a href="about.html">About Us</a>
+      <div class="menu-divider"></div>
+      <a href="salons.html">Salons</a>
+      <a href="specialists.html">Specialists</a>
+      <a href="beauty-spa.html">Beauty / Spa</a>
+      <a href="makeup-artists.html">Makeup Artists</a>
+      <a href="market.html">Market</a>
+      <a href="rent-a-chair.html">Rent a Chair</a>
+      <div class="menu-divider"></div>
+      <a href="billing.html">Billing</a>
+      <a href="list-your-business.html">List Your Business</a>
+    </div>
+  </header>
+
+  <div id="page"></div>
+
+  <div class="modal-overlay" id="bookModalOverlay">
+    <div class="modal-box" id="bookModalBox"></div>
+  </div>
+
+  <div class="lightbox-overlay" id="lightboxOverlay">
+    <div class="lightbox-box">
+      <div class="lightbox-close" id="lightboxClose">✕</div>
+      <div class="lightbox-photo" id="lightboxPhoto"></div>
+      <div class="lightbox-nav">
+        <button type="button" id="lightboxPrev">← Previous</button>
+        <button type="button" id="lightboxNext">Next →</button>
+      </div>
+    </div>
+  </div>
+
+  <button class="palette-fab" id="paletteFab" type="button" title="Customize your business colour">🎨</button>
+  <div class="palette-panel" id="palettePanel">
+    <div class="p-label">Business colour</div>
+    <div class="p-sub">Owner-only — matches this to your own brand palette.</div>
+    <div class="palette-swatches" id="paletteSwatches"></div>
+    <div class="palette-custom-row">
+      <input type="color" id="paletteCustomInput">
+      <span style="font-size:11.5px; color:#6b5d4f;">Custom colour</span>
+    </div>
+    <button type="button" class="palette-reset" id="paletteResetBtn">Reset to default</button>
+  </div>
+
+  <footer>© 2026 @MySalon. All rights reserved.</footer>
+
+  <script>
+    // Beauty/Spa has one tier only — every specialist gets the full profile: 8-photo portfolio,
+    // profile-picture avatar, and a cover band from their own brand palette. Nothing less.
+    const SPECIALISTS = {
+      'sipho-radebe':      { name:'Sipho Radebe', area:'Menlyn',    rating:4.9, reviews:103, tags:['Massage','Spa'],
+        theme:{ template:'minimal', bg:'gradient', accent:'#7C9070', accentDark:'#4E5F44', font:'elegant', headline:'Breathe. Release. Restore.' } },
+      'thandeka-zulu':     { name:'Thandeka Zulu', area:'Hatfield',  rating:4.9, reviews:74,  tags:['Spa','Massage'],
+        theme:{ template:'bold', bg:'photo', accent:'#6E8B8B', accentDark:'#425757', font:'elegant', headline:'A ritual worth repeating.' } },
+      'nolwazi-mahlangu':  { name:'Nolwazi Mahlangu', area:'Sandton',   rating:5.0, reviews:88,  tags:['Massage','Aromatherapy'],
+        theme:{ template:'minimal', bg:'gradient', accent:'#5E8C86', accentDark:'#365550', font:'elegant', headline:'Aromatherapy, deeply calming.' } },
+      'kabelo-mofokeng':   { name:'Kabelo Mofokeng', area:'Sandton',   rating:4.8, reviews:66,  tags:['Reflexology','Massage'],
+        theme:{ template:'classic', bg:'gradient', accent:'#4E6B67', accentDark:'#2E403D', font:'default', headline:'Reflexology, restored balance.' } },
+      'nozipho-ndlovu':    { name:'Nozipho Ndlovu', area:'Rosebank',  rating:4.9, reviews:112, tags:['Spa','Aromatherapy'],
+        theme:{ template:'bold', bg:'photo', accent:'#7C9070', accentDark:'#4E5F44', font:'elegant', headline:'A full sensory escape.' } },
+      'tumelo-phiri':      { name:'Tumelo Phiri', area:'Rosebank',  rating:4.7, reviews:49,  tags:['Massage','Reflexology'],
+        theme:{ template:'classic', bg:'gradient', accent:'#6E8B8B', accentDark:'#425757', font:'default', headline:'Hands-on relief, every session.' } },
+      'ntombi-gumede':     { name:'Ntombi Gumede', area:'Centurion', rating:4.9, reviews:95,  tags:['Spa','Massage'],
+        theme:{ template:'minimal', bg:'logo', accent:'#5E8C86', accentDark:'#365550', font:'elegant', headline:'Spa days, made personal.' } },
+      'katlego-mahlaba':   { name:'Katlego Mahlaba', area:'Centurion', rating:4.8, reviews:61,  tags:['Aromatherapy','Spa'],
+        theme:{ template:'classic', bg:'gradient', accent:'#4E6B67', accentDark:'#2E403D', font:'default', headline:'Scent-led relaxation rituals.' } },
+      'zamokuhle-ngema':   { name:'Zamokuhle Ngema', area:'Midrand',   rating:5.0, reviews:143, tags:['Massage','Spa'],
+        theme:{ template:'bold', bg:'photo', accent:'#7C9070', accentDark:'#4E5F44', font:'elegant', headline:'Massage that melts the stress away.' } },
+      'refiloe-nchabeleng':{ name:'Refiloe Nchabeleng', area:'Midrand',   rating:4.9, reviews:77,  tags:['Reflexology','Aromatherapy'],
+        theme:{ template:'minimal', bg:'gradient', accent:'#6E8B8B', accentDark:'#425757', font:'elegant', headline:'Foot to full-body, restored.' } },
+      'lwazi-mkhwanazi':   { name:'Lwazi Mkhwanazi', area:'Hatfield',  rating:4.8, reviews:58,  tags:['Massage','Spa'],
+        theme:{ template:'classic', bg:'gradient', accent:'#5E8C86', accentDark:'#365550', font:'default', headline:'Consistent, calming care.' } },
+      'busi-mahlatsi':     { name:'Busi Mahlatsi', area:'Menlyn',    rating:4.9, reviews:84,  tags:['Spa','Reflexology'],
+        theme:{ template:'minimal', bg:'logo', accent:'#4E6B67', accentDark:'#2E403D', font:'elegant', headline:'Spa & reflexology, together.' } },
+      'sibongile-radebe':  { name:'Sibongile Radebe', area:'Midrand',   rating:3.6, reviews:27, tags:['Massage'],
+        theme:{ template:'classic', bg:'gradient', accent:'#7C9070', accentDark:'#4E5F44', font:'default', headline:'Simple, honest massage.' } },
+      'mandla-sithole':    { name:'Mandla Sithole', area:'Centurion', rating:3.9, reviews:21, tags:['Spa'],
+        theme:{ template:'classic', bg:'gradient', accent:'#6E8B8B', accentDark:'#425757', font:'default', headline:'Affordable spa treatments.' } },
+      'dineo-kekana':      { name:'Dineo Kekana', area:'Rosebank',  rating:2.8, reviews:14, tags:['Reflexology'],
+        theme:{ template:'classic', bg:'gradient', accent:'#5E8C86', accentDark:'#365550', font:'default', headline:'Reflexology on the go.' } },
+      'bafana-shongwe':    { name:'Bafana Shongwe', area:'Hatfield',  rating:2.1, reviews:8,  tags:['Aromatherapy'],
+        theme:{ template:'classic', bg:'gradient', accent:'#4E6B67', accentDark:'#2E403D', font:'default', headline:'Budget aromatherapy sessions.' } }
+    };
+
+    const SERVICE_CATALOG = {
+      Massage:      [ ['Swedish Massage (60 min)',380], ['Deep Tissue Massage (60 min)',450], ['Hot Stone Massage',550] ],
+      Spa:          [ ['Full Body Spa Package',900], ['Couples Spa Package',1600], ['Express Facial + Massage',650] ],
+      Reflexology:  [ ['Foot Reflexology (30 min)',220], ['Full Body Reflexology (60 min)',420], ['Reflexology + Aromatherapy Combo',520] ],
+      Aromatherapy: [ ['Aromatherapy Massage',420], ['Essential Oil Ritual',480], ['Aromatherapy Facial',380] ]
+    };
+
+    function hashStr(s){
+      let h = 0;
+      for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+      return h;
+    }
+    function initials(name){
+      return name.replace(/&/g, ' ').split(/\s+/).filter(Boolean).slice(0, 2).map(w => w[0]).join('').toUpperCase();
+    }
+    function lightenColor(hex, amt){
+      const c = hex.replace('#', '');
+      const num = parseInt(c, 16);
+      let r = (num >> 16) & 255, g = (num >> 8) & 255, b = num & 255;
+      r = Math.round(r + (255 - r) * amt);
+      g = Math.round(g + (255 - g) * amt);
+      b = Math.round(b + (255 - b) * amt);
+      return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
+    }
+    function paletteFor(sp){
+      return [sp.theme.accent, sp.theme.accentDark, lightenColor(sp.theme.accent, 0.35), '#C9A961'];
+    }
+
+    function heroHtml(sp){
+      const t = sp.theme;
+      const coverColor = paletteFor(sp)[hashStr(sp.name) % 4];
+      const bgStyle = `background: linear-gradient(135deg, ${t.accent}, ${t.accentDark});`;
+      return `
+        <section class="hero font-${t.font}" style="${bgStyle}">
+          <div class="hero-cover" style="background:${coverColor};"></div>
+          <div class="hero-inner">
+            <div class="hero-top">
+              <div>
+                <span class="tier-chip">★ Full profile</span><br>
+                <div class="hero-avatar">${initials(sp.name)}<span class="hero-avatar-cam">📷</span></div>
+                <div class="eyebrow">${sp.area} · Independent beauty &amp; spa specialist</div>
+                <h1>${sp.name}</h1>
+                <div class="hero-meta"><span class="stars">★ ${sp.rating}</span> (${sp.reviews} reviews)</div>
+                <div class="sans" style="opacity:0.9; margin-bottom:14px; max-width:420px;">${t.headline}</div>
+                <div class="hero-tags">${sp.tags.map(tag => `<span class="hero-tag">${tag}</span>`).join('')}</div>
+              </div>
+              <a href="#" class="hero-book" id="heroBookBtn" style="color:${t.accentDark};">Book with ${sp.name.split(' ')[0]}</a>
+            </div>
+          </div>
+        </section>`;
+    }
+
+    function exhibitionHtml(sp){
+      const accent = sp.theme.accent, accentDark = sp.theme.accentDark;
+      return `
+        <section class="exhibit-section">
+          <div class="exhibit-head">
+            <h2>${sp.name.split(' ')[0]}'s <span style="color:${accent}; font-style:italic;">portfolio</span></h2>
+            <span class="tier-chip" style="font-family:-apple-system, sans-serif; font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:#4A3A12; background:linear-gradient(135deg, #F3D68A, #C9A961); padding:5px 12px; border-radius:999px;">★ Full profile perk</span>
+          </div>
+          <div class="exhibit-sub">8 photos of recent work. Tap a photo to enlarge.</div>
+          <div class="exhibit-grid" id="exhibitGrid">
+            ${Array.from({ length: 8 }).map((_, i) => `
+              <div class="exhibit-photo" data-pi="${i}" style="background:linear-gradient(${135 + i * 12}deg, ${accent}33, ${accentDark}55);">Photo ${i + 1}</div>
+            `).join('')}
+          </div>
+        </section>`;
+    }
+
+    function menuHtml(sp){
+      return `
+        <section class="menu-section">
+          <div class="menu-head">
+            <h2>Menu <span>&amp; pricing</span></h2>
+          </div>
+          <div class="menu-sub">Everything ${sp.name.split(' ')[0]} offers. Message before you book if you need something custom.</div>
+          <div class="menu-groups">
+            ${sp.tags.map(tag => `
+              <div class="menu-group">
+                <h3 style="color:${sp.theme.accent};">${tag}</h3>
+                ${(SERVICE_CATALOG[tag] || []).map(([itemName, price]) => `
+                  <div class="menu-item">
+                    <span>${itemName}</span>
+                    <span class="menu-price">R${price}</span>
+                  </div>
+                `).join('')}
+              </div>
+            `).join('')}
+          </div>
+        </section>`;
+    }
+
+    function contactHtml(sp){
+      return `
+        <section class="contact-section">
+          <div class="contact-box">
+            <div>
+              <h3>Have a question first?</h3>
+              <p class="sans">Send ${sp.name.split(' ')[0]} a quick message before you book, or jump straight into the calendar.</p>
+            </div>
+            <div class="contact-actions">
+              <button type="button" class="cta-btn ghost" id="sendMsgBtn">Send a message</button>
+              <button type="button" class="cta-btn primary" id="bookNowBtn" style="background:${sp.theme.accent};">Book with ${sp.name.split(' ')[0]}</button>
+            </div>
+          </div>
+        </section>`;
+    }
+
+    let currentSpecialist = null, currentSlug = null;
+
+    function render(){
+      const params = new URLSearchParams(window.location.search);
+      const slug = params.get('specialist');
+      const sp = slug && SPECIALISTS[slug];
+      const page = document.getElementById('page');
+
+      if (!sp){
+        page.innerHTML = `
+          <div class="not-found">
+            <h2>We couldn't find that specialist</h2>
+            <p>They may have been renamed or removed. <a href="beauty-spa.html">Back to all beauty &amp; spa specialists →</a></p>
+          </div>`;
+        document.title = 'Specialist not found — @MySalon';
+        return;
+      }
+
+      document.title = sp.name + ' — @MySalon';
+      currentSpecialist = sp;
+      currentSlug = slug;
+
+      page.innerHTML = heroHtml(sp) + menuHtml(sp) + exhibitionHtml(sp) + contactHtml(sp);
+
+      document.getElementById('heroBookBtn').addEventListener('click', (e) => { e.preventDefault(); openBookingMenu(); });
+      document.getElementById('bookNowBtn').addEventListener('click', () => openBookingMenu());
+      document.getElementById('sendMsgBtn').addEventListener('click', () => openMessageOnly());
+      document.querySelectorAll('#exhibitGrid .exhibit-photo').forEach(el => {
+        el.addEventListener('click', () => openPhotoLightbox(sp, Number(el.dataset.pi)));
+      });
+    }
+
+    // ---------- Portfolio lightbox ----------
+    const lightboxOverlay = document.getElementById('lightboxOverlay');
+    const lightboxPhoto = document.getElementById('lightboxPhoto');
+    let lightboxSpecialist = null, lightboxIdx = 0;
+    const PHOTO_COUNT = 8;
+
+    function renderLightbox(){
+      lightboxPhoto.textContent = `${lightboxSpecialist.name.split(' ')[0]}'s portfolio — Photo ${lightboxIdx + 1} of ${PHOTO_COUNT}`;
+      document.getElementById('lightboxPrev').disabled = lightboxIdx === 0;
+      document.getElementById('lightboxNext').disabled = lightboxIdx === PHOTO_COUNT - 1;
+    }
+    function openPhotoLightbox(sp, pi){
+      lightboxSpecialist = sp;
+      lightboxIdx = pi;
+      renderLightbox();
+      lightboxOverlay.classList.add('open');
+    }
+    document.getElementById('lightboxClose').addEventListener('click', () => lightboxOverlay.classList.remove('open'));
+    lightboxOverlay.addEventListener('click', (e) => { if (e.target === lightboxOverlay) lightboxOverlay.classList.remove('open'); });
+    document.getElementById('lightboxPrev').addEventListener('click', () => { if (lightboxIdx > 0){ lightboxIdx--; renderLightbox(); } });
+    document.getElementById('lightboxNext').addEventListener('click', () => { if (lightboxIdx < PHOTO_COUNT - 1){ lightboxIdx++; renderLightbox(); } });
+
+    // ---------- Booking modal: full menu (multi-select) → calendar → note → message thread ----------
+    const bookOverlay = document.getElementById('bookModalOverlay');
+    const bookBox = document.getElementById('bookModalBox');
+    const DOW = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    const HOURS = ['09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00'];
+
+    function nextDays(n){
+      const days = [];
+      const today = new Date();
+      for (let i = 0; i < n; i++){
+        const d = new Date(today);
+        d.setDate(today.getDate() + i);
+        days.push(d);
+      }
+      return days;
+    }
+    function hourTaken(seed, dayIdx, hourIdx){
+      return ((seed + dayIdx * 5 + hourIdx * 7) % 4) === 0;
+    }
+
+    function closeBookModal(){
+      bookOverlay.classList.remove('open');
+      bookingDay = null;
+      bookingHour = null;
+    }
+
+    let bookingDay = null, bookingHour = null;
+    let selectedMenuItems = [];
+
+    function menuSummary(){
+      const names = selectedMenuItems.map(i => i.name);
+      const total = selectedMenuItems.reduce((sum, i) => sum + Number(i.price), 0);
+      return { names, total };
+    }
+    function updateMenuContinue(accent){
+      const btn = document.getElementById('bmContinue');
+      if (!btn) return;
+      if (selectedMenuItems.length === 0){
+        btn.disabled = true;
+        btn.textContent = 'Choose at least one item to continue';
+      } else {
+        const { names, total } = menuSummary();
+        btn.disabled = false;
+        btn.textContent = names.length === 1 ? `Continue with ${names[0]} · R${total}` : `Continue with ${names.length} items · R${total}`;
+      }
+    }
+    function avatarHtml(sp){
+      return `<div class="wm-avatar">${initials(sp.name)}<span class="wm-avatar-cam">📷</span></div>`;
+    }
+    function coverHtml(sp){
+      const color = paletteFor(sp)[hashStr(sp.name) % 4];
+      return `<div class="wm-cover" style="background:${color};" title="Cover photo — from ${sp.name.split(' ')[0]}'s brand palette"></div>`;
+    }
+
+    function openMessageOnly(){
+      const sp = currentSpecialist;
+      const accent = sp.theme.accent;
+      bookBox.innerHTML = `
+        <button type="button" class="modal-close" id="bmClose">✕</button>
+        <div class="wm-hero" style="background:linear-gradient(135deg, ${accent}, ${sp.theme.accentDark});">
+          ${coverHtml(sp)}
+          ${avatarHtml(sp)}
+          <h3>${sp.name}</h3>
+          <div class="wm-role">${sp.tags.join(' · ')}</div>
+        </div>
+        <div class="wm-body">
+          <div class="wm-label">Send a message</div>
+          <div class="wm-message">
+            <textarea id="bmMsgInput" placeholder="Ask ${sp.name.split(' ')[0]} a question before you book…"></textarea>
+          </div>
+          <div class="wm-actions">
+            <button type="button" class="wm-btn primary" id="bmSendMsg" style="background:${accent};">Send message</button>
+          </div>
+        </div>`;
+      document.getElementById('bmClose').addEventListener('click', closeBookModal);
+      document.getElementById('bmSendMsg').addEventListener('click', () => {
+        const box = document.getElementById('bmMsgInput');
+        if (!box.value.trim()) return;
+        box.value = '';
+        box.placeholder = `Message sent to ${sp.name.split(' ')[0]} — they'll reply here soon.`;
+      });
+      bookOverlay.classList.add('open');
+    }
+
+    function openBookingMenu(){
+      const sp = currentSpecialist;
+      const accent = sp.theme.accent;
+      selectedMenuItems = [];
+      bookingDay = null;
+      bookingHour = null;
+
+      bookBox.innerHTML = `
+        <button type="button" class="modal-close" id="bmClose">✕</button>
+        <div class="wm-hero" style="background:linear-gradient(135deg, ${accent}, ${sp.theme.accentDark});">
+          ${coverHtml(sp)}
+          ${avatarHtml(sp)}
+          <h3>Book ${sp.name}</h3>
+          <div class="wm-role">Pick one or more — you can combine services</div>
+        </div>
+        <div class="wm-body">
+          <div class="wm-label">Menu</div>
+          <div class="wm-services" id="bmMenu">
+            ${sp.tags.map(tag => (SERVICE_CATALOG[tag] || []).map(([name, price]) => `
+              <div class="wm-svc-row" data-name="${name}" data-price="${price}" style="cursor:pointer; padding:10px 12px; border:1px solid var(--line); border-radius:9px; background:#fff; display:flex; align-items:center; gap:10px;">
+                <span class="wm-svc-check" style="width:18px; height:18px; border-radius:5px; border:1.5px solid #cbbfa9; flex:none; display:flex; align-items:center; justify-content:center; font-size:12px; color:#fff;"></span>
+                <span style="flex:1;">${name} <span style="color:#a89a86; font-size:11px;">· ${tag}</span></span>
+                <b>R${price}</b>
+              </div>
+            `).join('')).join('')}
+          </div>
+          <div class="wm-actions">
+            <button type="button" class="wm-btn primary" id="bmContinue" style="background:${accent};" disabled>Choose at least one item to continue</button>
+          </div>
+        </div>`;
+
+      document.getElementById('bmClose').addEventListener('click', closeBookModal);
+      document.querySelectorAll('#bmMenu .wm-svc-row').forEach(row => {
+        row.addEventListener('click', () => {
+          const name = row.dataset.name, price = row.dataset.price;
+          const idx = selectedMenuItems.findIndex(i => i.name === name);
+          const check = row.querySelector('.wm-svc-check');
+          if (idx >= 0){
+            selectedMenuItems.splice(idx, 1);
+            row.style.borderColor = 'var(--line)'; row.style.background = '#fff';
+            check.style.background = 'transparent';
+            check.textContent = '';
+          } else {
+            selectedMenuItems.push({ name, price });
+            row.style.borderColor = accent; row.style.background = 'rgba(0,0,0,0.02)';
+            check.style.background = accent; check.style.borderColor = accent;
+            check.textContent = '✓';
+          }
+          updateMenuContinue(accent);
+        });
+      });
+      document.getElementById('bmContinue').addEventListener('click', () => { if (selectedMenuItems.length) openCalendar(); });
+
+      bookOverlay.classList.add('open');
+    }
+
+    function openCalendar(){
+      const sp = currentSpecialist;
+      const accent = sp.theme.accent;
+      const seed = hashStr(currentSlug) + 5;
+      const days = nextDays(7);
+      const { names, total } = menuSummary();
+
+      bookBox.innerHTML = `
+        <button type="button" class="modal-close" id="bmClose">✕</button>
+        <div class="wm-hero" style="background:linear-gradient(135deg, ${accent}, ${sp.theme.accentDark});">
+          ${coverHtml(sp)}
+          ${avatarHtml(sp)}
+          <h3>${names.join(' + ')}</h3>
+          <div class="wm-role">${sp.name} · R${total}</div>
+        </div>
+        <div class="wm-body">
+          <div class="wm-label">Choose a day</div>
+          <div class="wm-day-row" id="bmDayRow">
+            ${days.map((d, i) => `
+              <div class="wm-day" data-i="${i}">
+                <div class="d-dow">${DOW[d.getDay()]}</div>
+                <div class="d-num">${d.getDate()}</div>
+              </div>
+            `).join('')}
+          </div>
+          <div id="bmHoursWrap"></div>
+          <div id="bmNoteWrap"></div>
+        </div>`;
+      document.getElementById('bmClose').addEventListener('click', closeBookModal);
+
+      document.querySelectorAll('#bmDayRow .wm-day').forEach(el => {
+        el.addEventListener('click', () => {
+          document.querySelectorAll('#bmDayRow .wm-day').forEach(d => { d.classList.remove('active'); d.style.background = ''; d.style.color = ''; });
+          el.classList.add('active');
+          el.style.background = accent;
+          bookingDay = Number(el.dataset.i);
+          bookingHour = null;
+          renderHours(seed, bookingDay, accent);
+          document.getElementById('bmNoteWrap').innerHTML = '';
+        });
+      });
+    }
+
+    function renderHours(seed, dayIdx, accent){
+      const wrap = document.getElementById('bmHoursWrap');
+      wrap.innerHTML = `
+        <div class="wm-label">Available hours</div>
+        <div class="wm-hours" id="bmHours">
+          ${HOURS.map((h, hi) => {
+            const taken = hourTaken(seed, dayIdx, hi);
+            return `<div class="wm-hour ${taken ? 'taken' : ''}" data-h="${hi}">${h}</div>`;
+          }).join('')}
+        </div>`;
+      document.querySelectorAll('#bmHours .wm-hour').forEach(el => {
+        if (el.classList.contains('taken')) return;
+        el.addEventListener('click', () => {
+          document.querySelectorAll('#bmHours .wm-hour').forEach(h => { h.classList.remove('active'); h.style.background = ''; });
+          el.classList.add('active');
+          el.style.background = accent;
+          bookingHour = Number(el.dataset.h);
+          renderNote(accent);
+        });
+      });
+    }
+
+    function renderNote(accent){
+      const sp = currentSpecialist;
+      const wrap = document.getElementById('bmNoteWrap');
+      wrap.innerHTML = `
+        <div class="wm-label">Add a note for ${sp.name.split(' ')[0]}</div>
+        <div class="wm-message">
+          <textarea id="bmBookNote" placeholder="e.g. 'Bad lower back — please go gentle' or 'First time, any prep advice?'"></textarea>
+        </div>
+        <div class="wm-actions">
+          <button type="button" class="wm-btn primary" id="bmSendRequest" style="background:${accent};">Send booking request</button>
+        </div>`;
+      document.getElementById('bmSendRequest').addEventListener('click', () => sendBookingRequest(accent));
+    }
+
+    function sendBookingRequest(accent){
+      const sp = currentSpecialist;
+      const day = nextDays(7)[bookingDay];
+      const dayLabel = `${DOW[day.getDay()]} ${day.getDate()}`;
+      const hourLabel = HOURS[bookingHour];
+      const noteEl = document.getElementById('bmBookNote');
+      const note = (noteEl && noteEl.value.trim()) || null;
+      const { names, total } = menuSummary();
+      const itemsLabel = names.join(', ');
+
+      bookBox.innerHTML = `
+        <button type="button" class="modal-close" id="bmClose">✕</button>
+        <div class="wm-hero" style="background:linear-gradient(135deg, ${accent}, ${sp.theme.accentDark});">
+          ${coverHtml(sp)}
+          ${avatarHtml(sp)}
+          <h3>${sp.name}</h3>
+          <div class="wm-role">${names.join(' + ')} · ${dayLabel} · ${hourLabel}</div>
+        </div>
+        <div class="wm-body">
+          <div id="bmChatArea">
+            <div class="wm-chat" id="bmChat">
+              <div class="wm-bubble me">Hi ${sp.name.split(' ')[0]}! I'd like to book ${itemsLabel} (R${total}) for ${dayLabel} at ${hourLabel}.${note ? ' ' + note : ''}</div>
+              <div class="wm-typing" id="bmTyping">${sp.name.split(' ')[0]} is typing…</div>
+            </div>
+          </div>
+        </div>`;
+      document.getElementById('bmClose').addEventListener('click', closeBookModal);
+
+      setTimeout(() => {
+        const seed = hashStr(currentSlug + itemsLabel) + bookingDay * 3 + bookingHour;
+        const replies = [
+          `That works for me — see you ${dayLabel} at ${hourLabel} for ${itemsLabel}! I'll confirm the day before.`,
+          `I'm actually booked right at ${hourLabel} — could you do an hour later on ${dayLabel}?`,
+          `Yes! Just holding your spot for ${itemsLabel}. Let me know if anything changes before ${dayLabel}.`
+        ];
+        const reply = replies[seed % replies.length];
+        const typing = document.getElementById('bmTyping');
+        if (typing) typing.remove();
+        const chat = document.getElementById('bmChat');
+        const area = document.getElementById('bmChatArea');
+        if (chat && area){
+          chat.insertAdjacentHTML('beforeend', `<div class="wm-bubble them">${reply}</div>`);
+          area.insertAdjacentHTML('beforeend', `<div class="wm-proto-note">Prototype — this reply is simulated. Real booking would message ${sp.name.split(' ')[0]} directly and hold the slot.</div>`);
+          addFollowUpComposer(chat, sp.name.split(' ')[0], accent);
+        }
+      }, 1100);
+    }
+
+    // Lets someone keep the conversation going after a booking is sent — announce running late, confirm, etc.
+    const ACKS = ["Got it, thanks for letting us know!", "No problem — see you then.", "Thanks for the update, we'll be ready."];
+    function addFollowUpComposer(chatEl, personFirstName, accent){
+      const area = document.getElementById('bmChatArea');
+      if (!area || document.getElementById('bmFollowInput')) return;
+      area.insertAdjacentHTML('beforeend', `
+        <div class="wm-follow-row">
+          <input id="bmFollowInput" type="text" placeholder="Message ${personFirstName} — e.g. 'Running 10 min late'">
+          <button type="button" id="bmFollowSend" style="background:${accent};">Send</button>
+        </div>`);
+      document.getElementById('bmFollowSend').addEventListener('click', () => {
+        const input = document.getElementById('bmFollowInput');
+        const text = input.value.trim();
+        if (!text) return;
+        chatEl.insertAdjacentHTML('beforeend', `<div class="wm-bubble me">${text}</div>`);
+        input.value = '';
+        const typingId = 'bmFollowTyping' + Date.now();
+        chatEl.insertAdjacentHTML('beforeend', `<div class="wm-typing" id="${typingId}">${personFirstName} is typing…</div>`);
+        setTimeout(() => {
+          const t = document.getElementById(typingId);
+          if (t) t.remove();
+          const ack = ACKS[hashStr(text) % ACKS.length];
+          chatEl.insertAdjacentHTML('beforeend', `<div class="wm-bubble them">${ack}</div>`);
+        }, 900);
+      });
+    }
+
+    // ---------- Palette customizer — re-themes the live page against your own brand colour ----------
+    const PALETTE_PRESETS = ['#7A1F2A','#C9A961','#3F6B4A','#5E8C86','#7B5EA7','#D63C7A','#B8794A','#A23B4E','#6E8B8B','#D97B56','#241E1A','#3A322C'];
+    let profileDefaultTheme = null;
+
+    function darkenColor(hex, amt){
+      const c = hex.replace('#', '');
+      const num = parseInt(c, 16);
+      let r = (num >> 16) & 255, g = (num >> 8) & 255, b = num & 255;
+      r = Math.round(r * (1 - amt)); g = Math.round(g * (1 - amt)); b = Math.round(b * (1 - amt));
+      return '#' + [r, g, b].map(x => Math.max(0, Math.min(255, x)).toString(16).padStart(2, '0')).join('');
+    }
+
+    function applyPaletteColor(hex){
+      if (!currentSpecialist) return;
+      if (!profileDefaultTheme) profileDefaultTheme = { accent: currentSpecialist.theme.accent, accentDark: currentSpecialist.theme.accentDark };
+      currentSpecialist.theme.accent = hex;
+      currentSpecialist.theme.accentDark = darkenColor(hex, 0.35);
+      render();
+    }
+
+    document.getElementById('paletteSwatches').innerHTML = PALETTE_PRESETS.map(c => `<button type="button" class="palette-swatch" data-color="${c}" style="background:${c};"></button>`).join('');
+    document.querySelectorAll('.palette-swatch').forEach(sw => {
+      sw.addEventListener('click', () => applyPaletteColor(sw.dataset.color));
+    });
+    document.getElementById('paletteCustomInput').addEventListener('input', (e) => applyPaletteColor(e.target.value));
+    document.getElementById('paletteFab').addEventListener('click', () => {
+      document.getElementById('palettePanel').classList.toggle('open');
+    });
+    document.getElementById('paletteResetBtn').addEventListener('click', () => {
+      if (!profileDefaultTheme || !currentSpecialist) return;
+      currentSpecialist.theme.accent = profileDefaultTheme.accent;
+      currentSpecialist.theme.accentDark = profileDefaultTheme.accentDark;
+      render();
+    });
+
+    render();
+  </script>
+
+  <script>
+  (function(){
+    const burgerBtn = document.getElementById('burgerBtn');
+    const menuPanel = document.getElementById('menuPanel');
+    if (burgerBtn && menuPanel){
+      burgerBtn.addEventListener('click', function(e){
+        e.stopPropagation();
+        menuPanel.classList.toggle('open');
+      });
+      document.addEventListener('click', function(e){
+        if (!menuPanel.contains(e.target) && e.target !== burgerBtn){
+          menuPanel.classList.remove('open');
+        }
+      });
+    }
+  })();
+  </script>
+</body>
+</html>

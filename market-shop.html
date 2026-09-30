@@ -1,0 +1,500 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shop — @MySalon Market</title>
+<style>
+  :root{
+    --ivory:#FAF6F0; --ivory-deep:#F1E9DD; --espresso:#241E1A; --espresso-soft:#3A322C;
+    --gold:#C9A961; --gold-deep:#A9863F; --blush:#D9AFA6; --line:#E6DCCB; --white:#FFFFFF;
+    --maroon:#7A1F2A;
+    --shadow: 0 20px 40px -20px rgba(36,30,26,0.35);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{ font-family:"Georgia", serif; background:var(--ivory); color:var(--espresso); -webkit-font-smoothing:antialiased; }
+  .sans{ font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+  a{ text-decoration:none; color:inherit; }
+  button{ font-family:inherit; cursor:pointer; border:none; background:none; }
+
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 18px 32px; background: var(--espresso); color: var(--ivory);
+  }
+  .brand{ font-size: 22px; }
+  .brand b{ color: var(--gold); font-weight:600; }
+  .topbar-right{ display:flex; align-items:center; gap:20px; }
+  .back-link{ font-family:-apple-system, sans-serif; font-size:13px; color: var(--gold); }
+  .cart-btn{
+    position:relative; display:flex; align-items:center; gap:8px;
+    background: rgba(255,255,255,0.08); color: var(--ivory);
+    font-family:-apple-system, sans-serif; font-size:13px; font-weight:600;
+    padding:9px 14px; border-radius:999px; border:1px solid rgba(255,255,255,0.14);
+  }
+  .cart-btn svg{ width:17px; height:17px; }
+  .cart-count{
+    position:absolute; top:-6px; right:-6px; background: var(--gold); color: var(--espresso);
+    font-size:10.5px; font-weight:800; min-width:18px; height:18px; border-radius:999px;
+    display:flex; align-items:center; justify-content:center; padding:0 4px;
+  }
+
+  /* ---------- Shop header: no staff, no booking — just who's selling and what's on offer ---------- */
+  .shop-head{ max-width:1180px; margin:0 auto; padding: 34px 32px 8px; }
+  .shop-head .eyebrow{
+    font-family:-apple-system, sans-serif; text-transform:uppercase; letter-spacing:3px;
+    font-size:12px; color: var(--maroon); margin-bottom:10px; font-weight:700;
+  }
+  .shop-head h1{ font-size:30px; font-weight:400; margin-bottom:8px; }
+  .shop-meta{ display:flex; flex-wrap:wrap; align-items:center; gap:10px; font-family:-apple-system, sans-serif; font-size:13px; color:#6b5d4f; margin-bottom:6px; }
+  .status-dot{ width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+  .status-dot.open{ background:#3FA34D; box-shadow:0 0 0 3px rgba(63,163,77,0.16); }
+  .status-dot.closed{ background:#D64545; box-shadow:0 0 0 3px rgba(214,69,69,0.16); }
+  .shop-cats{ display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+  .shop-cat-chip{
+    display:flex; align-items:center; gap:6px; font-family:-apple-system, sans-serif; font-size:11.5px; font-weight:600;
+    background: var(--white); border:1px solid var(--line); padding:6px 12px; border-radius:999px; color: var(--espresso-soft);
+  }
+  .shop-cat-chip .dot{ width:7px; height:7px; border-radius:50%; background: var(--c, var(--gold)); }
+
+  .m-section{ max-width:1180px; margin: 0 auto; padding: 26px 32px 8px; }
+  .m-section-head h2{ font-size:22px; font-weight:400; margin-bottom:4px; }
+  .section-sub{ font-family:-apple-system, sans-serif; font-size:12.5px; color:#8a7c6c; margin: 0 0 16px; }
+
+  /* ---------- Product grid: photo + category icon + price, nothing else ---------- */
+  .product-grid{ display:grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; }
+  .product-card{
+    display:flex; flex-direction:column; background: var(--white); border:1px solid var(--line); border-radius:12px; overflow:hidden;
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .product-card:hover{ transform: translateY(-3px); box-shadow: var(--shadow); }
+  .pc-img{
+    height:130px; background: linear-gradient(135deg, var(--ivory-deep), var(--blush));
+    display:flex; align-items:center; justify-content:center;
+    font-family:-apple-system, sans-serif; font-size:11px; color: var(--gold-deep);
+    position:relative;
+  }
+  .pc-cat-icon{
+    position:absolute; top:8px; left:8px; display:flex; align-items:center; gap:5px;
+    background: rgba(36,30,26,0.75); color:#fff; font-family:-apple-system, sans-serif;
+    font-size:9.5px; font-weight:700; padding:4px 9px 4px 7px; border-radius:999px;
+  }
+  .pc-cat-icon .dot{ width:7px; height:7px; border-radius:50%; background: var(--c, var(--gold)); flex:none; }
+  .pc-body{ padding:10px 12px 12px; font-family:-apple-system, sans-serif; flex:1; display:flex; flex-direction:column; }
+  .pc-price{ font-size:15px; font-weight:800; color: var(--espresso); margin-bottom:3px; }
+  .pc-body h3{ font-size:12px; font-weight:400; color:#4a3f36; margin-bottom:9px; line-height:1.3; }
+  .pc-cart-btn{
+    display:block; text-align:center; background: var(--espresso); margin-top:auto;
+    color: var(--gold); font-size:11px; font-weight:700; padding:8px; border-radius:7px;
+  }
+  .pc-cart-btn.added{ background:#3FA34D; color:#fff; }
+
+  .not-found{ max-width:640px; margin:80px auto; text-align:center; padding:0 32px; font-family:-apple-system, sans-serif; }
+  .not-found h2{ font-family:Georgia, serif; font-size:24px; margin-bottom:10px; }
+  .not-found a{ color: var(--maroon); font-weight:600; }
+
+  footer{ background: var(--espresso); color: rgba(250,246,240,0.6); text-align:center; padding: 28px; font-family:-apple-system, sans-serif; font-size:12px; margin-top:56px; }
+
+  /* ---------- Cart drawer (same pattern as the Market page) ---------- */
+  .modal-overlay{
+    display:none; position:fixed; inset:0; background: rgba(36,30,26,0.6); z-index:100;
+    align-items:flex-start; justify-content:center; padding: 5vh 16px; overflow-y:auto;
+  }
+  .modal-overlay.open{ display:flex; }
+  .modal-box{ background: var(--white); border-radius:20px; max-width:480px; width:100%; overflow:hidden; box-shadow: 0 30px 60px -20px rgba(36,30,26,0.5); }
+  .modal-head{ display:flex; align-items:flex-start; justify-content:space-between; padding:20px 22px 14px; border-bottom:1px solid var(--line); }
+  .modal-head h3{ font-family:Georgia, serif; font-size:19px; font-weight:400; }
+  .modal-close{ font-size:18px; color:#8a7c6c; line-height:1; padding:4px; }
+  .modal-body{ padding:20px 22px 24px; font-family:-apple-system, sans-serif; }
+  .cart-items{ display:flex; flex-direction:column; gap:14px; margin-bottom:18px; max-height:44vh; overflow-y:auto; }
+  .cart-item{ display:flex; gap:12px; align-items:flex-start; }
+  .ci-img{ width:60px; height:60px; border-radius:10px; flex:none; background: linear-gradient(135deg, var(--ivory-deep), var(--blush)); display:flex; align-items:center; justify-content:center; font-size:9px; color: var(--gold-deep); }
+  .ci-body{ flex:1; }
+  .ci-body h4{ font-family:Georgia, serif; font-size:14px; font-weight:400; margin-bottom:2px; }
+  .ci-shop{ font-size:11.5px; color:#8a7c6c; margin-bottom:6px; }
+  .ci-row{ display:flex; align-items:center; justify-content:space-between; }
+  .qty-stepper{ display:flex; align-items:center; gap:8px; }
+  .qty-btn{ width:24px; height:24px; border-radius:50%; background: var(--ivory-deep); font-size:14px; font-weight:700; color: var(--espresso-soft); }
+  .qty-val{ font-size:13px; font-weight:600; min-width:16px; text-align:center; }
+  .ci-price{ font-size:13.5px; font-weight:700; color: var(--gold-deep); }
+  .cart-empty{ text-align:center; color:#8a7c6c; padding:26px 0; font-size:13.5px; }
+  .cart-total-row{ display:flex; justify-content:space-between; align-items:center; padding-top:14px; border-top:1px solid var(--line); font-size:15px; font-weight:700; margin-bottom:16px; }
+  .cart-total-row .amt{ color: var(--gold-deep); }
+  .cart-shops-note{ font-size:11.5px; color:#8a7c6c; margin-bottom:14px; }
+  .checkout-btn{ display:block; width:100%; text-align:center; padding:13px; border-radius:10px; font-size:14px; font-weight:700; background: linear-gradient(180deg, var(--gold), var(--gold-deep)); color: var(--espresso); }
+
+  @media (max-width: 480px){
+    .product-grid{ grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .topbar{ position:relative; }
+  .topbar-right{ display:flex; align-items:center; gap:8px; }
+  .icon-btn{
+    width:46px; height:46px; border-radius:9px; display:flex; align-items:center; justify-content:center;
+    position:relative;
+  }
+  .icon-btn:hover{ background: rgba(255,255,255,0.08); }
+  .icon-btn svg{ width:21px; height:21px; }
+  .burger{
+    width:46px; height:46px; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:6px;
+    border-radius: 9px;
+    position:relative;
+  }
+  .burger:hover{ background: rgba(255,255,255,0.08); }
+  .burger span{ width:24px; height:2.5px; background: var(--ivory); display:block; border-radius:2px; }
+
+  .menu-panel{
+    position:absolute; top: 68px; right: 32px; z-index:70;
+    background: var(--white); border-radius: 14px;
+    box-shadow: var(--shadow); border:1px solid var(--line);
+    min-width: 260px; padding: 10px;
+    display:none; flex-direction:column; gap:2px;
+  }
+  .menu-panel.open{ display:flex; }
+  .menu-panel a{
+    font-family:-apple-system, sans-serif; font-size:15px; color: var(--espresso);
+    padding: 13px 16px; border-radius: 9px;
+  }
+  .menu-panel a:hover{ background: var(--ivory-deep); }
+  .menu-divider{ height:1px; background: var(--line); margin: 6px 4px; }
+</style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">@<b>MySalon</b></div>
+    <div class="topbar-right">
+      <button class="cart-btn" id="cartBtn" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        Cart
+        <span class="cart-count" id="cartCount" style="display:none;">0</span>
+      </button>
+      <a class="back-link sans" href="market.html">← Back to Market</a>
+          <button class="burger icon-btn" id="burgerBtn" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="menu-panel" id="menuPanel">
+      <a href="index.html">Home</a>
+      <a href="profile.html">Profile</a>
+      <a href="about.html">About Us</a>
+      <div class="menu-divider"></div>
+      <a href="salons.html">Salons</a>
+      <a href="specialists.html">Specialists</a>
+      <a href="beauty-spa.html">Beauty / Spa</a>
+      <a href="makeup-artists.html">Makeup Artists</a>
+      <a href="market.html">Market</a>
+      <a href="rent-a-chair.html">Rent a Chair</a>
+      <div class="menu-divider"></div>
+      <a href="billing.html">Billing</a>
+      <a href="list-your-business.html">List Your Business</a>
+    </div>
+  </header>
+
+  <div id="page"></div>
+
+  <footer>© 2026 @MySalon. All rights reserved.</footer>
+
+  <!-- CART MODAL -->
+  <div class="modal-overlay" id="cartModalOverlay">
+    <div class="modal-box">
+      <div class="modal-head">
+        <h3>Your cart</h3>
+        <button class="modal-close" id="cartModalClose" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="cart-items" id="cartItems"></div>
+        <div class="cart-empty" id="cartEmptyMsg" style="display:none;">Your cart is empty — add products from any shop, mix and match as you like.</div>
+        <div id="cartFooter">
+          <div class="cart-shops-note sans" id="cartShopsNote"></div>
+          <div class="cart-total-row"><span>Total</span><span class="amt" id="cartTotal">R0</span></div>
+          <button class="checkout-btn" id="checkoutBtn" type="button">Checkout</button>
+          <div class="sans" id="checkoutNote" style="display:none; text-align:center; margin-top:10px; font-size:12px; color:#6b5d4f;">This is a prototype — checkout isn't wired up to real payment yet, but your cart total and shop split are exactly what would carry through.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const CATEGORIES = [
+      { key:'wigs',       label:'Wigs & Extensions',      color:'#C98A8A' },
+      { key:'hair',       label:'Hair Products',          color:'#B8794A' },
+      { key:'electrical', label:'Electrical & Clippers',  color:'#7B5EA7' },
+      { key:'beauty',     label:'Beauty & Makeup',        color:'#D63C7A' },
+      { key:'razors',     label:'Razors & Blades',        color:'#3F6B4A' },
+      { key:'skincare',   label:'Skincare',                color:'#C1502E' },
+      { key:'nails',      label:'Nail Supplies',          color:'#1F3A5F' },
+      { key:'tools',      label:'Tools & Accessories',    color:'#7C9070' }
+    ];
+    function catInfo(key){ return CATEGORIES.find(c => c.key === key) || { label:key, color:'#8a7c6c' }; }
+
+    // Shop slug → display name (same shops the Market page already lists products for).
+    const SHOPS = {
+      'wig-studio-menlyn': 'Wig Studio Menlyn',
+      'studio-hatfield': 'Studio Hatfield',
+      'velvet-and-vine': 'Velvet & Vine',
+      'the-colour-bar': 'The Colour Bar',
+      'midrand-beauty-bar': 'Midrand Beauty Bar',
+      'the-gold-chair': 'The Gold Chair',
+      'mua-studio-sandton': 'MUA Studio Sandton',
+      'glow-and-co-beauty-bar': 'Glow & Co Beauty Bar',
+      'quick-cuts-midrand': 'Quick Cuts Midrand',
+      'serenity-massage': 'Serenity Massage',
+      'the-ritual-spa': 'The Ritual Spa',
+      'nail-bar-rosebank': 'Nail Bar Rosebank',
+      'express-nails-centurion': 'Express Nails Centurion',
+      'city-barber-rosebank': 'City Barber Rosebank',
+      'curl-and-co-studio': 'Curl & Co Studio'
+    };
+
+    // Same product catalog as the Market page — a shop's marketplace page shows only what
+    // it sells, no staff, no bookings.
+    const PRODUCTS = [
+      { slug:'bone-straight-lace-wig', name:'Bone Straight Lace Wig', category:'wigs', shop:'Wig Studio Menlyn', price:1850, sponsored:true },
+      { slug:'curly-bob-unit', name:'Curly Bob Unit', category:'wigs', shop:'Studio Hatfield', price:1200, sponsored:true },
+      { slug:'hd-lace-closure', name:'HD Lace Closure', category:'wigs', shop:'Velvet & Vine', price:650, sponsored:false },
+      { slug:'kinky-straight-bundle', name:'Kinky Straight Bundle Wig', category:'wigs', shop:'Curl & Co Studio', price:980, sponsored:false },
+      { slug:'full-lace-unit', name:'Full Lace Unit', category:'wigs', shop:'Wig Studio Menlyn', price:2200, sponsored:true },
+
+      { slug:'hair-food-growth-cream', name:'Hair Food Growth Cream', category:'hair', shop:'Studio Hatfield', price:145, sponsored:true },
+      { slug:'edge-control-gel', name:'Edge Control Gel', category:'hair', shop:'The Colour Bar', price:79, sponsored:false },
+      { slug:'detangling-comb', name:'Wide-Tooth Detangling Comb', category:'hair', shop:'Velvet & Vine', price:89, sponsored:false },
+      { slug:'leave-in-conditioner', name:'Leave-In Conditioner', category:'hair', shop:'The Colour Bar', price:65, sponsored:false },
+      { slug:'argan-oil-serum', name:'Argan Oil Hair Serum', category:'hair', shop:'Studio Hatfield', price:135, sponsored:false },
+
+      { slug:'pro-barber-clippers', name:'Professional Barber Clippers', category:'electrical', shop:'The Gold Chair', price:1299, sponsored:true },
+      { slug:'ceramic-flat-iron', name:'Ceramic Flat Iron', category:'electrical', shop:'Midrand Beauty Bar', price:749, sponsored:true },
+      { slug:'cordless-trimmer', name:'Cordless Trimmer', category:'electrical', shop:'The Gold Chair', price:899, sponsored:false },
+      { slug:'ionic-hair-dryer', name:'Ionic Hair Dryer', category:'electrical', shop:'Midrand Beauty Bar', price:899, sponsored:false },
+      { slug:'rotating-hot-air-brush', name:'Rotating Hot Air Brush', category:'electrical', shop:'Midrand Beauty Bar', price:620, sponsored:false },
+      { slug:'clipper-blade-oil', name:'Clipper Blade Oil', category:'electrical', shop:'The Gold Chair', price:45, sponsored:false },
+
+      { slug:'makeup-brush-set', name:'Makeup Brush Set', category:'beauty', shop:'MUA Studio Sandton', price:450, sponsored:true },
+      { slug:'hd-setting-powder', name:'HD Setting Powder', category:'beauty', shop:'Glow & Co Beauty Bar', price:220, sponsored:true },
+      { slug:'bridal-lash-kit', name:'Bridal Lash Kit', category:'beauty', shop:'MUA Studio Sandton', price:180, sponsored:false },
+      { slug:'foundation-palette', name:'Foundation Palette', category:'beauty', shop:'MUA Studio Sandton', price:310, sponsored:false },
+      { slug:'contour-kit', name:'Contour Kit', category:'beauty', shop:'Glow & Co Beauty Bar', price:260, sponsored:true },
+
+      { slug:'straight-razor-kit', name:'Straight Razor Kit', category:'razors', shop:'The Gold Chair', price:320, sponsored:true },
+      { slug:'disposable-blade-pack', name:'Disposable Blade Pack (10)', category:'razors', shop:'The Gold Chair', price:60, sponsored:true },
+      { slug:'safety-razor', name:'Safety Razor', category:'razors', shop:'Quick Cuts Midrand', price:280, sponsored:false },
+      { slug:'barber-neck-duster', name:'Barber Neck Duster', category:'razors', shop:'The Gold Chair', price:85, sponsored:false },
+      { slug:'replacement-blade-pack-xl', name:'Replacement Blade Pack XL', category:'razors', shop:'Quick Cuts Midrand', price:110, sponsored:false },
+
+      { slug:'vitamin-c-serum', name:'Vitamin C Facial Serum', category:'skincare', shop:'The Ritual Spa', price:380, sponsored:true },
+      { slug:'clay-face-mask', name:'Clay Face Mask', category:'skincare', shop:'Serenity Massage', price:150, sponsored:false },
+      { slug:'rosehip-body-oil', name:'Rosehip Body Oil', category:'skincare', shop:'The Ritual Spa', price:210, sponsored:false },
+      { slug:'charcoal-peel-mask', name:'Charcoal Peel Mask', category:'skincare', shop:'Serenity Massage', price:175, sponsored:false },
+      { slug:'hydrating-toner', name:'Hydrating Toner', category:'skincare', shop:'The Ritual Spa', price:160, sponsored:true },
+
+      { slug:'gel-polish-set', name:'Gel Polish Set', category:'nails', shop:'Nail Bar Rosebank', price:340, sponsored:true },
+      { slug:'nail-art-brushes', name:'Nail Art Brushes', category:'nails', shop:'Express Nails Centurion', price:95, sponsored:false },
+      { slug:'cuticle-care-kit', name:'Cuticle Care Kit', category:'nails', shop:'Nail Bar Rosebank', price:160, sponsored:false },
+      { slug:'acrylic-powder-set', name:'Acrylic Powder Set', category:'nails', shop:'Nail Bar Rosebank', price:290, sponsored:false },
+      { slug:'uv-gel-lamp', name:'UV Gel Lamp', category:'nails', shop:'Express Nails Centurion', price:450, sponsored:false },
+
+      { slug:'rolling-massage-tool', name:'Rolling Massage Tool', category:'tools', shop:'Serenity Massage', price:290, sponsored:true },
+      { slug:'salon-cape-clips', name:'Salon Cape & Clips Set', category:'tools', shop:'City Barber Rosebank', price:120, sponsored:false },
+      { slug:'ceramic-heat-mat', name:'Ceramic Tool Heat Mat', category:'tools', shop:'Midrand Beauty Bar', price:99, sponsored:false },
+      { slug:'barber-cape-premium', name:'Barber Cape Premium', category:'tools', shop:'City Barber Rosebank', price:180, sponsored:false },
+      { slug:'foot-spa-basin', name:'Foot Spa Basin', category:'tools', shop:'Serenity Massage', price:540, sponsored:true }
+    ];
+
+    function closeHourFor(slug){
+      let h = 0;
+      for (let i = 0; i < slug.length; i++) h = (h * 31 + slug.charCodeAt(i)) >>> 0;
+      return 17 + (h % 3);
+    }
+    function fmtHour(h){
+      const period = h >= 12 ? 'PM' : 'AM';
+      let hh = h % 12; if (hh === 0) hh = 12;
+      return hh + ':00 ' + period;
+    }
+    function shopStatus(slug){
+      const close = closeHourFor(slug);
+      const hour = new Date().getHours();
+      return { isOpen: hour >= 9 && hour < close, close };
+    }
+
+    function productCardHtml(p){
+      const cat = catInfo(p.category);
+      return `
+        <div class="product-card">
+          <div class="pc-img">
+            Photo
+            <span class="pc-cat-icon" style="--c:${cat.color};"><span class="dot"></span>${cat.label}</span>
+          </div>
+          <div class="pc-body">
+            <div class="pc-price">R${p.price.toLocaleString()}</div>
+            <h3>${p.name}</h3>
+            <button class="pc-cart-btn" data-add="${p.slug}" type="button">Add to cart</button>
+          </div>
+        </div>`;
+    }
+
+    function wireCartButtons(container){
+      container.querySelectorAll('[data-add]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const p = PRODUCTS.find(x => x.slug === btn.dataset.add);
+          if (!p) return;
+          addToCart(p);
+          btn.textContent = 'Added ✓';
+          btn.classList.add('added');
+          setTimeout(() => { btn.textContent = 'Add to cart'; btn.classList.remove('added'); }, 1200);
+        });
+      });
+    }
+
+    function render(){
+      const params = new URLSearchParams(window.location.search);
+      const slug = params.get('shop');
+      const shopName = slug && SHOPS[slug];
+      const page = document.getElementById('page');
+
+      if (!shopName){
+        page.innerHTML = `
+          <div class="not-found">
+            <h2>We couldn't find that shop</h2>
+            <p>It may have been renamed or removed. <a href="market.html">Back to the Market →</a></p>
+          </div>`;
+        document.title = 'Shop not found — @MySalon Market';
+        return;
+      }
+
+      document.title = shopName + ' — @MySalon Market';
+      const products = PRODUCTS.filter(p => p.shop === shopName);
+      const cats = [...new Set(products.map(p => p.category))].map(catInfo);
+      const st = shopStatus(slug);
+
+      page.innerHTML = `
+        <section class="shop-head">
+          <div class="eyebrow">Market shop</div>
+          <h1>${shopName}</h1>
+          <div class="shop-meta">
+            <span class="status-dot ${st.isOpen ? 'open' : 'closed'}"></span>${st.isOpen ? 'Open now' : 'Closed'} · Closes ${fmtHour(st.close)}
+            <span>· ${products.length} product${products.length === 1 ? '' : 's'}</span>
+          </div>
+          <div class="shop-cats">
+            ${cats.map(c => `<span class="shop-cat-chip" style="--c:${c.color};"><span class="dot"></span>${c.label}</span>`).join('')}
+          </div>
+        </section>
+
+        <section class="m-section">
+          <div class="m-section-head"><h2>Products</h2></div>
+          <div class="section-sub sans">Everything ${shopName} sells on @MySalon — no bookings here, just the shelf.</div>
+          <div class="product-grid" id="shopProductGrid"></div>
+        </section>`;
+
+      const grid = document.getElementById('shopProductGrid');
+      grid.innerHTML = products.map(productCardHtml).join('');
+      wireCartButtons(grid);
+    }
+
+    render();
+
+    // ---------- Cart ----------
+    let cart = [];
+    const cartBtn = document.getElementById('cartBtn');
+    const cartCount = document.getElementById('cartCount');
+    const cartModalOverlay = document.getElementById('cartModalOverlay');
+    const cartItemsEl = document.getElementById('cartItems');
+    const cartEmptyMsg = document.getElementById('cartEmptyMsg');
+    const cartFooter = document.getElementById('cartFooter');
+    const cartShopsNote = document.getElementById('cartShopsNote');
+    const cartTotal = document.getElementById('cartTotal');
+
+    function addToCart(p){
+      const existing = cart.find(c => c.slug === p.slug);
+      if (existing) existing.qty += 1;
+      else cart.push({ slug: p.slug, qty: 1 });
+      renderCartBadge();
+    }
+    function renderCartBadge(){
+      const totalQty = cart.reduce((sum, c) => sum + c.qty, 0);
+      cartCount.textContent = totalQty;
+      cartCount.style.display = totalQty ? 'flex' : 'none';
+    }
+    function renderCart(){
+      if (!cart.length){
+        cartItemsEl.innerHTML = '';
+        cartEmptyMsg.style.display = 'block';
+        cartFooter.style.display = 'none';
+        return;
+      }
+      cartEmptyMsg.style.display = 'none';
+      cartFooter.style.display = 'block';
+      let total = 0;
+      const shopsSet = new Set();
+      cartItemsEl.innerHTML = cart.map(c => {
+        const p = PRODUCTS.find(x => x.slug === c.slug);
+        total += p.price * c.qty;
+        shopsSet.add(p.shop);
+        return `
+          <div class="cart-item">
+            <div class="ci-img">Photo</div>
+            <div class="ci-body">
+              <h4>${p.name}</h4>
+              <div class="ci-shop sans">${p.shop}</div>
+              <div class="ci-row">
+                <div class="qty-stepper">
+                  <button class="qty-btn" data-dec="${c.slug}" type="button">−</button>
+                  <span class="qty-val">${c.qty}</span>
+                  <button class="qty-btn" data-inc="${c.slug}" type="button">+</button>
+                </div>
+                <span class="ci-price">R${(p.price * c.qty).toLocaleString()}</span>
+              </div>
+            </div>
+          </div>`;
+      }).join('') + `<div style="text-align:right;"><button class="sans" style="font-size:11.5px; color:#B24242;" id="clearCartBtn" type="button">Clear cart</button></div>`;
+
+      cartShopsNote.textContent = shopsSet.size > 1
+        ? `Items from ${shopsSet.size} different shops — that's fine, each shop fulfils its own part of the order.`
+        : `All items from ${[...shopsSet][0]}.`;
+      cartTotal.textContent = 'R' + total.toLocaleString();
+
+      cartItemsEl.querySelectorAll('[data-inc]').forEach(btn => btn.addEventListener('click', () => changeQty(btn.dataset.inc, 1)));
+      cartItemsEl.querySelectorAll('[data-dec]').forEach(btn => btn.addEventListener('click', () => changeQty(btn.dataset.dec, -1)));
+      document.getElementById('clearCartBtn').addEventListener('click', () => { cart = []; renderCartBadge(); renderCart(); });
+    }
+    function changeQty(slug, delta){
+      const item = cart.find(c => c.slug === slug);
+      if (!item) return;
+      item.qty += delta;
+      if (item.qty <= 0) cart = cart.filter(c => c.slug !== slug);
+      renderCartBadge();
+      renderCart();
+    }
+
+    cartBtn.addEventListener('click', () => {
+      renderCart();
+      document.getElementById('checkoutNote').style.display = 'none';
+      cartModalOverlay.classList.add('open');
+    });
+    document.getElementById('cartModalClose').addEventListener('click', () => cartModalOverlay.classList.remove('open'));
+    cartModalOverlay.addEventListener('click', (e) => { if (e.target === cartModalOverlay) cartModalOverlay.classList.remove('open'); });
+    document.getElementById('checkoutBtn').addEventListener('click', () => {
+      document.getElementById('checkoutNote').style.display = 'block';
+    });
+
+    renderCartBadge();
+  </script>
+
+  <script>
+  (function(){
+    const burgerBtn = document.getElementById('burgerBtn');
+    const menuPanel = document.getElementById('menuPanel');
+    if (burgerBtn && menuPanel){
+      burgerBtn.addEventListener('click', function(e){
+        e.stopPropagation();
+        menuPanel.classList.toggle('open');
+      });
+      document.addEventListener('click', function(e){
+        if (!menuPanel.contains(e.target) && e.target !== burgerBtn){
+          menuPanel.classList.remove('open');
+        }
+      });
+    }
+  })();
+  </script>
+</body>
+</html>

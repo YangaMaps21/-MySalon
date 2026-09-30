@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Billing — @MySalon</title>
+<style>
+  :root{
+    --ivory:#FAF6F0; --ivory-deep:#F1E9DD; --espresso:#241E1A; --espresso-soft:#3A322C;
+    --gold:#C9A961; --gold-deep:#A9863F; --line:#E6DCCB; --white:#FFFFFF; --green:#3F6B4A;
+    --shadow: 0 20px 40px -20px rgba(36,30,26,0.35);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{ font-family:"Georgia", serif; background:var(--ivory); color:var(--espresso); -webkit-font-smoothing:antialiased; }
+  .sans{ font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+  a{ text-decoration:none; color:inherit; }
+  button{ font-family:inherit; cursor:pointer; border:none; background:none; }
+
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 18px 32px; background: var(--espresso); color: var(--ivory);
+  }
+  .brand{ font-size: 22px; }
+  .brand b{ color: var(--gold); font-weight:600; }
+  .back-link{ font-family:-apple-system, sans-serif; font-size:13px; color: var(--gold); }
+
+  .page-head{
+    padding: 56px 32px 24px; max-width: 1180px; margin: 0 auto; text-align:center;
+  }
+  .page-head .eyebrow{
+    font-family:-apple-system, sans-serif; text-transform:uppercase; letter-spacing:3px;
+    font-size:12px; color: var(--gold-deep); margin-bottom:14px;
+  }
+  .page-head h1{ font-size:38px; font-weight:400; margin-bottom:14px; }
+  .page-head p{ font-family:-apple-system, sans-serif; color:#6b5d4f; max-width:600px; margin:0 auto; line-height:1.6; }
+
+  .toggle{
+    display:flex; justify-content:center; margin: 28px 0 8px;
+  }
+  .toggle-inner{
+    display:inline-flex; background: var(--white); border:1px solid var(--line); border-radius:999px; padding:4px;
+    font-family:-apple-system, sans-serif; font-size:13px;
+  }
+  .toggle-inner span{ padding:9px 20px; border-radius:999px; cursor:pointer; }
+  .toggle-inner span.active{ background: var(--espresso); color: var(--gold); }
+  .toggle-note{ text-align:center; font-family:-apple-system, sans-serif; font-size:11.5px; color:#a89a86; margin-bottom:8px; }
+
+  .plan-section{ max-width: 1180px; margin: 44px auto 0; padding: 0 32px; }
+  .plan-section-head{ margin-bottom:18px; }
+  .plan-section-head h2{ font-size:22px; font-weight:400; }
+  .plan-section-head .sub{ font-family:-apple-system, sans-serif; font-size:13px; color:#8a7c6c; margin-top:4px; }
+
+  .plans{
+    display:grid; grid-template-columns: repeat(2, 1fr); gap: 24px;
+  }
+  .plans.three{ grid-template-columns: repeat(3, 1fr); }
+  .plan{
+    background: var(--white); border:1px solid var(--line); border-radius:18px;
+    padding: 30px 26px; position:relative; overflow:hidden; display:flex; flex-direction:column;
+  }
+  .plan.featured{ border-color: var(--gold); box-shadow: var(--shadow); }
+  .plan .badge{
+    position:absolute; top:20px; right:20px;
+    background: var(--gold); color: var(--espresso);
+    font-family:-apple-system, sans-serif; font-size:11px; font-weight:700;
+    padding: 5px 12px; border-radius:999px; text-transform:uppercase; letter-spacing:0.5px;
+  }
+  .plan h3{ font-size:19px; margin-bottom:6px; }
+  .plan .for{ font-family:-apple-system, sans-serif; font-size:12.5px; color:#8a7c6c; margin-bottom:18px; min-height:32px; }
+  .plan .amount{ font-size:32px; margin-bottom:2px; }
+  .plan .amount span{ font-family:-apple-system, sans-serif; font-size:13.5px; color:#8a7c6c; }
+  .plan .amount .annual-note{ display:none; font-family:-apple-system, sans-serif; font-size:11.5px; color:var(--gold-deep); font-weight:600; margin-top:2px; }
+  .plan .commission{ font-family:-apple-system, sans-serif; font-size:12px; color: var(--gold-deep); margin-bottom:8px; font-weight:600; }
+  .plan .included{ font-family:-apple-system, sans-serif; font-size:12px; color:var(--espresso-soft); margin-bottom:16px; }
+  .plan ul{ list-style:none; display:flex; flex-direction:column; gap:9px; margin-bottom:24px; flex:1; }
+  .plan li{ font-family:-apple-system, sans-serif; font-size:13px; color:var(--espresso-soft); display:flex; gap:8px; align-items:flex-start; }
+  .plan li::before{ content:"✓"; color: var(--gold-deep); font-weight:700; flex:none; }
+  .btn{
+    display:block; text-align:center; font-family:-apple-system, sans-serif;
+    font-size:14px; font-weight:600; padding: 13px; border-radius:8px;
+  }
+  .btn-gold{ background: linear-gradient(180deg, var(--gold), var(--gold-deep)); color: var(--espresso); }
+  .btn-outline{ border:1px solid var(--line); color: var(--espresso); }
+
+  .extra-staff-note{
+    max-width:1180px; margin:18px auto 0; padding:0 32px;
+    font-family:-apple-system, sans-serif; font-size:12.5px; color:#8a7c6c; text-align:center; line-height:1.6;
+  }
+
+  .bundle-banner{
+    max-width:1180px; margin: 52px auto 0; padding: 0 32px;
+  }
+  .bundle-inner{
+    background: linear-gradient(135deg, var(--espresso), #3A322C); color: var(--ivory);
+    border-radius:20px; padding:36px 34px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:22px;
+  }
+  .bundle-inner .bundle-text{ max-width:600px; }
+  .bundle-tag{
+    display:inline-block; font-family:-apple-system, sans-serif; font-size:10.5px; font-weight:700; text-transform:uppercase;
+    letter-spacing:0.5px; color:#4A3A12; background: linear-gradient(135deg, #F3D68A, var(--gold)); padding:5px 12px; border-radius:999px; margin-bottom:12px;
+  }
+  .bundle-inner h2{ font-size:24px; font-weight:400; margin-bottom:8px; }
+  .bundle-inner p{ font-family:-apple-system, sans-serif; font-size:13px; color:rgba(250,246,240,0.75); line-height:1.6; }
+  .bundle-price{ text-align:center; flex:none; }
+  .bundle-price .was{ font-family:-apple-system, sans-serif; font-size:13px; color:rgba(250,246,240,0.55); text-decoration:line-through; }
+  .bundle-price .now{ font-size:32px; color:var(--gold); margin:2px 0 12px; }
+  .bundle-price .now span{ font-family:-apple-system, sans-serif; font-size:13px; color:rgba(250,246,240,0.7); }
+
+  .ai-callout{
+    max-width:1180px; margin: 28px auto 0; padding: 0 32px;
+  }
+  .ai-callout-inner{
+    background: var(--ivory-deep); border:1px dashed var(--gold-deep); border-radius:16px; padding:20px 24px;
+    display:flex; align-items:center; gap:14px; font-family:-apple-system, sans-serif;
+  }
+  .ai-callout-inner .icon{ font-size:22px; flex:none; }
+  .ai-callout-inner .txt b{ display:block; font-size:13.5px; color:var(--espresso); margin-bottom:2px; }
+  .ai-callout-inner .txt span{ font-size:12.5px; color:#6b5d4f; line-height:1.5; }
+
+  .checkout{
+    max-width: 640px; margin: 60px auto 80px; padding: 0 32px; display:none;
+  }
+  .checkout.open{ display:block; }
+  .checkout-box{
+    background: var(--white); border:1px solid var(--line); border-radius:18px; padding:32px 28px; box-shadow: var(--shadow);
+  }
+  .checkout-plan{
+    display:flex; justify-content:space-between; align-items:center; background: var(--ivory-deep);
+    border-radius:12px; padding:14px 18px; margin-bottom:24px; font-family:-apple-system, sans-serif;
+  }
+  .checkout-plan .cp-name{ font-weight:700; font-size:14px; color:var(--espresso); }
+  .checkout-plan .cp-price{ font-weight:700; font-size:14px; color: var(--gold-deep); }
+  .checkout h2{ font-size:22px; font-weight:400; margin-bottom:4px; }
+  .checkout .sub{ font-family:-apple-system, sans-serif; font-size:12.5px; color:#8a7c6c; margin-bottom:22px; }
+  .co-label{ font-family:-apple-system, sans-serif; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; color:#a89a86; margin:18px 0 8px; }
+  .co-label:first-of-type{ margin-top:0; }
+  .co-row{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .checkout input{
+    width:100%; border:1px solid var(--line); border-radius:9px; padding:11px 13px; font-family:inherit;
+    font-size:13px; background:var(--ivory); color:var(--espresso); box-sizing:border-box; margin-bottom:10px;
+  }
+  .co-pay-btn{
+    display:block; width:100%; text-align:center; padding:14px; border-radius:9px; font-size:14px; font-weight:700;
+    font-family:-apple-system, sans-serif; background: linear-gradient(180deg, var(--gold), var(--gold-deep)); color:var(--espresso); margin-top:8px;
+  }
+  .co-note{ font-family:-apple-system, sans-serif; font-size:11px; color:#a89a86; margin-top:12px; line-height:1.5; text-align:center; }
+
+  .faq{
+    max-width: 780px; margin: 20px auto 100px; padding: 0 32px;
+  }
+  .faq h2{ font-size:26px; font-weight:400; text-align:center; margin-bottom:28px; }
+  .faq-item{ border-bottom:1px solid var(--line); padding: 18px 0; }
+  .faq-item h4{ font-size:15px; font-weight:600; margin-bottom:6px; }
+  .faq-item p{ font-family:-apple-system, sans-serif; font-size:13.5px; color:#6b5d4f; line-height:1.6; }
+
+  footer{ background: var(--espresso); color: rgba(250,246,240,0.6); text-align:center; padding: 28px; font-family:-apple-system, sans-serif; font-size:12px; }
+
+  @media (max-width: 900px){
+    .plans, .plans.three{ grid-template-columns: 1fr; }
+    .co-row{ grid-template-columns: 1fr; }
+  }
+
+  .topbar{ position:relative; }
+  .topbar-right{ display:flex; align-items:center; gap:8px; }
+  .icon-btn{
+    width:46px; height:46px; border-radius:9px; display:flex; align-items:center; justify-content:center;
+    position:relative;
+  }
+  .icon-btn:hover{ background: rgba(255,255,255,0.08); }
+  .icon-btn svg{ width:21px; height:21px; }
+  .burger{
+    width:46px; height:46px; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:6px;
+    border-radius: 9px;
+    position:relative;
+  }
+  .burger:hover{ background: rgba(255,255,255,0.08); }
+  .burger span{ width:24px; height:2.5px; background: var(--ivory); display:block; border-radius:2px; }
+
+  .menu-panel{
+    position:absolute; top: 68px; right: 32px; z-index:70;
+    background: var(--white); border-radius: 14px;
+    box-shadow: var(--shadow); border:1px solid var(--line);
+    min-width: 260px; padding: 10px;
+    display:none; flex-direction:column; gap:2px;
+  }
+  .menu-panel.open{ display:flex; }
+  .menu-panel a{
+    font-family:-apple-system, sans-serif; font-size:15px; color: var(--espresso);
+    padding: 13px 16px; border-radius: 9px;
+  }
+  .menu-panel a:hover{ background: var(--ivory-deep); }
+  .menu-divider{ height:1px; background: var(--line); margin: 6px 4px; }
+</style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">@<b>MySalon</b></div>
+    <div class="topbar-right">
+      <a class="back-link sans" href="index.html">← Back to home</a>
+      <button class="burger icon-btn" id="burgerBtn" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="menu-panel" id="menuPanel">
+      <a href="index.html">Home</a>
+      <a href="profile.html">Profile</a>
+      <a href="about.html">About Us</a>
+      <div class="menu-divider"></div>
+      <a href="salons.html">Salons</a>
+      <a href="specialists.html">Specialists</a>
+      <a href="beauty-spa.html">Beauty / Spa</a>
+      <a href="makeup-artists.html">Makeup Artists</a>
+      <a href="market.html">Market</a>
+      <a href="rent-a-chair.html">Rent a Chair</a>
+      <div class="menu-divider"></div>
+      <a href="billing.html">Billing</a>
+      <a href="list-your-business.html">List Your Business</a>
+    </div>
+  </header>
+
+  <section class="page-head">
+    <div class="eyebrow">For providers</div>
+    <h1>Pricing built for how you actually work</h1>
+    <p class="sans">A solo specialist shouldn't pay what an 8-person salon pays. Pick independent, salon, or marketplace-store pricing — and combine them for less if you run more than one.</p>
+    <div class="toggle">
+      <div class="toggle-inner" id="billingToggle">
+        <span data-period="monthly" class="active">Monthly</span>
+        <span data-period="annual">Annual</span>
+      </div>
+    </div>
+    <div class="toggle-note">Annual pricing shown below is currently available on Independent Specialist plans.</div>
+  </section>
+
+  <!-- INDEPENDENT SPECIALISTS -->
+  <section class="plan-section">
+    <div class="plan-section-head">
+      <h2>Independent specialists</h2>
+      <div class="sub sans">One person — barber, hairstylist, nail tech, massage therapist, braider, makeup artist, lash tech.</div>
+    </div>
+    <div class="plans">
+      <div class="plan">
+        <h3>Specialist Standard</h3>
+        <div class="for sans">Everything you need to take bookings and get paid.</div>
+        <div class="amount">
+          <span class="monthly-amt">R99<span>/month</span></span>
+          <span class="annual-amt" style="display:none;">R990<span>/year</span></span>
+        </div>
+        <div class="commission">No commission on bookings</div>
+        <ul>
+          <li>Profile, portfolio &amp; social links</li>
+          <li>Map + search listing</li>
+          <li>Services, prices &amp; booking calendar</li>
+          <li>Accept deposits &amp; in-app payments</li>
+          <li>Reviews &amp; basic customer history</li>
+          <li>AI-look requests from customers</li>
+        </ul>
+        <button type="button" class="btn btn-outline" data-plan="spec-standard" data-name="Specialist Standard" data-price-monthly="R99/month" data-price-annual="R990/year">Get Started</button>
+      </div>
+
+      <div class="plan featured">
+        <span class="badge">Recommended</span>
+        <h3>Specialist Pro</h3>
+        <div class="for sans">For specialists ready to grow their client base.</div>
+        <div class="amount">
+          <span class="monthly-amt">R249<span>/month</span></span>
+          <span class="annual-amt" style="display:none;">R2,490<span>/year</span></span>
+        </div>
+        <div class="commission">No commission on bookings</div>
+        <ul>
+          <li>Everything in Specialist Standard</li>
+          <li>Higher search visibility &amp; featured eligibility</li>
+          <li>Videos on your profile</li>
+          <li>Full CRM &amp; customer segmentation</li>
+          <li>Rebooking reminders &amp; promotions</li>
+          <li>Advanced analytics &amp; empty-slot promotion</li>
+          <li>Rent a Chair / Space access</li>
+          <li>Priority placement</li>
+        </ul>
+        <button type="button" class="btn btn-gold" data-plan="spec-pro" data-name="Specialist Pro" data-price-monthly="R249/month" data-price-annual="R2,490/year">Get Started</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SALONS & STUDIOS -->
+  <section class="plan-section">
+    <div class="plan-section-head">
+      <h2>Salons &amp; studios</h2>
+      <div class="sub sans">Manage a whole team from one master dashboard — each specialist still gets their own profile.</div>
+    </div>
+    <div class="plans">
+      <div class="plan">
+        <h3>Salon Standard</h3>
+        <div class="for sans">For studios getting their team online.</div>
+        <div class="amount">R349<span>/month</span></div>
+        <div class="commission">No commission on bookings</div>
+        <div class="included sans">Includes up to 4 specialists</div>
+        <ul>
+          <li>Everything in Specialist Standard, per staff member</li>
+          <li>Multi-staff calendar &amp; team profiles</li>
+          <li>One master dashboard for the whole salon</li>
+        </ul>
+        <button type="button" class="btn btn-outline" data-plan="salon-standard" data-name="Salon Standard" data-price-monthly="R349/month" data-price-annual="R349/month">Get Started</button>
+      </div>
+
+      <div class="plan featured">
+        <span class="badge">Recommended</span>
+        <h3>Salon Pro</h3>
+        <div class="for sans">For salons that want the full growth toolkit.</div>
+        <div class="amount">R699<span>/month</span></div>
+        <div class="commission">No commission on bookings</div>
+        <div class="included sans">Includes up to 8 specialists</div>
+        <ul>
+          <li>Everything in Salon Standard</li>
+          <li>Full CRM &amp; customer campaigns</li>
+          <li>Featured visibility &amp; advanced analytics</li>
+          <li>Automated rebooking &amp; empty-slot promotion</li>
+          <li>Videos &amp; better social integration</li>
+          <li>List &amp; manage chair/space rentals</li>
+          <li>Priority support &amp; promotional tools</li>
+        </ul>
+        <button type="button" class="btn btn-gold" data-plan="salon-pro" data-name="Salon Pro" data-price-monthly="R699/month" data-price-annual="R699/month">Get Started</button>
+      </div>
+    </div>
+    <div class="extra-staff-note sans">
+      Need more staff than your plan includes? Extra specialists are <b>+R49/month each</b> on either plan.
+      Standard tops out at 4 extra (8 total) — past that, Pro works out better anyway.
+      Example: a Pro salon with 11 staff = R699 + (3 extra × R49) = <b>R846/month</b>.
+    </div>
+  </section>
+
+  <!-- MARKETPLACE / ECOMMERCE -->
+  <section class="plan-section">
+    <div class="plan-section-head">
+      <h2>Marketplace store</h2>
+      <div class="sub sans">Separate from bookings — for salons or specialists who also want to sell products (wigs, clippers, shampoo, treatments, equipment) through the Market.</div>
+    </div>
+    <div class="plans">
+      <div class="plan">
+        <h3>Marketplace Store</h3>
+        <div class="for sans">Start selling products alongside your services.</div>
+        <div class="amount">R249<span>/month</span></div>
+        <div class="commission">+ 8% commission on sales</div>
+        <ul>
+          <li>Product listings in the Market</li>
+          <li>Order &amp; inventory management</li>
+          <li>Payouts to your bank account</li>
+        </ul>
+        <button type="button" class="btn btn-outline" data-plan="store" data-name="Marketplace Store" data-price-monthly="R249/month + 8%" data-price-annual="R249/month + 8%">Get Started</button>
+      </div>
+
+      <div class="plan">
+        <h3>Marketplace Store Pro</h3>
+        <div class="for sans">Higher volume sellers who want a lower commission.</div>
+        <div class="amount">R599<span>/month</span></div>
+        <div class="commission">+ 5% commission on sales</div>
+        <ul>
+          <li>Everything in Marketplace Store</li>
+          <li>Featured product placement</li>
+          <li>Lower 5% commission on sales</li>
+        </ul>
+        <button type="button" class="btn btn-outline" data-plan="store-pro" data-name="Marketplace Store Pro" data-price-monthly="R599/month + 5%" data-price-annual="R599/month + 5%">Get Started</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- BUNDLE -->
+  <section class="bundle-banner">
+    <div class="bundle-inner">
+      <div class="bundle-text">
+        <span class="bundle-tag">Best value</span>
+        <h2>Business Pro — Salon Pro + Store Pro, bundled</h2>
+        <p class="sans">Bookings, CRM, payments, chair rentals, featured exposure, analytics, marketing tools, and your own marketplace store with 5% commission — all in one plan.</p>
+      </div>
+      <div class="bundle-price">
+        <div class="was sans">R699 + R599 = R1,298/mo</div>
+        <div class="now">R999<span>/month</span></div>
+        <button type="button" class="btn btn-gold" data-plan="business-pro" data-name="Business Pro (Salon Pro + Store Pro)" data-price-monthly="R999/month" data-price-annual="R999/month" style="padding:12px 22px;">Get Business Pro</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="ai-callout">
+    <div class="ai-callout-inner">
+      <div class="icon">✨</div>
+      <div class="txt">
+        <b>AI Hairstyle &amp; Beard Generator — free for customers, on every plan</b>
+        <span>Customers try a new look and get routed straight to booking with a specialist — this is an acquisition feature for the whole platform, not something locked behind any subscription tier.</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="checkout" id="checkoutSection">
+    <div class="checkout-box" id="checkoutBox"></div>
+  </section>
+
+  <section class="faq">
+    <h2>Common questions</h2>
+    <div class="faq-item">
+      <h4>Is there a commission on bookings?</h4>
+      <p class="sans">No — Specialist and Salon plans are flat fees with no commission on services booked through the platform. Only Marketplace Store plans carry a product-sales commission.</p>
+    </div>
+    <div class="faq-item">
+      <h4>What happens if my salon grows past its plan's staff limit?</h4>
+      <p class="sans">Extra specialists are +R49/month each. Salon Standard allows up to 4 extra (8 total); beyond that, Salon Pro is the better deal since it already includes 8.</p>
+    </div>
+    <div class="faq-item">
+      <h4>Can I switch plans later?</h4>
+      <p class="sans">Yes — upgrade, downgrade, or add the Marketplace Store at any time from your provider dashboard. If you remove a staff member, your next bill adjusts automatically.</p>
+    </div>
+    <div class="faq-item">
+      <h4>How do Marketplace Store payouts work?</h4>
+      <p class="sans">Payouts are made on a rolling basis to your linked bank account, minus the plan's commission on completed sales.</p>
+    </div>
+  </section>
+
+  <footer>© 2026 @MySalon. All rights reserved.</footer>
+
+  <script>
+    let billingPeriod = 'monthly';
+    document.querySelectorAll('#billingToggle span').forEach(el => {
+      el.addEventListener('click', () => {
+        if (billingPeriod === el.dataset.period) return;
+        billingPeriod = el.dataset.period;
+        document.querySelectorAll('#billingToggle span').forEach(s => s.classList.toggle('active', s === el));
+        document.querySelectorAll('.monthly-amt').forEach(el2 => el2.style.display = billingPeriod === 'monthly' ? '' : 'none');
+        document.querySelectorAll('.annual-amt').forEach(el2 => el2.style.display = billingPeriod === 'annual' ? '' : 'none');
+      });
+    });
+
+    const checkoutSection = document.getElementById('checkoutSection');
+    const checkoutBox = document.getElementById('checkoutBox');
+
+    function renderCheckoutForm(name, price){
+      checkoutBox.innerHTML = `
+        <div class="checkout-plan">
+          <span class="cp-name">${name}</span>
+          <span class="cp-price">${price}</span>
+        </div>
+        <h2>Set up billing</h2>
+        <div class="sub">This is how you'll be paid out and where invoices go — takes a couple of minutes.</div>
+
+        <div class="co-label">Business address</div>
+        <input type="text" id="coStreet" placeholder="Street address">
+        <div class="co-row">
+          <input type="text" id="coCity" placeholder="Suburb / City">
+          <input type="text" id="coPostal" placeholder="Postal code">
+        </div>
+
+        <div class="co-label">Banking details</div>
+        <input type="text" id="coBank" placeholder="Bank name">
+        <input type="text" id="coAcctHolder" placeholder="Account holder name">
+        <div class="co-row">
+          <input type="text" id="coAcctNumber" placeholder="Account number">
+          <input type="text" id="coBranch" placeholder="Branch code">
+        </div>
+
+        <button type="button" class="co-pay-btn" id="coPayBtn">Confirm &amp; Pay ${price.split(' + ')[0]}</button>
+        <div class="co-note">Payments are processed securely (prototype). Your account activates within 48 hours of payment.</div>
+        <div id="coResultArea"></div>
+      `;
+      document.getElementById('coPayBtn').addEventListener('click', () => payForPlan(name));
+    }
+
+    function payForPlan(name){
+      const area = document.getElementById('coResultArea');
+      checkoutBox.querySelectorAll('input, .co-pay-btn, .co-label').forEach(el => el.style.display = 'none');
+      area.innerHTML = `<div style="text-align:center; padding:24px 0; font-family:-apple-system, sans-serif; font-size:13px; color:#8a7c6c;">Processing payment…</div>`;
+      setTimeout(() => {
+        area.innerHTML = `
+          <div style="text-align:center; padding:8px 0 4px;">
+            <div style="font-size:26px; margin-bottom:8px;">✓</div>
+            <div style="font-family:Georgia, serif; font-size:18px; margin-bottom:6px;">Payment received (prototype)</div>
+            <div style="font-family:-apple-system, sans-serif; font-size:13px; color:#6b5d4f; line-height:1.6; margin-bottom:18px;">
+              Your ${name} subscription is confirmed. We're verifying your business and banking details now —
+              your account will be activated within <b>48 hours</b> and you'll get an email once you're live.
+            </div>
+            <a href="list-your-business.html" class="btn btn-gold" style="display:inline-block; padding:12px 24px;">Finish your business listing →</a>
+          </div>`;
+      }, 1400);
+    }
+
+    document.querySelectorAll('.plan button[data-plan], .bundle-price button[data-plan]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const price = billingPeriod === 'annual' ? btn.dataset.priceAnnual : btn.dataset.priceMonthly;
+        renderCheckoutForm(btn.dataset.name, price);
+        checkoutSection.classList.add('open');
+        checkoutSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+  </script>
+
+  <script>
+  (function(){
+    const burgerBtn = document.getElementById('burgerBtn');
+    const menuPanel = document.getElementById('menuPanel');
+    if (burgerBtn && menuPanel){
+      burgerBtn.addEventListener('click', function(e){
+        e.stopPropagation();
+        menuPanel.classList.toggle('open');
+      });
+      document.addEventListener('click', function(e){
+        if (!menuPanel.contains(e.target) && e.target !== burgerBtn){
+          menuPanel.classList.remove('open');
+        }
+      });
+    }
+  })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,555 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Salons — @MySalon</title>
+<style>
+  :root{
+    --ivory:#FAF6F0; --ivory-deep:#F1E9DD; --espresso:#241E1A; --espresso-soft:#3A322C;
+    --gold:#C9A961; --gold-deep:#A9863F; --blush:#D9AFA6; --line:#E6DCCB; --white:#FFFFFF;
+    --maroon:#7A1F2A;
+    --shadow: 0 20px 40px -20px rgba(36,30,26,0.35);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{ font-family:"Georgia", serif; background:var(--ivory); color:var(--espresso); -webkit-font-smoothing:antialiased; }
+  .sans{ font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+  a{ text-decoration:none; color:inherit; }
+  button{ font-family:inherit; cursor:pointer; border:none; background:none; }
+
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 18px 32px; background: var(--espresso); color: var(--ivory);
+  }
+  .brand{ font-size: 22px; }
+  .brand b{ color: var(--gold); font-weight:600; }
+  .back-link{ font-family:-apple-system, sans-serif; font-size:13px; color: var(--gold); }
+
+  .page-head{
+    padding: 44px 32px 8px; max-width: 1180px; margin: 0 auto;
+  }
+  .page-head .eyebrow{
+    font-family:-apple-system, sans-serif; text-transform:uppercase; letter-spacing:3px;
+    font-size:12px; color: var(--maroon); margin-bottom:10px; font-weight:700;
+  }
+  .page-head h1{ font-size:34px; font-weight:400; margin-bottom:10px; }
+  .page-head p{ font-family:-apple-system, sans-serif; color:#6b5d4f; max-width:560px; line-height:1.6; }
+
+  .locate-bar{
+    max-width:1180px; margin: 24px auto 0; padding: 0 32px;
+    display:flex; flex-wrap:wrap; align-items:center; gap:14px;
+  }
+  .locate-btn{
+    display:flex; align-items:center; gap:8px;
+    background: var(--espresso); color: var(--gold);
+    font-family:-apple-system, sans-serif; font-size:13.5px; font-weight:600;
+    padding: 11px 18px; border-radius: 999px; flex:none;
+  }
+  .locate-btn svg{ width:16px; height:16px; }
+  .locate-btn.locating svg{ animation: locSpin 1s linear infinite; }
+  @keyframes locSpin{ to{ transform: rotate(360deg); } }
+  .locate-status{ font-family:-apple-system, sans-serif; font-size:12.5px; color:#8a7c6c; }
+
+  .radius-row{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .radius-label{ font-family:-apple-system, sans-serif; font-size:12px; color:#8a7c6c; font-weight:600; }
+  .radius-chip{
+    font-family:-apple-system, sans-serif; font-size:12.5px; font-weight:600; color: var(--espresso-soft);
+    background: var(--white); border:1px solid var(--line); padding:8px 16px; border-radius:999px;
+    opacity:0.45; pointer-events:none; transition: all .15s ease;
+  }
+  .radius-chip.enabled{ opacity:1; pointer-events:auto; cursor:pointer; }
+  .radius-chip.active{ background: var(--maroon); color: var(--white); border-color: var(--maroon); }
+
+  /* ---------- Sections ---------- */
+  .salon-section{ max-width:1180px; margin: 0 auto; padding: 34px 32px 8px; }
+  .salon-section-head{ display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:6px; }
+  .salon-section-head h2{ font-size:24px; font-weight:400; }
+  .salon-section-head h2 span{ color: var(--gold-deep); font-style:italic; }
+  .salon-section-head .tag{
+    font-family:-apple-system, sans-serif; font-size:10.5px; font-weight:700; text-transform:uppercase;
+    letter-spacing:0.4px; background: var(--maroon); color:var(--white); padding:4px 10px; border-radius:999px;
+  }
+  .section-sub{ font-family:-apple-system, sans-serif; font-size:12.5px; color:#8a7c6c; margin: 4px 0 16px; }
+  .sponsored-head .tag{ display:inline-block; margin-left:10px; vertical-align:middle; }
+
+  .results-bar{
+    font-family:-apple-system, sans-serif; font-size:13px; color:#8a7c6c; margin-bottom:14px;
+  }
+
+  /* ---------- Sponsored: gold, sparkling panel ---------- */
+  .sponsored-panel{
+    position:relative; overflow:hidden; border-radius:22px; padding:22px 20px;
+    background: linear-gradient(135deg, #FFF7E0, #FBE7A6 55%, #F3D680);
+    border:1px solid #E9C766; box-shadow: 0 18px 34px -22px rgba(169,134,63,0.55);
+  }
+  .sponsored-panel::before{
+    content:''; position:absolute; inset:0; pointer-events:none; mix-blend-mode:overlay;
+    background: linear-gradient(115deg, transparent 20%, rgba(255,255,255,0.85) 40%, transparent 60%);
+    background-size: 260% 260%; animation: sponsoredSparkle 4.5s linear infinite;
+  }
+  .sponsored-panel::after{
+    content:''; position:absolute; inset:0; pointer-events:none;
+    background-image:
+      radial-gradient(circle, rgba(255,255,255,0.95) 0 1.5px, transparent 1.6px),
+      radial-gradient(circle, rgba(255,255,255,0.8) 0 1px, transparent 1.1px),
+      radial-gradient(circle, rgba(255,255,255,0.9) 0 1.2px, transparent 1.3px);
+    background-size: 140px 140px, 90px 90px, 110px 110px;
+    background-position: 10px 20px, 60px 80px, 100px 10px;
+    animation: sponsoredTwinkle 2.4s ease-in-out infinite alternate;
+  }
+  .sponsored-panel > *{ position:relative; z-index:1; }
+  @keyframes sponsoredSparkle{ 0%{ background-position: -160% -160%; } 100%{ background-position: 160% 160%; } }
+  @keyframes sponsoredTwinkle{ 0%{ opacity:0.35; } 100%{ opacity:0.9; } }
+  .gold-btn{ border-color:#A9863F !important; color:#7A5F26 !important; background:rgba(255,255,255,0.55); }
+  .gold-btn:hover{ background:#A9863F !important; color:#fff !important; }
+
+  /* ---------- Tier panels: each tier gets its own colored backdrop ---------- */
+  .tier-panel{
+    border-radius:22px; padding:22px 20px 20px; margin-bottom:26px;
+  }
+  .tier-panel:last-child{ margin-bottom:0; }
+  .tier-panel-head{ display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+  .tier-panel-head h3{ font-family:Georgia, serif; font-size:17px; font-weight:400; }
+  .tier-chip{
+    font-family:-apple-system, sans-serif; font-size:10.5px; font-weight:700; text-transform:uppercase;
+    letter-spacing:0.5px; padding:5px 12px; border-radius:999px; color:#fff; flex:none;
+  }
+  .tier-panel-head .tl-line{ flex:1; height:1px; }
+  .tier-panel-count{ font-family:-apple-system, sans-serif; font-size:12px; color:#7a6a56; flex:none; }
+
+  .tier-panel.premium{
+    background: linear-gradient(135deg, #F6E9F1, #ECD3E0); border:1px solid #D9AFC7;
+  }
+  .tier-panel.premium .tier-chip{ background: var(--maroon); }
+  .tier-panel.premium .tl-line{ background: #D9AFC7; }
+
+  .tier-panel.standard{
+    background: linear-gradient(135deg, #EAF0E5, #DCE8D3); border:1px solid #BFD6AE;
+  }
+  .tier-panel.standard .tier-chip{ background:#4B6B3E; }
+  .tier-panel.standard .tl-line{ background:#BFD6AE; }
+
+  .tier-panel .view-all-row{ margin: 18px 0 2px; }
+  .tier-panel.premium .view-all-btn{ border-color: var(--maroon); color: var(--maroon); }
+  .tier-panel.premium .view-all-btn:hover{ background: var(--maroon); color:#fff; }
+  .tier-panel.standard .view-all-btn{ border-color:#4B6B3E; color:#4B6B3E; }
+  .tier-panel.standard .view-all-btn:hover{ background:#4B6B3E; color:#fff; }
+
+  .salon-grid{
+    display:grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
+  }
+  .salon-card{
+    display:block; background: var(--white); border:1px solid var(--line); border-radius:16px; overflow:hidden;
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .salon-card:hover{ transform: translateY(-4px); box-shadow: var(--shadow); }
+  .sc-img{
+    height:130px; background: linear-gradient(135deg, var(--ivory-deep), var(--blush));
+    display:flex; align-items:center; justify-content:center;
+    font-family:-apple-system, sans-serif; font-size:12px; color: var(--gold-deep);
+    position:relative;
+  }
+  .sc-img.sponsored{ background: linear-gradient(135deg, #F3D68A, #E0B23C); color:#3A2E1E; }
+  .sc-sponsored-flag{
+    position:absolute; top:10px; left:10px; background: rgba(36,30,26,0.78); color: var(--gold);
+    font-family:-apple-system, sans-serif; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.3px;
+    padding:4px 9px; border-radius:999px;
+  }
+  .sc-distance{
+    position:absolute; top:10px; right:10px; background: rgba(36,30,26,0.78); color: var(--ivory);
+    font-family:-apple-system, sans-serif; font-size:11px; font-weight:700; padding:4px 10px; border-radius:999px;
+    backdrop-filter: blur(4px);
+  }
+  .sc-body{ padding:16px; font-family:-apple-system, sans-serif; }
+  .sc-body h3{ font-family:Georgia, serif; font-size:16px; margin-bottom:4px; }
+  .sc-meta{ font-size:12px; color:#8a7c6c; margin-bottom:9px; }
+  .sc-meta .stars{ color: var(--gold); }
+  .sc-status{
+    display:flex; align-items:center; gap:6px; font-size:12px; color:#6b5d4f;
+    margin-bottom:9px; font-family:-apple-system, sans-serif;
+  }
+  .status-dot{ width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+  .status-dot.open{ background:#3FA34D; box-shadow:0 0 0 3px rgba(63,163,77,0.16); }
+  .status-dot.closed{ background:#D64545; box-shadow:0 0 0 3px rgba(214,69,69,0.16); }
+  .sc-tags{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:13px; }
+  .sc-tag{
+    font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.3px;
+    background: var(--ivory-deep); color: var(--espresso-soft); padding:4px 8px; border-radius:999px;
+  }
+  .sc-btn{
+    display:block; text-align:center; background: linear-gradient(180deg, var(--gold), var(--gold-deep));
+    color: var(--espresso); font-size:12.5px; font-weight:700; padding:10px; border-radius:8px;
+  }
+
+  .view-all-row{ text-align:center; margin: 22px 0 4px; }
+  .view-all-btn{
+    font-family:-apple-system, sans-serif; font-size:13px; font-weight:600; color: var(--maroon);
+    border:1px solid var(--maroon); padding:10px 24px; border-radius:999px;
+  }
+  .view-all-btn:hover{ background: var(--maroon); color: var(--white); }
+
+  .section-divider{ max-width:1180px; margin: 8px auto 0; padding: 0 32px; }
+  .section-divider hr{ border:none; border-top:1px solid var(--line); }
+
+  .empty-state{
+    max-width:1180px; margin:20px auto; padding:0 32px; text-align:center;
+    font-family:-apple-system, sans-serif; color:#8a7c6c; display:none;
+  }
+
+  footer{ background: var(--espresso); color: rgba(250,246,240,0.6); text-align:center; padding: 28px; font-family:-apple-system, sans-serif; font-size:12px; margin-top:56px; }
+
+  @media (max-width: 900px){
+    .salon-grid{ grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 600px){
+    .salon-grid{ grid-template-columns: 1fr; }
+  }
+
+  .topbar{ position:relative; }
+  .topbar-right{ display:flex; align-items:center; gap:8px; }
+  .icon-btn{
+    width:46px; height:46px; border-radius:9px; display:flex; align-items:center; justify-content:center;
+    position:relative;
+  }
+  .icon-btn:hover{ background: rgba(255,255,255,0.08); }
+  .icon-btn svg{ width:21px; height:21px; }
+  .burger{
+    width:46px; height:46px; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:6px;
+    border-radius: 9px;
+    position:relative;
+  }
+  .burger:hover{ background: rgba(255,255,255,0.08); }
+  .burger span{ width:24px; height:2.5px; background: var(--ivory); display:block; border-radius:2px; }
+
+  .menu-panel{
+    position:absolute; top: 68px; right: 32px; z-index:70;
+    background: var(--white); border-radius: 14px;
+    box-shadow: var(--shadow); border:1px solid var(--line);
+    min-width: 260px; padding: 10px;
+    display:none; flex-direction:column; gap:2px;
+  }
+  .menu-panel.open{ display:flex; }
+  .menu-panel a{
+    font-family:-apple-system, sans-serif; font-size:15px; color: var(--espresso);
+    padding: 13px 16px; border-radius: 9px;
+  }
+  .menu-panel a:hover{ background: var(--ivory-deep); }
+  .menu-divider{ height:1px; background: var(--line); margin: 6px 4px; }
+</style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">@<b>MySalon</b></div>
+    <div class="topbar-right">
+      <a class="back-link sans" href="index.html">← Back to home</a>
+      <button class="burger icon-btn" id="burgerBtn" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="menu-panel" id="menuPanel">
+      <a href="index.html">Home</a>
+      <a href="profile.html">Profile</a>
+      <a href="about.html">About Us</a>
+      <div class="menu-divider"></div>
+      <a href="salons.html">Salons</a>
+      <a href="specialists.html">Specialists</a>
+      <a href="beauty-spa.html">Beauty / Spa</a>
+      <a href="makeup-artists.html">Makeup Artists</a>
+      <a href="market.html">Market</a>
+      <a href="rent-a-chair.html">Rent a Chair</a>
+      <div class="menu-divider"></div>
+      <a href="billing.html">Billing</a>
+      <a href="list-your-business.html">List Your Business</a>
+    </div>
+  </header>
+
+  <section class="page-head">
+    <div class="eyebrow">Salons</div>
+    <h1>Salons near you</h1>
+    <p class="sans">Established studios and storefronts on @MySalon. Turn on your location to see how far each one is, and how far you're willing to travel.</p>
+  </section>
+
+  <div class="locate-bar">
+    <button class="locate-btn" id="locateBtn" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+      Use my location
+    </button>
+    <div class="radius-row">
+      <span class="radius-label">Venture out:</span>
+      <span class="radius-chip" data-radius="5">5 km</span>
+      <span class="radius-chip" data-radius="10">10 km</span>
+      <span class="radius-chip" data-radius="25">25 km</span>
+      <span class="radius-chip" data-radius="50">50 km</span>
+      <span class="radius-chip enabled active" data-radius="all">All</span>
+    </div>
+    <span class="locate-status sans" id="locateStatus"></span>
+  </div>
+
+  <!-- SPONSORED -->
+  <section class="salon-section">
+    <div class="salon-section-head sponsored-head">
+      <h2>Sponsored <span>salons</span><span class="tag">Sponsored</span></h2>
+    </div>
+    <div class="section-sub">Promoted placements from salons on @MySalon</div>
+    <div class="sponsored-panel">
+      <div class="salon-grid" id="sponsoredGrid"></div>
+      <div class="view-all-row">
+        <button class="view-all-btn gold-btn" id="viewAllSponsored" type="button">View all sponsored (12)</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"><hr></div>
+
+  <!-- BROWSE ALL / HIGHEST RATED FIRST -->
+  <section class="salon-section">
+    <div class="salon-section-head">
+      <h2>All <span>salons</span></h2>
+    </div>
+    <div class="results-bar sans" id="resultsBar"></div>
+    <div id="allSalonsWrap"></div>
+    <div class="empty-state" id="emptyState">No salons in this radius yet — try widening it.</div>
+  </section>
+
+  <footer>© 2026 @MySalon. All rights reserved.</footer>
+
+  <script>
+    // Promoted / paid placements — shown in sponsorship order, first 4 then "View all"
+    const SPONSORED = [
+      { slug:'the-gold-chair', name:'The Gold Chair', area:'Sandton',   lat:-26.1076, lng:28.0567, rating:4.9, reviews:212, tags:['Barbers','Fades'], tier:'standard' },
+      { slug:'mua-studio-sandton', name:'MUA Studio Sandton', area:'Sandton', lat:-26.1076, lng:28.0567, rating:5.0, reviews:118, tags:['Makeup','Bridal'], tier:'premium' },
+      { slug:'velvet-and-vine', name:'Velvet & Vine', area:'Rosebank',   lat:-26.1465, lng:28.0436, rating:4.8, reviews:164, tags:['Braids','Locs'], tier:'standard' },
+      { slug:'nail-bar-rosebank', name:'Nail Bar Rosebank', area:'Rosebank', lat:-26.1465, lng:28.0436, rating:4.8, reviews:141, tags:['Nails','Gel'], tier:'standard' },
+      { slug:'the-colour-bar', name:'The Colour Bar', area:'Centurion', lat:-25.8603, lng:28.1894, rating:4.7, reviews:98,  tags:['Colors','Balayage'], tier:'premium' },
+      { slug:'curl-and-co-studio', name:'Curl & Co Studio', area:'Centurion', lat:-25.8603, lng:28.1894, rating:4.6, reviews:73, tags:['Braids','Twists'], tier:'standard' },
+      { slug:'wig-studio-menlyn', name:'Wig Studio Menlyn', area:'Menlyn', lat:-25.7830, lng:28.2769, rating:4.6, reviews:59,  tags:['Wigs','Installs'], tier:'standard' },
+      { slug:'serenity-massage', name:'Serenity Massage', area:'Menlyn', lat:-25.7830, lng:28.2769, rating:4.9, reviews:132, tags:['Massage','Spa'], tier:'premium' },
+      { slug:'the-ritual-spa', name:'The Ritual Spa', area:'Hatfield',  lat:-25.7487, lng:28.2379, rating:4.9, reviews:87,  tags:['Spa','Massage'], tier:'premium' },
+      { slug:'studio-hatfield', name:'Studio Hatfield', area:'Hatfield', lat:-25.7487, lng:28.2379, rating:4.7, reviews:176, tags:['Facials','Wigs'], tier:'premium' },
+      { slug:'midrand-beauty-bar', name:'Midrand Beauty Bar', area:'Midrand', lat:-25.9992, lng:28.1263, rating:4.9, reviews:203, tags:['Makeup','Facials'], tier:'premium' },
+      { slug:'glow-and-co-beauty-bar', name:'Glow & Co Beauty Bar', area:'Midrand', lat:-25.9992, lng:28.1263, rating:4.5, reviews:44, tags:['Nails','Facials'], tier:'standard' }
+    ];
+
+    // Extra directory listings (not sponsored) — mostly lower-rated, standard-tier, so they
+    // genuinely sink toward the back of the "All salons" list once sorted.
+    const MORE_SALONS = [
+      { slug:'quick-cuts-midrand', name:'Quick Cuts Midrand', area:'Midrand', lat:-25.9992, lng:28.1263, rating:3.6, reviews:52, tags:['Barbers','Fades'], tier:'standard' },
+      { slug:'express-nails-centurion', name:'Express Nails Centurion', area:'Centurion', lat:-25.8603, lng:28.1894, rating:3.9, reviews:37, tags:['Nails','Gel'], tier:'standard' },
+      { slug:'city-barber-rosebank', name:'City Barber Rosebank', area:'Rosebank', lat:-26.1465, lng:28.0436, rating:2.8, reviews:21, tags:['Barbers'], tier:'standard' },
+      { slug:'budget-braids-hatfield', name:'Budget Braids Hatfield', area:'Hatfield', lat:-25.7487, lng:28.2379, rating:2.1, reviews:14, tags:['Braids'], tier:'standard' }
+    ];
+
+    // The full directory — grouped by tier (premium first, standard after), each tier ranked
+    // by its own rating (highest first) unless location sorts it by distance.
+    const ALL_SALONS = SPONSORED.concat(MORE_SALONS);
+
+    let userLoc = null;
+    let sponsoredExpanded = false;
+
+    function haversineKm(lat1, lon1, lat2, lon2){
+      const R = 6371;
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a = Math.sin(dLat / 2) ** 2 +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) ** 2;
+      return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    }
+
+    function closeHourFor(slug){
+      let h = 0;
+      for (let i = 0; i < slug.length; i++) h = (h * 31 + slug.charCodeAt(i)) >>> 0;
+      return 17 + (h % 3); // closes 5pm, 6pm or 7pm, deterministic per shop
+    }
+    function fmtHour(h){
+      const period = h >= 12 ? 'PM' : 'AM';
+      let hh = h % 12; if (hh === 0) hh = 12;
+      return hh + ':00 ' + period;
+    }
+    function shopStatus(s){
+      const close = closeHourFor(s.slug);
+      const hour = new Date().getHours();
+      return { isOpen: hour >= 9 && hour < close, close };
+    }
+
+    function cardHtml(s, sponsored){
+      const st = shopStatus(s);
+      return `
+        <a class="salon-card" href="salon-profile.html?salon=${s.slug}">
+          <div class="sc-img${sponsored ? ' sponsored' : ''}">
+            Photo
+            ${sponsored ? '<span class="sc-sponsored-flag">Sponsored</span>' : ''}
+            ${s.d !== null && s.d !== undefined ? `<span class="sc-distance">${s.d.toFixed(1)} km away</span>` : ''}
+          </div>
+          <div class="sc-body">
+            <h3>${s.name}</h3>
+            <div class="sc-meta"><span class="stars">★ ${s.rating}</span> (${s.reviews}) · ${s.area}</div>
+            <div class="sc-tags">${s.tags.map(t => `<span class="sc-tag">${t}</span>`).join('')}</div>
+            <div class="sc-status"><span class="status-dot ${st.isOpen ? 'open' : 'closed'}"></span>${st.isOpen ? 'Open' : 'Closed'} · ${st.isOpen ? 'Closes' : 'Opens 9:00 AM · Closes'} ${fmtHour(st.close)}</div>
+            <span class="sc-btn">View &amp; Book</span>
+          </div>
+        </a>`;
+    }
+
+    const sponsoredGrid = document.getElementById('sponsoredGrid');
+    const viewAllSponsoredBtn = document.getElementById('viewAllSponsored');
+    const grid = document.getElementById('salonGrid');
+    const resultsBar = document.getElementById('resultsBar');
+    const emptyState = document.getElementById('emptyState');
+    let activeRadius = 'all';
+
+    function withDistance(list){
+      return list.map(s => ({ ...s, d: userLoc ? haversineKm(userLoc.lat, userLoc.lng, s.lat, s.lng) : null }));
+    }
+
+    function renderSponsored(){
+      const list = withDistance(SPONSORED);
+      const shown = sponsoredExpanded ? list : list.slice(0, 4);
+      sponsoredGrid.innerHTML = shown.map(s => cardHtml(s, true)).join('');
+      viewAllSponsoredBtn.textContent = sponsoredExpanded ? 'Show fewer' : `View all sponsored (${SPONSORED.length})`;
+    }
+
+    const ALL_PAGE_SIZE = 4; // per tier, before that tier's own "View all" is pressed
+    let tierExpanded = { premium: false, standard: false };
+    const allSalonsWrap = document.getElementById('allSalonsWrap');
+
+    // Distance bands, closest first: everything within 5km shows up before the 10km ring,
+    // then 25km, then 50km, then anything further out. Within the same band, stars decide —
+    // the highest-rated salon in that band pops up first. Sponsored salons stay in their own
+    // panel above all of this either way.
+    function distanceBand(d){
+      if (d <= 5) return 0;
+      if (d <= 10) return 1;
+      if (d <= 25) return 2;
+      if (d <= 50) return 3;
+      return 4;
+    }
+
+    function rankWithin(list){
+      if (userLoc){
+        list.sort((a, b) => {
+          const bandDiff = distanceBand(a.d) - distanceBand(b.d);
+          if (bandDiff !== 0) return bandDiff;
+          return b.rating - a.rating;
+        });
+      } else {
+        list.sort((a, b) => b.rating - a.rating);
+      }
+      return list;
+    }
+
+    function tierPanelHtml(key, label, list){
+      if (!list.length) return '';
+      const expanded = tierExpanded[key];
+      const shown = expanded ? list : list.slice(0, ALL_PAGE_SIZE);
+      const btnHtml = list.length > ALL_PAGE_SIZE
+        ? `<div class="view-all-row"><button class="view-all-btn" data-tier="${key}" type="button">${expanded ? 'Show fewer' : `View all ${label.toLowerCase()} salons (${list.length})`}</button></div>`
+        : '';
+      return `
+        <div class="tier-panel ${key}">
+          <div class="tier-panel-head">
+            <span class="tier-chip">${label} tier</span>
+            <span class="tl-line"></span>
+            <span class="tier-panel-count sans">${list.length} salon${list.length === 1 ? '' : 's'}</span>
+          </div>
+          <div class="salon-grid">${shown.map(s => cardHtml(s, false)).join('')}</div>
+          ${btnHtml}
+        </div>`;
+    }
+
+    function renderAll(){
+      let list = withDistance(ALL_SALONS);
+
+      if (userLoc && activeRadius !== 'all'){
+        list = list.filter(s => s.d <= Number(activeRadius));
+      }
+
+      // Premium (500-and-up tier) salons always sit above standard-tier ones, each in its own
+      // colored panel with its own "View all" — a low rating only ever sinks a salon within its
+      // own tier, never against the other tier, and only shows up once that tier is expanded.
+      const premium = rankWithin(list.filter(s => s.tier === 'premium'));
+      const standard = rankWithin(list.filter(s => s.tier !== 'premium'));
+
+      allSalonsWrap.innerHTML = tierPanelHtml('premium', 'Premium', premium) + tierPanelHtml('standard', 'Standard', standard);
+      allSalonsWrap.querySelectorAll('.view-all-btn[data-tier]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const key = btn.dataset.tier;
+          tierExpanded[key] = !tierExpanded[key];
+          renderAll();
+        });
+      });
+
+      const total = premium.length + standard.length;
+      emptyState.style.display = total ? 'none' : 'block';
+
+      resultsBar.textContent = userLoc
+        ? `${total} salon${total === 1 ? '' : 's'}${activeRadius !== 'all' ? ' within ' + activeRadius + ' km' : ''} — premium tier first, closest distance band first, highest-rated within each band`
+        : `${total} salons — premium tier first, highest rated within each tier. Turn on your location to sort by distance`;
+    }
+
+    function renderAllSections(){
+      renderSponsored();
+      renderAll();
+    }
+
+    viewAllSponsoredBtn.addEventListener('click', () => {
+      sponsoredExpanded = !sponsoredExpanded;
+      renderSponsored();
+    });
+
+    document.querySelectorAll('.radius-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        if (!chip.classList.contains('enabled')) return;
+        document.querySelectorAll('.radius-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        activeRadius = chip.dataset.radius;
+        renderAll();
+      });
+    });
+
+    const locateBtn = document.getElementById('locateBtn');
+    const locateStatus = document.getElementById('locateStatus');
+
+    locateBtn.addEventListener('click', () => {
+      if (!navigator.geolocation){
+        locateStatus.textContent = "Location isn't available in this browser.";
+        return;
+      }
+      locateBtn.classList.add('locating');
+      locateStatus.textContent = 'Finding you…';
+
+      navigator.geolocation.getCurrentPosition((pos) => {
+        locateBtn.classList.remove('locating');
+        userLoc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+        locateStatus.textContent = 'Showing distance from your current location.';
+        document.querySelectorAll('.radius-chip').forEach(c => c.classList.add('enabled'));
+        renderAllSections();
+      }, () => {
+        locateBtn.classList.remove('locating');
+        locateStatus.textContent = "Couldn't get your location — check permissions and try again.";
+      }, { enableHighAccuracy: true, timeout: 10000 });
+    });
+
+    renderAllSections();
+  </script>
+
+  <script>
+  (function(){
+    const burgerBtn = document.getElementById('burgerBtn');
+    const menuPanel = document.getElementById('menuPanel');
+    if (burgerBtn && menuPanel){
+      burgerBtn.addEventListener('click', function(e){
+        e.stopPropagation();
+        menuPanel.classList.toggle('open');
+      });
+      document.addEventListener('click', function(e){
+        if (!menuPanel.contains(e.target) && e.target !== burgerBtn){
+          menuPanel.classList.remove('open');
+        }
+      });
+    }
+  })();
+  </script>
+</body>
+</html>
